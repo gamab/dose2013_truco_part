@@ -229,7 +229,7 @@ feature {ANY,TR_TEST_LOGIC}
 ----------------------------------Dealer----------------------------------
 	dealer()
 		-- Dealing the cards to the players, setting the dealer id and setting the player's who has to play id
-		-- finally reorder the players
+		-- finally set the round number to 1 and reorder the players
 	local
 		array_of_cards:ARRAY[TR_CARD]
 		a_card:TR_CARD
@@ -271,6 +271,9 @@ feature {ANY,TR_TEST_LOGIC}
 		game_state_obj.set_the_player_turn_id (game_state_obj.who_dealt)
 		game_state_obj.inc_the_player_turn_id
 		current_player_id := game_state_obj.the_player_turn_id
+		-- setting the round number to 1
+		round_number := 1
+		game_state_obj.set_round_number (1)
 		-- setting the positions of the players
 		set_players_positions (game_state_obj.the_player_turn_id)
 	end
