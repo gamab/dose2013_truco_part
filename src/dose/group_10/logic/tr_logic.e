@@ -630,10 +630,6 @@ feature {ANY,TR_TEST_LOGIC}
 		create deck_cards.make_filled (Void, 0, 3)
 		game_state_obj.update_deck_cards (deck_cards)
 
-		-- we start in the first round
-		round_number:=1
-		game_state_obj.set_round_number (1)
-
 		-- we deal the cards
 		dealer
 	end
