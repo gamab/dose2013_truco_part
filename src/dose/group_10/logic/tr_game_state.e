@@ -62,6 +62,11 @@ feature{ANY}
 		rounds.put ( a_team_id, a_round_number)
 	end
 
+	set_rounds ( a_new_rounds : ARRAY[INTEGER])
+	do
+		rounds := a_new_rounds
+	end
+
 	get_round():ARRAY[INTEGER]
 	do
 		result:= rounds

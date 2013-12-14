@@ -227,7 +227,9 @@ feature {ANY,TR_TEST_LOGIC}
 	end
 
 ----------------------------------Dealer----------------------------------
-	Dealer()
+	dealer()
+		-- Dealing the cards to the players, setting the dealer id and setting the player's who has to play id
+		-- finally reorder the players
 	local
 		array_of_cards:ARRAY[TR_CARD]
 		a_card:TR_CARD
@@ -264,8 +266,13 @@ feature {ANY,TR_TEST_LOGIC}
 		game_state_obj.set_all_players (all_players)
 		-- incrementing the person who distribued
 		game_state_obj.inc_who_dealt
+		current_dealer_id := game_state_obj.who_dealt
 		-- incrementing the id person who has to play
+		game_state_obj.set_the_player_turn_id (game_state_obj.who_dealt)
 		game_state_obj.inc_the_player_turn_id
+		current_player_id := game_state_obj.the_player_turn_id
+		-- setting the positions of the players
+		set_players_positions (game_state_obj.the_player_turn_id)
 	end
 
 --------------------------------------------------------------------------------------------------------------
@@ -476,42 +483,40 @@ feature {ANY,TR_TEST_LOGIC}
 	end
 ---------------------------------------------------------------------------------------------------------------------
 
-	get_current_bet():STRING
+	get_current_bet : STRING
 	do
 		result := game_state_obj.current_bet
 	end
 
 ---------------------------------------------------------------------------------------------------------------------
 
-	is_end_of_game():BOOLEAN
+	is_end_of_game : BOOLEAN
 	do
 		result := (game_state_obj.team1_score>=24 or game_state_obj.team2_score >= 24)
 	end
 ----------------------------------------not implemented yet --------------------------------------------------------------------
 
-  win_round(winner:TR_PLAYER)
-                do
-                	if round_number > 0 then
+	win_round(winner:TR_PLAYER)
+	do
+		round_number := game_state_obj.round_number
 
+		if round_number > 0 then
+			rounds.put (winner.get_player_team_id,round_number-1)
+			game_state_obj.set_round (winner.get_player_team_id,round_number-1)
+			if round_number < 3 then
+				round_number:=round_number+1
+				game_state_obj.set_round_number (round_number)
+				set_players_positions(winner.get_player_id)-- will reorder players
+			else
+				the_end_of_the_hand:=true
+				round_number:=1
+				game_state_obj.set_round_number (1)
+				set_players_positions(1)
+			end
 
-                      rounds.put (winner.get_player_team_id,round_number-1)
-                      game_state_obj.set_round (winner.get_player_team_id,round_number-1)
-                      if
-                              round_number<3
-                       then
-                      round_number:=round_number+1
-                      game_state_obj.set_round_number (round_number)
-                      set_players_positions(winner.get_player_id)-- will reorder players
-                      else
-                      the_end_of_the_hand:=true
-                              round_number:=1
-                              game_state_obj.set_round_number (1)
-                              set_players_positions(1)
-                      end
-
-                       game_state_obj.set_winner_round (winner)
+			game_state_obj.set_winner_round (winner)
 		end
-   end
+	end
 -------------------------------------------------------------------------------------------
 
 
@@ -600,30 +605,35 @@ feature {ANY,TR_TEST_LOGIC}
 	end
 --------------------------------------------------------------------------------------------
 
-   end_hand()
-                        do
-                                the_end_of_the_hand:=false
-                             game_state_obj.set_end_hand
-                             if
-                                     current_dealer_id<4
-                             then
-                                     current_dealer_id:=current_dealer_id+1
-                                     else
-                                             current_dealer_id:=1
-                             end
-                             set_players_positions (current_dealer_id)
+	end_hand()
+	do
+		-- we remember this is the end of the hand
+		the_end_of_the_hand:=True
+		game_state_obj.set_end_hand
 
-                               create rounds.make_filled (-1,0,2)
-                               action:=false
-                               game_state_obj.remove_action
-                               current_bet:=""
-                               game_state_obj.set_current_bet (current_bet)
-                               deck_cards.make_empty
-                               game_state_obj.update_deck_cards (deck_cards)
-                               round_number:=1
-                               game_state_obj.set_round_number (round_number)
---
-   end
+		-- we empty the rounds winners array
+		create rounds.make_filled (-1,0,2)
+		game_state_obj.set_rounds(rounds)
+
+		-- there is no more actions
+		action:=false
+		game_state_obj.remove_action
+
+		-- there is no more bets
+		current_bet:=""
+		game_state_obj.set_current_bet ("")
+
+		-- the cards played have to be deleted from the table
+		create deck_cards.make_filled (Void, 0, 3)
+		game_state_obj.update_deck_cards (deck_cards)
+
+		-- we start in the first round
+		round_number:=1
+		game_state_obj.set_round_number (1)
+
+		-- we deal the cards
+		dealer
+	end
 
 ---------------------------------------------------------------------
 
