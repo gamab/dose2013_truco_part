@@ -204,69 +204,68 @@ feature {ANY,TR_TEST_LOGIC}
 
 ----------------------------------------------------------------------------
 
-        set_player_info(a_name:STRING ;  a_id, a_team_id:INTEGER)-- will used by controller to send information
-
-           local
-                   player : TR_PLAYER
-        do
-                    create player.make (a_id, a_team_id)
-                    player.set_player_name(a_name)
-                all_players[a_id-1] := player
-                game_state_obj.set_all_players (all_players)
-        end
+	set_player_info(a_name:STRING ;  a_id, a_team_id:INTEGER)-- will used by controller to send information
+	local
+		player : TR_PLAYER
+	do
+		create player.make (a_id, a_team_id)
+		player.set_player_name(a_name)
+		all_players[a_id-1] := player
+		game_state_obj.set_all_players (all_players)
+	end
 
 -----------------------------------------------------------
 
-   get_players():ARRAY[TR_PLAYER]
-                                do
-                                        result:=all_players
-                                end
+	get_players():ARRAY[TR_PLAYER]
+	do
+		result := game_state_obj.get_all_players
+	end
 -----------------------------------------------------------
-   get_cards():ARRAY[TR_CARD]
-                                do
-                                        result:=cards
-                                end
+	get_cards():ARRAY[TR_CARD]
+	do
+		result:=cards
+	end
 
 ----------------------------------Dealer----------------------------------
-   Dealer()
-         local
-                               array_of_cards:ARRAY[TR_CARD]
-                               new_cards:ARRAY[TR_CARD]
-                               a_card:TR_CARD
-                               i:INTEGER_32
-                               j:INTEGER
-                  do
-
-                  	all_players := game_state_obj.get_all_players
-
-
-                              j:=0
-                              create a_card.make ("",i)
-                              create new_cards.make_filled (a_card,0 , 39)
-                           create array_of_cards.make_filled (a_card, 0,2)--initilization
-                                           if (39-pos) < 12
-                                           then
-                                                           make_cards_random_order
-                                                           pos:=0
-                                           end
-                           from j:=0 until j>3
-                           loop
-                             create array_of_cards.make_filled (a_card, 0,2)
-                                           from i:=0 until i>2
-                                     loop
-                                           create a_card.make (cards.item (pos).get_card_type,cards.item (pos).get_card_value)
-                                           array_of_cards.put (a_card, i)
-                                           pos:=pos+1
-                                           i:=i+1
-                                    end
-                                    all_players[j].set_cards (array_of_cards)
-                                    j:=j+1
-                           end
-
-
-                          game_state_obj.set_all_players (all_players)
-                          game_state_obj.set_the_player_turn_id (1)
-   end
+	Dealer()
+	local
+		array_of_cards:ARRAY[TR_CARD]
+		new_cards:ARRAY[TR_CARD]
+		a_card:TR_CARD
+		i:INTEGER_32
+		j:INTEGER
+	do
+		all_players := game_state_obj.get_all_players
+		j:=0
+		create a_card.make ("",i)
+		create new_cards.make_filled (a_card,0 , 39)
+		create array_of_cards.make_filled (a_card, 0,2)--initilization
+		if (39-pos) < 12 then
+			make_cards_random_order
+			pos:=0
+		end
+		from
+			j:=0
+		until
+			j>3
+		loop
+			create array_of_cards.make_filled (a_card, 0,2)
+			from
+				i:=0
+			until
+				i>2
+			loop
+				create a_card.make (cards.item (pos).get_card_type,cards.item (pos).get_card_value)
+				array_of_cards.put (a_card, i)
+				pos:=pos+1
+				i:=i+1
+			end
+			all_players[j].set_cards (array_of_cards)
+			j:=j+1
+		end
+		game_state_obj.set_all_players (all_players)
+		game_state_obj.set_the_player_turn_id (1)
+	end
 
 --------------------------------------------------------------------------------------------------------------
 
