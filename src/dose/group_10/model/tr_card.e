@@ -10,7 +10,10 @@ class
         TR_CARD
 inherit
 	STORABLE
-        
+	redefine
+		out
+	end
+
 create
         make
 
@@ -69,5 +72,10 @@ end
    	    type:="";value :=-1;weight_truco:=-1;weight_envido:=-1
    end
 
+feature
+	out : STRING
+	do
+		result := "[" + value.out + " " + type + "]"
+	end
 end
 

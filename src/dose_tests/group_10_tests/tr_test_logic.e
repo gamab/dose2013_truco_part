@@ -1007,4 +1007,28 @@ feature -- test for: end_hand
  		assert ("end_hand ok", not worked_well)
  	end
 
+feature --
+
+	test_put_card
+	local
+		logic: TR_LOGIC
+ 		worked_well:BOOLEAN
+	 	i : INTEGER
+ 	do
+ 		create logic.make
+		logic.put_the_cards
+		from
+			i := 0
+		until
+			i > 39
+		loop
+			print(logic.cards[i].out+"%N")
+			i := i + 1
+		end
+		worked_well := logic.cards[logic.cards.lower].get_card_value = 1 and logic.cards[logic.cards.lower].get_card_type.is_equal ("cups")
+		worked_well := logic.cards[logic.cards.upper].get_card_value = 12 and logic.cards[logic.cards.upper].get_card_type.is_equal ("clubs")
+ 		assert ("put_card ok", worked_well)
+ 	end
+
+
 end
