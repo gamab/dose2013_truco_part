@@ -298,6 +298,8 @@ feature {ANY,TR_TEST_LOGIC}
 ---------------------------------------------------------------------------------------------------
 
 	send_envido(a_betting_player_id:INTEGER)
+	require
+		bet_possible : game_state_obj.is_envido_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
 		game_state_obj.set_current_bet ("envido")
 		game_state_obj.set_action
@@ -313,7 +315,7 @@ feature {ANY,TR_TEST_LOGIC}
 		end
 		game_state_obj.set_betting_team (betting_team)
 	end
-	
+
  --------------------------------------------------------------------
 	is_real_envido_allowed(local_player: TR_PLAYER):BOOLEAN
 	do
@@ -322,8 +324,9 @@ feature {ANY,TR_TEST_LOGIC}
 -----------------------------------------------------------------------------------------------------------
 
 	send_re_envido(a_betting_player_id:INTEGER)
+	require
+		bet_possible : game_state_obj.is_real_envido_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
-
 		game_state_obj.set_current_bet ("realenvido")
 		game_state_obj.set_action
 		current_bet:="realenvido"
@@ -349,6 +352,8 @@ feature {ANY,TR_TEST_LOGIC}
 -----------------------------------------------------------------------------------------------------
 
 	send_falta_envido(a_betting_player_id:INTEGER)
+	require
+		bet_possible : game_state_obj.is_falta_envido_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
 		game_state_obj.set_current_bet ("faltaenvido")
 		game_state_obj.set_action
@@ -376,6 +381,8 @@ feature {ANY,TR_TEST_LOGIC}
 ------------------------------------------------------------------------------------------------------------------------
 
 	send_truco(a_betting_player_id:INTEGER)
+	require
+		bet_possible : game_state_obj.is_truco_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
 		game_state_obj.set_current_bet ("truco")
 		game_state_obj.set_action
@@ -401,28 +408,25 @@ feature {ANY,TR_TEST_LOGIC}
 	end
 ------------------------------------------------------------------------------------------------------------------------
 
-   send_re_truco(a_betting_player_id:INTEGER)
-                     do
-                               game_state_obj.set_current_bet ("retruco")
-                               game_state_obj.set_action
-                               current_bet:="retruco"
-                               action:=true
-                               who_bet_id:=a_betting_player_id
-                               game_state_obj.set_who_bet_id (who_bet_id)
+	send_re_truco(a_betting_player_id:INTEGER)
+	require
+		bet_possible : game_state_obj.is_retruco_allowed (game_state_obj.all_players[a_betting_player_id-1])
+	do
+		game_state_obj.set_current_bet ("retruco")
+		game_state_obj.set_action
+		current_bet:="retruco"
+		action:=true
+		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (who_bet_id)
 
+		if a_betting_player_id=1 or a_betting_player_id=3 then
+			betting_team:=1
+		else
+			betting_team:=2
+		end
+	   game_state_obj.set_betting_team (betting_team)
 
-                                                        if
-                                                                a_betting_player_id=1 or a_betting_player_id=3
-                                                        then
-                                                                 betting_team:=1
-                                                        else
-                                                                 betting_team:=2
-                                                        end
-
-                          -- betting_team:=( a_betting_player_id\\4)+1
-                           game_state_obj.set_betting_team (betting_team)
-
-   end
+	end
 ---------------------------------------------------------------------------------------------------------------------
 
 	is_vale_cuatro_allowed(local_player: TR_PLAYER):BOOLEAN
@@ -432,29 +436,27 @@ feature {ANY,TR_TEST_LOGIC}
 
 --------------------------------------------------------------------------------------------------------------------
 
-   send_valle_cuatro(a_betting_player_id:INTEGER)
-                do
-                                game_state_obj.set_current_bet ("vallecuatro")
-                                game_state_obj.set_action
-                                current_bet:="vallecuatro"
-                                action:=true
-                                who_bet_id:=a_betting_player_id
-                                game_state_obj.set_who_bet_id (who_bet_id)
+	send_valle_cuatro(a_betting_player_id:INTEGER)
+	require
+		bet_possible : game_state_obj.is_vale_cuatro_allowed (game_state_obj.all_players[a_betting_player_id-1])
+	do
+		game_state_obj.set_current_bet ("vallecuatro")
+		game_state_obj.set_action
+		current_bet:="vallecuatro"
+		action:=true
+		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (who_bet_id)
 
+		if a_betting_player_id=1 or a_betting_player_id=3 then
+			betting_team:=1
+		else
+			betting_team:=2
+		end
 
-                                                        if
-                                                                a_betting_player_id=1 or a_betting_player_id=3
-                                                        then
-                                                                 betting_team:=1
-                                                        else
-                                                                 betting_team:=2
-                                                        end
+		game_state_obj.set_betting_team (betting_team)
 
+	end
 
-                          -- betting_team:=( a_betting_player_id\\4)+1
-                           game_state_obj.set_betting_team (betting_team)
-
-   end
 ---------------------------------------------------------------------------------------------------------------------
 	get_table_cards():ARRAY[TR_CARD]
 	do
@@ -476,14 +478,14 @@ feature {ANY,TR_TEST_LOGIC}
 
 	get_current_bet():STRING
 	do
-		result:=game_state_obj.current_bet
+		result := game_state_obj.current_bet
 	end
 
 ---------------------------------------------------------------------------------------------------------------------
 
 	is_end_of_game():BOOLEAN
 	do
-		result:=  (game_state_obj.team1_score>=24 or game_state_obj.team2_score >= 24)
+		result := (game_state_obj.team1_score>=24 or game_state_obj.team2_score >= 24)
 	end
 ----------------------------------------not implemented yet --------------------------------------------------------------------
 
