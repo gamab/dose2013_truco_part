@@ -260,8 +260,12 @@ feature {ANY,TR_TEST_LOGIC}
 			all_players[j].set_cards (array_of_cards)
 			j:=j+1
 		end
+		-- setting the new players
 		game_state_obj.set_all_players (all_players)
-		game_state_obj.set_the_player_turn_id (1)
+		-- incrementing the person who distribued
+		game_state_obj.inc_who_dealt
+		-- incrementing the id person who has to play
+		game_state_obj.inc_the_player_turn_id
 	end
 
 --------------------------------------------------------------------------------------------------------------
@@ -517,7 +521,7 @@ feature {ANY,TR_TEST_LOGIC}
               do
                    game_state_obj:=the_game_state
                    rounds:=game_state_obj.get_round
-                   current_player_id:=game_state_obj.get_the_player_turn_id
+                   current_player_id:=game_state_obj.the_player_turn_id
                    round_number:=game_state_obj.get_round_number
                    team1_score:=game_state_obj.get_team1_score
                    team2_score:=game_state_obj.get_team2_score
@@ -581,7 +585,7 @@ feature {ANY,TR_TEST_LOGIC}
                       	i:=i+1
                       end
 
-                     new_player_turn := game_state_obj.get_the_player_turn_id\\4 + 1
+                     new_player_turn := game_state_obj.the_player_turn_id\\4 + 1
                      game_state_obj.set_the_player_turn_id (new_player_turn)
 
 					game_state_obj.set_all_players (all_players)

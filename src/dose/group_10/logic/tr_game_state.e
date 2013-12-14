@@ -52,6 +52,7 @@ feature{ANY}
 		end_hand:=false
 		end_game:=false
 		action:=false
+		who_dealt := 0
 	end
 
 	set_round(a_team_id,a_round_number:INTEGER_32)
@@ -64,18 +65,6 @@ feature{ANY}
 	get_round():ARRAY[INTEGER]
 	do
 		result:= rounds
-	end
-
-	set_the_player_turn_id(a_player_id:INTEGER)
-	require
-		a_player_id>0 and a_player_id<5
-	do
-		the_player_turn_id:=a_player_id
-	end
-
-	get_the_player_turn_id():INTEGER
-	do
-		result:= the_player_turn_id
 	end
 
 	set_round_number(a_round_number:INTEGER)
@@ -265,17 +254,6 @@ feature{ANY}
 		result:=all_players
 	end
 
-
---	set_players_turn(p:TR_PLAYER)
---	do
---		players_turn:=p
---	end
-
---	get_players_turn():TR_PLAYER
---	do
---		result:=players_turn
---	end
-
 	do_i_have_to_play(id : INTEGER) : BOOLEAN
 	do
         result:= not(action) and (the_player_turn_id=id)
@@ -296,6 +274,31 @@ feature{ANY}
 		end
 	end
 
+feature -- dealing
+
+	inc_who_dealt
+	do
+		who_dealt := who_dealt \\ 4 + 1
+	end
+
+feature -- player turn
+
+	set_the_player_turn_id(a_player_id:INTEGER)
+	require
+		a_player_id>0 and a_player_id<5
+	do
+		the_player_turn_id:=a_player_id
+	end
+
+	get_the_player_turn_id : INTEGER
+	do
+		result := the_player_turn_id
+	end
+
+	inc_the_player_turn_id
+	do
+		the_player_turn_id := the_player_turn_id \\ 4 + 1
+	end
 
 feature --game status
 
