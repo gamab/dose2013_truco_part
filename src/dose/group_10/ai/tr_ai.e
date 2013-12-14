@@ -303,42 +303,39 @@ feature {NONE, TR_TEST_AI} --Accept
     -- Accept Real Envido: if the points are above Floor_to_real_envido
     -- Accept Falta Envido: if the points are above Floor_to_falta_envido and if the nearest team to win missing 6 points
     require
-            proposition_envido_valid: proposition = Envido or
-                                                               proposition = Real_envido or
-                                                               proposition = Falta_envido
-            point_team_max_valid:  point_team_max >= 0 AND point_team_max <= 24
-            envido_points_valid:       envido_points >= 0 and envido_points <= 33
-
+		proposition_envido_valid: proposition.is_equal(Envido) or proposition.is_equal(Real_envido) or proposition.is_equal(Falta_envido)
+		point_team_max_valid:  point_team_max >= 0 AND point_team_max <= 24
+		envido_points_valid:       envido_points >= 0 and envido_points <= 33
     local
-            send : BOOLEAN
-    do
-            if proposition = Envido then
-                    if envido_points >= Floor_to_envido then
-                            send := True
-                    else
-                            send:= False
-                    end
-                elseif proposition.is_equal(Real_envido)  then
-                        if envido_points >= Floor_to_real_envido then
-                            send := True
-                    else
-                            send := False
-                    end
-            elseif proposition.is_equal(Falta_envido)  then
-                    if envido_points >= Floor_to_falta_envido then
-                            --if the nearest team to win missing 6 points
-                            if point_team_max > 18 then
-                                    send := True
-                            else
-                                    send := False
-                            end
-                    else
-                            send := False
-                    end
+    	send : BOOLEAN
+	do
+		if proposition.is_equal(Envido) then
+			if envido_points >= Floor_to_envido then
+				send := True
+			else
+            	send:= False
+        	end
+		elseif proposition.is_equal(Real_envido)  then
+        	if envido_points >= Floor_to_real_envido then
+            	send := True
             else
-                    send := false
+            	send := False
             end
-            result := send
+       	elseif proposition.is_equal(Falta_envido)  then
+        	if envido_points >= Floor_to_falta_envido then
+            --if the nearest team to win missing 6 points
+            	if point_team_max > 18 then
+                	send := True
+                else
+                	send := False
+                end
+           	else
+            	send := False
+			end
+      	else
+        	send := false
+        end
+        result := send
     end
 
         accept_truco_easy (proposition : String; current_state_game: TR_LOGIC;player1_card:ARRAY[TR_CARD]; played_card:ARRAY[BOOLEAN]):BOOLEAN
