@@ -297,27 +297,23 @@ feature {ANY,TR_TEST_LOGIC}
 
 ---------------------------------------------------------------------------------------------------
 
-   send_envido(a_betting_player_id:INTEGER)
-                      do
-                                game_state_obj.set_current_bet ("envido")
-                                game_state_obj.set_action
-                               current_bet:="envido"
-                               action:=true
-                               who_bet_id:=a_betting_player_id
-                               game_state_obj.set_who_bet_id (who_bet_id)
+	send_envido(a_betting_player_id:INTEGER)
+	do
+		game_state_obj.set_current_bet ("envido")
+		game_state_obj.set_action
+		current_bet:="envido"
+		action:=true
+		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (who_bet_id)
 
-                                                        if
-                                                                a_betting_player_id=1 or a_betting_player_id=3
-                                                        then
-                                                                 betting_team:=1
-
-                                                        else
-                                                                 betting_team:=2
-                                                        end
-
-                                                        game_state_obj.set_betting_team (betting_team)
-
-                     end
+		if a_betting_player_id=1 or a_betting_player_id=3 then
+			betting_team:=1
+		else
+			betting_team:=2
+		end
+		game_state_obj.set_betting_team (betting_team)
+	end
+	
  --------------------------------------------------------------------
 	is_real_envido_allowed(local_player: TR_PLAYER):BOOLEAN
 	do
