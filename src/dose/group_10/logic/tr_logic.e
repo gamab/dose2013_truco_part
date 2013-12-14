@@ -16,7 +16,7 @@ feature{NONE,TR_TEST_LOGIC}
 		deck_cards				:ARRAY[TR_CARD]-- the cards on deck it will be only 4 cards
 		rounds					:ARRAY[INTEGER]-- save the id of winners in every round
 		all_players				:ARRAY[TR_PLAYER]-- the 4 players array
-			players_turn		:TR_PLAYER--never mind
+
 		pos						:INTEGER -- counter for cards
 		round_number			:INTEGER-- the round number 1  2  3
 		team1_score				:INTEGER-- score of the team1
@@ -51,8 +51,8 @@ feature {ANY,TR_TEST_LOGIC}
 		create deck_cards.make_filled (d,0,3)-- cards on deck
 		game_state_obj.update_deck_cards (deck_cards)
 		create cards.make_filled (d,0,39)-- all cards in the game
-		create players_turn.make (0, 0)
-		game_state_obj.set_players_turn (players_turn)
+
+		game_state_obj.set_the_player_turn_id (1)
 		current_player_id:=1
 		game_state_obj.set_the_player_turn_id (current_player_id)
 		current_game_points:=0
@@ -230,16 +230,13 @@ feature {ANY,TR_TEST_LOGIC}
 	Dealer()
 	local
 		array_of_cards:ARRAY[TR_CARD]
-		new_cards:ARRAY[TR_CARD]
 		a_card:TR_CARD
 		i:INTEGER_32
 		j:INTEGER
 	do
 		all_players := game_state_obj.get_all_players
-		j:=0
+		i := 1
 		create a_card.make ("",i)
-		create new_cards.make_filled (a_card,0 , 39)
-		create array_of_cards.make_filled (a_card, 0,2)--initilization
 		if (39-pos) < 12 then
 			make_cards_random_order
 			pos:=0

@@ -17,6 +17,7 @@ feature{TR_LOGIC}
 	who_bet_id				:INTEGER-- who press bet	
 
 	the_player_turn_id		:INTEGER
+
 	round_number			:INTEGER
 	team1_score				:INTEGER
 	team2_score				:INTEGER-- the team hwo send a bet
@@ -27,17 +28,20 @@ feature{TR_LOGIC}
 	the_winner				:TR_PLAYER
 	end_game				:BOOLEAN--true if and only if the end of the hand and be false otherwise
 	action					:BOOLEAN
-	players_turn			:TR_PLAYER--the palyer who has turn
 
+
+	who_dealt				: INTEGER -- who was the one who dealt the card
 feature{ANY}
 
 	make
+	local
+		player_empty : TR_PLAYER
 	do
 		create rounds.make_filled (0, 0,2)
-		create players_turn.make (0, 0)
+		create player_empty.make (0, 0)
 		create the_winner.make (0,0)
 		create the_deck_cards.make_empty
-		create all_players.make_filled (players_turn,0,3)-- make all_players array with size 4 and initialize
+		create all_players.make_filled (player_empty,0,3)-- make all_players array with size 4 and initialize
 		round_number:=0
 		team1_score:=0
 		team2_score:=0
@@ -262,15 +266,15 @@ feature{ANY}
 	end
 
 
-	set_players_turn(p:TR_PLAYER)
-	do
-		players_turn:=p
-	end
+--	set_players_turn(p:TR_PLAYER)
+--	do
+--		players_turn:=p
+--	end
 
-	get_players_turn():TR_PLAYER
-	do
-		result:=players_turn
-	end
+--	get_players_turn():TR_PLAYER
+--	do
+--		result:=players_turn
+--	end
 
 	do_i_have_to_play(id : INTEGER) : BOOLEAN
 	do
