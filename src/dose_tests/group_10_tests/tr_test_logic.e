@@ -48,22 +48,29 @@ test_make_cards_random_order -- check if there isn't twice the same card in the 
 	 	worked_well: BOOLEAN
 	 	i,j: INTEGER
  	do
- 		worked_well := true
+		worked_well := true
 		create logic.make
 		logic.make_cards_random_order()
-		from i := 0
-		until i > logic.cards.count
+		from
+			i := 0
+		until
+			i > logic.cards.upper
 		loop
-			from j:= 0
-			until j > logic.cards.count
+			print(logic.cards.at (i).out + "%N")
+			from
+				j:= i + 1
+			until
+				j > logic.cards.upper
 			loop
-				if logic.cards.at (i) = logic.cards.at (j) and not (i = j) then
+				if logic.cards.at (i) = logic.cards.at (j) then
 					worked_well := false;
 				end
+				j := j + 1
 			end
+			i := i + 1
 		end
 		assert ("make_cards_with_random_order ok", worked_well)
- 	end
+	end
 
 
 	 test_get_team_points
