@@ -118,86 +118,89 @@ feature {ANY,TR_TEST_LOGIC}
 		end
 	end
 -------------------------------------------------------------------------
-   make_cards_random_order-- put cards on random order in random_cards
-                local
-                        random_cards :ARRAY[TR_CARD]
-                        frbdn : ARRAY[TR_CARD]
-                        forbidden : BOOLEAN
-                                the_card : TR_CARD
-                        card : TR_CARD
-                        rand : RANDOM
-                        size : INTEGER
-                        index : INTEGER
-                                 i : INTEGER
-                                 x : INTEGER
-                                 r : INTEGER
-                                 j : INTEGER
-                                 l_time: TIME
-                                            l_seed: INTEGER
-                                 do
-                                         size := 39
-                                         create card.make ("NULL", 0)
-                                         create random_cards.make_filled (card , 0 , 39)
-                                         create rand.make
-                                          create l_time.make_now
-                            l_seed := l_time.hour
-                            l_seed := l_seed * 60 + l_time.minute
-                            l_seed := l_seed * 60 + l_time.second
-                            l_seed := l_seed * 1000 + l_time.milli_second
-                            rand.set_seed (l_seed)
+	make_cards_random_order-- put cards on random order in random_cards
+	local
+		random_cards :ARRAY[TR_CARD]
+		frbdn : ARRAY[TR_CARD]
+		forbidden : BOOLEAN
+		the_card : TR_CARD
+		card : TR_CARD
+		rand : RANDOM
+		size : INTEGER
+		index : INTEGER
+		i : INTEGER
+		x : INTEGER
+		r : INTEGER
+		j : INTEGER
+		l_time: TIME
+		l_seed: INTEGER
+	do
+		size := 39
+		create card.make ("NULL", 0)
+		create random_cards.make_filled (card , 0 , 39)
+		create rand.make
+		create l_time.make_now
+		l_seed := l_time.hour
+		l_seed := l_seed * 60 + l_time.minute
+		l_seed := l_seed * 60 + l_time.second
+		l_seed := l_seed * 1000 + l_time.milli_second
+		rand.set_seed (l_seed)
 
-                                         index := 39 - pos
-                                         if index > 20 then
-                                                 forbidden := false
-                                                 index := 0
-                                         else
-                                                 forbidden := true
-                                         end
-                                         --fill forbidden array
-                                         if forbidden then
-                                                 create frbdn.make_filled (card , 0 , index)
-                                                 x := pos
-                                                 from i:=0
-                                                 until i>index
-                                                 loop
-                                                         create card.make (cards[x].get_card_type, cards[x].get_card_value)
-                                                         --frbdn.put (card, i)
-                                                         random_cards.put (card, i)
-                                                         size := size - 1
-                                                         i:=i+1
-                                                         x:=x+1
-                                                 end
-                                                 index := index + 1
-                                         end
-                                         --rest of cards in random
-                                                        j:=0
-                                         from i := index
-                                         until i > 39
-                                         loop
-                                                 rand.forth
-                                                 r := rand.item
-                                                 x := (size+1)-j
-                                                 r := r\\x --determining upper limit
-                                                 create card.make (cards[r].get_card_type, cards[r].get_card_value)
-                                                 random_cards.put (card, i)
-                                                 remove(cards , r , size-j)
-                                                 j:=j+1
-                                                                i := i+1
+		index := 39 - pos
+		if index > 20 then
+			forbidden := false
+			index := 0
+		else
+			forbidden := true
+		end
+		--fill forbidden array
+		if forbidden then
+			create frbdn.make_filled (card , 0 , index)
+			x := pos
+			from
+				i:=0
+			until
+				i>index
+			loop
+				create card.make (cards[x].get_card_type, cards[x].get_card_value)
+				--frbdn.put (card, i)
+				random_cards.put (card, i)
+				size := size - 1
+				i:=i+1
+				x:=x+1
+			end
+			index := index + 1
+		end
+		--rest of cards in random
+		j:=0
+		from
+			i := index
+		until
+			i > 39
+		loop
+			rand.forth
+			r := rand.item
+			x := (size+1)-j
+			r := r\\x --determining upper limit
+			create card.make (cards[r].get_card_type, cards[r].get_card_value)
+			random_cards.put (card, i)
+			remove(cards , r , size-j)
+			j:=j+1
+			i := i+1
 
-                                         end
-                                         cards := random_cards
-
-                                 end
+		end
+		cards := random_cards
+	end
 ------------------------------------------------------
-   remove (c:ARRAY[TR_CARD];index:INTEGER;size:INTEGER)
-                local
-                        tmp : TR_CARD
-                do
-                        create tmp.make ("null",0)
-                        tmp := c[index]
-                        c[index] := c[size]
-                        c[size] := tmp
-                end
+	remove (c:ARRAY[TR_CARD];index:INTEGER;size:INTEGER)
+	local
+		tmp : TR_CARD
+	do
+		create tmp.make ("null",0)
+		tmp := c[index]
+		c[index] := c[size]
+		c[size] := tmp
+	end
 
 ----------------------------------------------------------------------------
 
