@@ -74,38 +74,49 @@ feature {ANY,TR_TEST_LOGIC}
 
 ----------------------------PUT_THE_CARDS-------------------------------------------
 
-   put_the_cards-- create 40card and put them in the array cards
-                       local
-                       the_card:TR_CARD
-                       i:INTEGER_32
-                       v:INTEGER_32
-                       j:INTEGER
-                       x:INTEGER
-                       do
-                                 create the_card.make ("null",0)
-                                 create cards.make_filled (the_card , 0, 39)
-                                 x:=0
-                                 from j:=0 until j>3
-                                 loop
-                                          v:=1
-                                         from i:=0 until i>9
-                                         loop
-                                                 if v=8 or v=9  then
-                                                        v:=v+1
-                                                 else
-                                                                 if j=0 then create the_card.make ("cups",v)             -- v from 1 to 12 without 8 9
-                                                                 elseif j=1 then create the_card.make ("golds",v)
-                                                                 elseif j=2 then create the_card.make ("swords",v)
-                                                                 elseif j=3 then create the_card.make ("clubs",v)
-                                                                 end
-                                                        cards.put (the_card, x)
-                                                        x:=x+1;i:=i+1;v:=v+1
-                                                 end
-                                                        end
-                                                        j:=j+1
-                                 end
-
-                       end
+	put_the_cards-- create 40card and put them in the array cards
+	local
+		the_card:TR_CARD
+		i:INTEGER_32
+		v:INTEGER_32
+		j:INTEGER
+		x:INTEGER
+	do
+		create the_card.make ("null",0)
+		create cards.make_filled (the_card , 0, 39)
+		x:=0
+		from
+			j:=0
+		until
+			j>3
+		loop
+			v:=1
+			from
+				i:=0
+			until
+				i>9
+			loop
+				if v=8 or v=9  then
+					v:=v+1
+				else
+					if j=0 then
+						create the_card.make ("cups",v)             -- v from 1 to 12 without 8 9
+					elseif j=1 then
+						create the_card.make ("golds",v)
+					elseif j=2 then
+						create the_card.make ("swords",v)
+					elseif j=3 then
+						create the_card.make ("clubs",v)
+					end
+					cards.put (the_card, x)
+					x:=x+1
+					i:=i+1
+					v:=v+1
+				end
+			end
+			j:=j+1
+		end
+	end
 -------------------------------------------------------------------------
    make_cards_random_order-- put cards on random order in random_cards
                 local
