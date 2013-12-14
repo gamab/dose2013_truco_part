@@ -12,80 +12,26 @@ create
 
 feature{NONE,TR_TEST_LOGIC}
 
-                cards                            :ARRAY[TR_CARD]-- all game cards =  40 card
-        deck_cards                       :ARRAY[TR_CARD]-- the cards on deck it will be only 4 cards
-        rounds                           :ARRAY[INTEGER]-- save the id of winners in every round
-        all_players                      :ARRAY[TR_PLAYER]-- the 4 players array
-                players_turn                     :TR_PLAYER--never mind
-        pos                              :INTEGER -- counter for cards
-        round_number                     :INTEGER-- the round number 1  2  3
-        team1_score                      :INTEGER-- score of the team1
-        team2_score                      :INTEGER--score of the team2
-        betting_team                     :INTEGER-- The team hwo send last bet
-        current_game_points              :INTEGER-- raise of the game , first it 1 but when you press envido and accept it will be 2 and so on
-        current_bet                      :STRING-- if there a bet  what's this bet
-        game_state                       :STRING--never mind
-        action                           :BOOLEAN--never mind
-        who_bet_id                       :INTEGER
-        game_state_obj                   :TR_GAME_STATE
-        the_end_of_the_hand              :BOOLEAN
-        final_winner                     :INTEGER
-                current_player_id                :INTEGER
-                current_dealer_id                :INTEGER
-
-feature{NONE}--represent headers of logic functions
-
---TR_LOGIC:
-
---get_cards():ARRAY[TR_CARD]
---put_the_cards
--- make_cards_random_order
---set_player_info(a_name:STRING ;  a_id, a_team_id:INTEGER)
---get_players():ARRAY[TR_PLAYER]
---Dealer()
---set_round_number(num:INTEGER)
---get_round_number():INTEGER
---is_start_hand():BOOLEAN
---is_envido_allowed(player: TR_PLAYER) : BOOLEAN
---send_envido(a_betting_player_id:INTEGER)
---is_real_envido_allowed(local_player: TR_PLAYER):BOOLEAN-- will not be used --
---send_re_envido(a_betting_player_id:INTEGER)
---is_falta_envido_allowed(local_player: TR_PLAYER) : BOOLEAN
---send_falta_envido(a_betting_player_id:INTEGER)
---is_truco_allowed(player: TR_PLAYER) :BOOLEAN
---send_truco(a_betting_player_id:INTEGER)
---is_retruco_allowed(local_player: TR_PLAYER):BOOLEAN
---send_re_truco(a_betting_player_id:INTEGER)
---is_vale_cuatro_allowed(local_player: TR_PLAYER):BOOLEAN
---send_valle_cuatro(a_betting_player_id:INTEGER)
---get_table_cards():ARRAY[TR_CARD]
---get_team_points(a_team_id:INTEGER):INTEGER
---get_current_bet():STRING
---is_end_of_game():BOOLEAN
---win_round(winner:TR_PLAYER)
---set_current_game_state(the_game_state:TR_GAME_STATE)
---get_current_game_state():TR_GAME_STATE
---play_card(card: TR_CARD; local_player: TR_PLAYER)
---is_hand_ended():BOOLEAN
---end_hand()
---set_players_positions(winner_id:INTEGER)
---send_accept(team:INTEGER)
---send_reject(team:INTEGER)
---end_game()
---update_game_points(point: INTEGER)
---update_team_points(a_team_id,a_team_points:INTEGER)
---hwo_is_next_player(player: TR_PLAYER):TR_PLAYER
---is_end_round():BOOLEAN
---end_round()
---deck_card_winner(the_card_in_array:ARRAY[TR_CARD]):INTEGER
---get_round():ARRAY[INTEGER]
---set_current_player_id(id:INTEGER)
---get_current_player_id():INTEGER
---hwo_is_current_player ():TR_PLAYER
---do_i_have_to_play(id : INTEGER) : BOOLEAN
---do_i_have_to_answer_a_bet(id : INTEGER) : BOOLEAN
-
-
+			cards				:ARRAY[TR_CARD]-- all game cards =  40 card
+		deck_cards				:ARRAY[TR_CARD]-- the cards on deck it will be only 4 cards
+		rounds					:ARRAY[INTEGER]-- save the id of winners in every round
+		all_players				:ARRAY[TR_PLAYER]-- the 4 players array
+			players_turn		:TR_PLAYER--never mind
+		pos						:INTEGER -- counter for cards
+		round_number			:INTEGER-- the round number 1  2  3
+		team1_score				:INTEGER-- score of the team1
+		team2_score				:INTEGER--score of the team2
+		betting_team			:INTEGER-- The team hwo send last bet
+		current_game_points		:INTEGER-- raise of the game , first it 1 but when you press envido and accept it will be 2 and so on
+		current_bet				:STRING-- if there a bet  what's this bet
+		game_state				:STRING--never mind
+		action					:BOOLEAN--never mind
+		who_bet_id				:INTEGER
+		game_state_obj			:TR_GAME_STATE
+		the_end_of_the_hand		:BOOLEAN
+		final_winner			:INTEGER
+			current_player_id	:INTEGER
+			current_dealer_id	:INTEGER
 
 feature {ANY,TR_TEST_LOGIC}
 
