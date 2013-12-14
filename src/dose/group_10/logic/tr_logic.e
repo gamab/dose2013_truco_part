@@ -35,40 +35,40 @@ feature{NONE,TR_TEST_LOGIC}
 
 feature {ANY,TR_TEST_LOGIC}
 
-   make
-                 --constractor that sets the players data to null , sets all cards randomly and sets Game_Points to 0
-                 local
-                        p:TR_PLAYER-- used to initialize the all_players array
-                               d:TR_CARD
-            do
-                                                        create game_state_obj.make
-                                create  p.make(0,0)-- create the player with id=0, teamid = 0
-                                create d.make ("",0)--  ceate card
-                                create all_players.make_filled (p,0,3)-- make all_players array with size 4 and initialize
-                                game_state_obj.set_all_players (all_players)
-                                  create rounds.make_filled (-1, 0,2)-- array to save who win
+	make
+	--constractor that sets the players data to null , sets all cards randomly and sets Game_Points to 0
+	local
+		p:TR_PLAYER-- used to initialize the all_players array
+		d:TR_CARD
+	do
+		create game_state_obj.make
+		create  p.make(0,0)-- create the player with id=0, teamid = 0
+		create d.make ("",0)--  ceate card
+		create all_players.make_filled (p,0,3)-- make all_players array with size 4 and initialize
+		game_state_obj.set_all_players (all_players)
+		create rounds.make_filled (-1, 0,2)-- array to save who win	
 
-                                create deck_cards.make_filled (d,0,3)-- cards on deck
-                                game_state_obj.update_deck_cards (deck_cards)
-                                create cards.make_filled (d,0,39)-- all cards in the game
-                                 create players_turn.make (0, 0)
-                                 game_state_obj.set_players_turn (players_turn)
-                                current_player_id:=1
-                                game_state_obj.set_the_player_turn_id (current_player_id)
-                                    current_game_points:=0
-                                    game_state_obj.set_current_game_points (current_game_points)
-                            round_number:=1
-                            game_state_obj.set_round_number (round_number)
-                            current_bet:=""
-                            game_state_obj.set_current_bet (current_bet)
-                            game_state:=""
-                            pos:=0
-                            current_dealer_id:=1
-                            the_end_of_the_hand:=false
-                            game_state_obj.set_end_hand_to_false
-                                put_the_cards
-                                make_cards_random_order
-end
+		create deck_cards.make_filled (d,0,3)-- cards on deck
+		game_state_obj.update_deck_cards (deck_cards)
+		create cards.make_filled (d,0,39)-- all cards in the game
+		create players_turn.make (0, 0)
+		game_state_obj.set_players_turn (players_turn)
+		current_player_id:=1
+		game_state_obj.set_the_player_turn_id (current_player_id)
+		current_game_points:=0
+		game_state_obj.set_current_game_points (current_game_points)
+		round_number:=1
+		game_state_obj.set_round_number (round_number)
+		current_bet:=""
+		game_state_obj.set_current_bet (current_bet)
+		game_state:=""
+		pos:=0
+		current_dealer_id:=1
+		the_end_of_the_hand:=false
+		game_state_obj.set_end_hand_to_false
+		put_the_cards
+		make_cards_random_order
+	end
 
 
 
