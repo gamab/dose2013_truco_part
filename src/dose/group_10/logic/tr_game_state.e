@@ -210,7 +210,7 @@ feature{ANY}
 
 	is_envido_allowed(player: TR_PLAYER) : BOOLEAN
 	do
-		result:=is_first_round and current_bet.is_equal ("")
+		result:=is_first_round and current_bet.is_empty
 	end
 
 	is_real_envido_allowed(local_player: TR_PLAYER):BOOLEAN
