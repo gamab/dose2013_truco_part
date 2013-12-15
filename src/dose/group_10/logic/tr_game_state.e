@@ -321,7 +321,7 @@ feature --game status
 	is_first_round : BOOLEAN
 		-- indicates this is the first round
 	do
-		result := rounds[0] /= -1
+		result := round_number = 1
 	end
 
 end

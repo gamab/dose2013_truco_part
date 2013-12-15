@@ -535,17 +535,23 @@ feature -- test for : is_envido_allowed is_real_envido_allowed is_falta_envido_a
 		testing: "user/TR" -- this is tag with the class-prefix
 	local
 	 	logic : TR_LOGIC
-	 	player : TR_PLAYER
-	 	player2 : TR_PLAYER
+	 	players : ARRAY[TR_PLAYER]
 		real_envido_allowed : BOOLEAN
 		falta_envido_allowed : BOOLEAN
 	do
  	 	create logic.make
- 	 	create player.make (1, 1)
- 	 	create player2.make (2, 2)
+
+ 	 	logic.set_player_info ("Player", 1, 1)
+ 	 	logic.set_player_info ("Player2", 2, 2)
+ 	 	logic.set_player_info ("Player3", 3, 1)
+ 	 	logic.set_player_info ("Player4", 4, 2)
+
+ 	 	players := logic.get_players
+
  	 	--falta envido should be allowed if someone said real_envido
- 	 	real_envido_allowed := logic.is_real_envido_allowed (player)
- 	 	falta_envido_allowed := logic.is_falta_envido_allowed (player2)
+ 	 	logic.send_envido (1)
+ 	 	logic.send_re_envido (2)
+ 	 	falta_envido_allowed := logic.is_falta_envido_allowed (players.at (2))
  		assert ("is_falta_envido_allowed_1 ok", falta_envido_allowed )
  	end
 
