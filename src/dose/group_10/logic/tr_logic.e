@@ -23,7 +23,7 @@ feature{NONE,TR_TEST_LOGIC}
 --		team2_score				:INTEGER--score of the team2
 --		betting_team			:INTEGER-- The team hwo send last bet
 --		current_game_points		:INTEGER-- raise of the game , first it 1 but when you press envido and accept it will be 2 and so on
-		current_bet				:STRING-- if there a bet  what's this bet
+--		current_bet				:STRING-- if there a bet  what's this bet
 
 		action					:BOOLEAN--never mind
 		who_bet_id				:INTEGER
@@ -71,8 +71,8 @@ feature {ANY,TR_TEST_LOGIC}
 --		round_number := 1
 		game_state_obj.set_round_number (1)
 
-		current_bet:=""
-		game_state_obj.set_current_bet (current_bet)
+--		current_bet:=""
+		game_state_obj.set_current_bet ("")
 
 		pos:=0
 		current_dealer_id:=0
@@ -345,7 +345,7 @@ feature -- Bets
 	do
 		game_state_obj.set_current_bet (BC.envido)
 		game_state_obj.set_action
-		current_bet:=BC.envido
+--		current_bet:=BC.envido
 		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
@@ -370,7 +370,7 @@ feature -- Bets
 	do
 		game_state_obj.set_current_bet (BC.real_envido)
 		game_state_obj.set_action
-		current_bet:=BC.real_envido
+--		current_bet:=BC.real_envido
 		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
@@ -396,7 +396,7 @@ feature -- Bets
 	do
 		game_state_obj.set_current_bet (BC.falta_envido)
 		game_state_obj.set_action
-		current_bet:=BC.falta_envido
+--		current_bet:=BC.falta_envido
 		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
@@ -423,7 +423,7 @@ feature -- Bets
 	do
 		game_state_obj.set_current_bet (BC.truco)
 		game_state_obj.set_action
-		current_bet:=BC.truco
+--		current_bet:=BC.truco
 		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
@@ -449,7 +449,7 @@ feature -- Bets
 	do
 		game_state_obj.set_current_bet (BC.retruco)
 		game_state_obj.set_action
-		current_bet:=BC.retruco
+--		current_bet:=BC.retruco
 		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
@@ -476,7 +476,7 @@ feature -- Bets
 	do
 		game_state_obj.set_current_bet (BC.vale_cuatro)
 		game_state_obj.set_action
-		current_bet:=BC.vale_cuatro
+--		current_bet:=BC.vale_cuatro
 		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
@@ -493,7 +493,10 @@ feature -- Bets
 	local
 		add_score : INTEGER
 		id_winner : INTEGER
+		current_bet : STRING
 	do
+		current_bet := game_state_obj.current_bet
+
 		-- TRUCO
 
 		if current_bet.is_equal (BC.truco) or current_bet.is_equal (BC.retruco) or current_bet.is_equal (BC.vale_cuatro) then
@@ -541,7 +544,10 @@ feature -- Bets
 		team_exists : team >= 1 and team <= 2
 	local
 		add_points : INTEGER
+		current_bet : STRING
 	do
+		current_bet := game_state_obj.current_bet
+
 		-- TRUCO		
 		if current_bet.is_equal (BC.truco) or current_bet.is_equal (BC.retruco) or current_bet.is_equal (BC.vale_cuatro) then
 
@@ -684,7 +690,7 @@ feature -- Working with the gmae_state
 --		team2_score:=game_state_obj.get_team2_score
 --		betting_team:=game_state_obj.get_betting_team
 --		current_game_points:=game_state_obj.get_current_game_points
-		current_bet:=game_state_obj.get_current_bet
+--		current_bet:=game_state_obj.get_current_bet
 		who_bet_id:=game_state_obj.get_who_bet_id
 		-- win_round (game_state_obj.get_winner_round)
 --		deck_cards:=game_state_obj.get_deck_cards
@@ -927,7 +933,7 @@ feature -- end of hand
 		game_state_obj.remove_action
 
 		-- there is no more bets
-		current_bet:=""
+--		current_bet:=""
 		game_state_obj.set_current_bet ("")
 
 		-- the cards played have to be deleted from the table
