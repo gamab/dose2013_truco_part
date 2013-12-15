@@ -445,11 +445,7 @@ feature -- Bets
 	send_re_truco(a_betting_player_id:INTEGER)
 	require
 		bet_possible : game_state_obj.is_retruco_allowed (game_state_obj.all_players[a_betting_player_id-1])
-	local
-		betting_team : INTEGER
 	do
-		betting_team := game_state_obj.betting_team
-
 		game_state_obj.set_current_bet (BC.retruco)
 		game_state_obj.set_action
 		current_bet:=BC.retruco
@@ -458,11 +454,10 @@ feature -- Bets
 		game_state_obj.set_who_bet_id (who_bet_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
-			betting_team:=1
+	 		game_state_obj.set_betting_team (1)
 		else
-			betting_team:=2
+	 		game_state_obj.set_betting_team (2)
 		end
-	   game_state_obj.set_betting_team (betting_team)
 
 	end
 ---------------------------------------------------------------------------------------------------------------------
@@ -477,11 +472,7 @@ feature -- Bets
 	send_valle_cuatro(a_betting_player_id:INTEGER)
 	require
 		bet_possible : game_state_obj.is_vale_cuatro_allowed (game_state_obj.all_players[a_betting_player_id-1])
-	local
-		betting_team : INTEGER
 	do
-		betting_team := game_state_obj.betting_team
-
 		game_state_obj.set_current_bet (BC.vale_cuatro)
 		game_state_obj.set_action
 		current_bet:=BC.vale_cuatro
@@ -490,13 +481,10 @@ feature -- Bets
 		game_state_obj.set_who_bet_id (who_bet_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
-			betting_team:=1
+			game_state_obj.set_betting_team (1)
 		else
-			betting_team:=2
+			game_state_obj.set_betting_team (2)
 		end
-
-		game_state_obj.set_betting_team (betting_team)
-
 	end
 
 
