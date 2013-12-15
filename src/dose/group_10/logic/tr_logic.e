@@ -14,7 +14,7 @@ feature{NONE,TR_TEST_LOGIC}
 
 			cards				:ARRAY[TR_CARD]-- all game cards =  40 card
 --		deck_cards				:ARRAY[TR_CARD]-- the cards on deck it will be only 4 cards
-		rounds					:ARRAY[INTEGER]-- save the id of winners in every round
+--		rounds					:ARRAY[INTEGER]-- save the id of winners in every round
 --		all_players				:ARRAY[TR_PLAYER]-- the 4 players array
 
 		pos						:INTEGER -- counter for cards
@@ -44,31 +44,39 @@ feature {ANY,TR_TEST_LOGIC}
 		d:TR_CARD
 		all_players : ARRAY[TR_PLAYER]
 		deck_cards : ARRAY[TR_CARD]
+		rounds : ARRAY[INTEGER]
 	do
 		create BC
 
 		create game_state_obj.make
 		create  p.make(0,0)-- create the player with id=0, teamid = 0
 		create d.make ("",0)--  ceate card
+
 		create all_players.make_filled (p,0,3)-- make all_players array with size 4 and initialize
 		game_state_obj.set_all_players (all_players)
+
 		create rounds.make_filled (-1, 0,2)-- array to save who win	
+		game_state_obj.set_rounds (rounds)
 
 		create deck_cards.make_filled (d,0,3)-- cards on deck
 		game_state_obj.update_deck_cards (deck_cards)
 		create cards.make_filled (d,0,39)-- all cards in the game
 
-		game_state_obj.set_the_player_turn_id (1)
-		current_player_id:=1
 		game_state_obj.set_the_player_turn_id (current_player_id)
+		current_player_id:=1
+
 		current_game_points:=0
 		game_state_obj.set_current_game_points (current_game_points)
+
 		round_number:=1
 		game_state_obj.set_round_number (round_number)
+
 		current_bet:=""
 		game_state_obj.set_current_bet (current_bet)
+
 		pos:=0
-		current_dealer_id:=1
+		current_dealer_id:=0
+
 		the_end_of_the_hand:=false
 		game_state_obj.set_end_hand_to_false
 		put_the_cards
@@ -675,7 +683,7 @@ feature -- Working with the gmae_state
 	set_current_game_state(the_game_state:TR_GAME_STATE)
 	do
 		game_state_obj:=the_game_state
-		rounds:=game_state_obj.get_round
+--		rounds:=game_state_obj.get_round
 		current_player_id:=game_state_obj.the_player_turn_id
 		round_number:=game_state_obj.get_round_number
 		team1_score:=game_state_obj.get_team1_score
@@ -815,7 +823,7 @@ feature -- modifying and getting rounds
 
 	get_round:ARRAY[INTEGER]
 	do
-		result:=rounds
+		result:=game_state_obj.rounds
 	end
 
 	is_first_round():BOOLEAN
@@ -834,9 +842,11 @@ feature -- end of rounds
 		id_possible : winner_id >= 1 and winner_id <= 3
 	local
 		draw : BOOLEAN
+		rounds : ARRAY[INTEGER]
 	do
 		-- we get the round number from the game state
 		round_number := game_state_obj.round_number
+		rounds := game_state_obj.rounds
 
 		-- first we look if there is a draw
 		draw := is_there_a_draw
@@ -903,6 +913,7 @@ feature -- end of hand
 	end_hand
 	local
 		deck_cards : ARRAY[TR_CARD]
+		rounds : ARRAY[INTEGER]
 	do
 		-- we remember this is the end of the hand
 		the_end_of_the_hand:=True
