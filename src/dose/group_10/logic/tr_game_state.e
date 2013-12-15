@@ -26,7 +26,8 @@ feature{TR_LOGIC}
 	current_bet				:STRING-- if there a bet  what's this bet
 	end_hand				:BOOLEAN--true if and only if the end of the hand and be false otherwise
 	the_winner				:TR_PLAYER
-	end_game				:BOOLEAN--true if and only if the end of the hand and be false otherwise
+	end_game				:BOOLEAN
+		--true if and only if the end of the hand and be false otherwise
 	action					:BOOLEAN
 
 	who_dealt				: INTEGER -- who was the one who dealt the card
