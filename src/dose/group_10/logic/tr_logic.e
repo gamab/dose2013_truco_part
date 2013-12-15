@@ -33,6 +33,8 @@ feature{NONE,TR_TEST_LOGIC}
 			current_player_id	:INTEGER
 			current_dealer_id	:INTEGER
 
+		BC						: TR_BET_CONSTANTS
+
 feature {ANY,TR_TEST_LOGIC}
 
 	make
@@ -780,153 +782,89 @@ feature -- end of rounds
 	end
 -------------------------------------------------------
 
-        send_accept(team:INTEGER)
-		local
-			add_score :INTEGER
-		do
-			if current_bet.is_equal ( "truco") then
+	send_accept(team:INTEGER)
+	local
+		add_score : INTEGER
+		id : INTEGER
+		cur_id : INTEGER
+		count : INTEGER
+		max : INTEGER
+	do
+		-- we get the players
+		all_players := game_state_obj.get_all_players
+
+
+		-- TRUCO
+
+		if current_bet.is_equal (BC.truco) or current_bet.is_equal (BC.retruco) or current_bet.is_equal (BC.vale_cuatro) then
+			-- we get the game points
+			current_game_points := game_state_obj.get_current_game_points
+
+			-- we treat the bet
+			if current_bet.is_equal (BC.truco) then
 				current_game_points := current_game_points+1
-				game_state_obj.set_current_game_points (current_game_points)
+			elseif current_bet.is_equal (BC.retruco) then
+				current_game_points := current_game_points+1
+			elseif current_bet.is_equal (BC.vale_cuatro) then
+				current_game_points := current_game_points+1
 			end
-			if current_bet.is_equal ("retruco") then
-				current_game_points := current_game_points+2
-				game_state_obj.set_current_game_points (current_game_points)
-			end
-			if current_bet.is_equal ("vallecuatro") then
-				current_game_points := current_game_points+3
-				game_state_obj.set_current_game_points (current_game_points)
-			end
-			if
-				current_bet.is_equal ("envido") or
-				current_bet.is_equal ("realenvido") or
-				current_bet.is_equal ("faltaenvido")
-			then
-				if current_bet.is_equal ("envido")  then
-					add_score := 2
-				else if current_bet.is_equal ("realenvido")  then
-					add_score := 3
-				else if current_bet.is_equal ("faltaenvido")  then
-					add_score := 4
+
+			-- we set the current_game points
+			game_state_obj.set_current_game_points (current_game_points)
+
+		-- ENVIDO		
+		elseif current_bet.is_equal (BC.envido) or current_bet.is_equal (BC.real_envido) or current_bet.is_equal (BC.falta_envido) then
+
+			-- we treat the bet to know the points we will need to add
+			if current_bet.is_equal (BC.envido)  then
+				add_score := 2
+			elseif current_bet.is_equal (BC.real_envido)  then
+				add_score := 3
+			elseif current_bet.is_equal (BC.falta_envido)  then
+				-- the falta envido is the points between the end of the game and the current score of the best team
+				if (game_state_obj.team1_score > game_state_obj.team2_score) then
+					add_score := 24 - game_state_obj.team1_score
+				else
+					add_score := 24 - game_state_obj.team2_score
 				end
 			end
+
+			-- we are searching for the first player to have the highest envido points
+			from
+				count := 2
+				id := get_id_from_position_in_round(1)
+				max := all_players.at (id-1).cards_points
+				cur_id := id \\ 4 + 1
+			until
+				count > 4
+			loop
+				if all_players.at (cur_id - 1).cards_points > max then
+					max := all_players.at (cur_id - 1).cards_points
+					id := cur_id
+				end
+
+				cur_id := cur_id \\ 4 + 1
+				count := count + 1
+			end
+
+			-- we set the points of the best player
+			if id = 1 or id = 3 then
+                team1_score := team1_score + add_score
+                all_players[0].set_player_team_score (team1_score)
+                all_players[2].set_player_team_score (team1_score)
+                game_state_obj.set_team2_score (team1_score)
+			elseif id = 2 or id = 4 then
+                team2_score := team2_score + add_score
+                all_players[1].set_player_team_score (team2_score)
+                all_players[3].set_player_team_score (team2_score)
+                game_state_obj.set_team2_score (team2_score)
+			end
+
 		end
 
-
-                                 -- if first team wins
-                if
-                all_players[0].cards_points > all_players[1].cards_points
-                        and all_players[0].cards_points > all_players[3].cards_points
-                        or all_players[2].cards_points > all_players[1].cards_points
-                        and all_players[2].cards_points > all_players[3].cards_points
-                then
-                team1_score := team1_score + add_score
-                all_players[0].set_player_team_score (team1_score)
-                all_players[2].set_player_team_score (team1_score)
-                game_state_obj.set_team1_score (team1_score)
-                                 -- if second wins
-                else if
-                all_players[0].cards_points > all_players[1].cards_points
-                        and all_players[0].cards_points > all_players[3].cards_points
-                        or all_players[2].cards_points > all_players[1].cards_points
-                        and all_players[2].cards_points > all_players[3].cards_points
-                then
-                team2_score := team2_score + add_score
-                all_players[1].set_player_team_score (team2_score)
-                all_players[3].set_player_team_score (team2_score)
-                game_state_obj.set_team2_score (team2_score)
-
-                -- if first the same as second
-                else if all_players[0].cards_points = all_players[1].cards_points
-                then
-                if
-                all_players[0].get_player_posistion < all_players[1].get_player_posistion
-                then
-                team1_score := team1_score + add_score
-                all_players[0].set_player_team_score (team1_score)
-                all_players[2].set_player_team_score (team1_score)
-                                game_state_obj.set_team1_score (team1_score)
-                else
-                team2_score := team2_score + add_score
-                all_players[1].set_player_team_score (team2_score)
-                all_players[3].set_player_team_score (team2_score)
-                                game_state_obj.set_team2_score (team2_score)
-
-                end
-                                  -- if first  the same as forth
-                else if all_players[0].cards_points = all_players[3].cards_points
-                then
-                if
-                all_players[0].get_player_posistion < all_players[3].get_player_posistion
-                then
-                team1_score := team1_score + add_score
-                all_players[0].set_player_team_score (team1_score)
-                all_players[2].set_player_team_score (team1_score)
-                game_state_obj.set_team1_score (team1_score)
-
-                else
-                team2_score := team2_score + add_score
-                all_players[1].set_player_team_score (team2_score)
-                all_players[3].set_player_team_score (team2_score)
-                game_state_obj.set_team2_score (team2_score)
-
-                end
-
-                                  -- if third  the same as second
-                else if all_players[2].cards_points = all_players[1].cards_points
-                then
-                if
-                all_players[2].get_player_posistion < all_players[1].get_player_posistion
-                then
-                team1_score := team1_score + add_score
-                all_players[0].set_player_team_score (team1_score)
-                all_players[2].set_player_team_score (team1_score)
-                game_state_obj.set_team1_score (team1_score)
-
-                else
-                team2_score := team2_score + add_score
-                all_players[1].set_player_team_score (team2_score)
-                all_players[3].set_player_team_score (team2_score)
-                game_state_obj.set_team2_score (team2_score)
-
-                end
-                -- if third  the same as forth
-                else if all_players[2].cards_points = all_players[3].cards_points
-                then
-                if
-                all_players[2].get_player_posistion < all_players[3].get_player_posistion
-                then
-                team1_score := team1_score + add_score
-                all_players[0].set_player_team_score (team1_score)
-                all_players[2].set_player_team_score (team1_score)
-                game_state_obj.set_team1_score (team1_score)
-
-                else
-                team2_score := team2_score + add_score
-                all_players[1].set_player_team_score (team2_score)
-                all_players[3].set_player_team_score (team2_score)
-                game_state_obj.set_team2_score (team2_score)
-
-
-                                          end
-
-                                            end
-                                                end
-                                                end
-                                                end
-                                                end
-                                                end
-                                 -- end_hand ()
-                                end
-
-                         current_bet:=""
-                         game_state_obj.set_current_bet (current_bet)
-                        action:=false
-                        game_state_obj.remove_action
-                        betting_team:=team
-                        game_state_obj.set_betting_team (team)
-
-
-                end
+		action:=false
+		game_state_obj.remove_action
+	end
 
 -------------------------------------------
 
