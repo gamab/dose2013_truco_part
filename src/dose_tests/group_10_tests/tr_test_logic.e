@@ -103,7 +103,6 @@ test_make_cards_random_order -- check if there isn't twice the same card in the 
 		create logic.make
 		create player_1.make (1, 1)
 		create player_2.make (2, 1)
-		logic.set_team (player_1, player_2, 1)
 		logic.add_to_team_points (1,2)
 		assert ("update_team_score ok", logic.get_team_points (1) = 2)
  	end
@@ -136,38 +135,6 @@ test_make_cards_random_order -- check if there isn't twice the same card in the 
 
 
 
- 	test_update_player_cards()
- 	-- it update correctly than if he play a card in his player card he should not have it anymore
- 	note
-		testing: "covers/{TR_LOGIC}.update_player_cards"
-		testing: "user/TR" -- this is tag with the class-prefix
-	local
-	 	logic : TR_LOGIC
-	 	worked_well : BOOLEAN
-	 	card,card1,card2,card3: TR_CARD
-	 	player: TR_PLAYER
-	 	i: INTEGER
-	 	cards:ARRAY[TR_CARD]
- 	do
- 		worked_well := false
-		create logic.make
-		create card.make ("", 1)
-		create cards.make_filled (card, 0, 2)
-		create card1.make ("sword", 1)
-		create card2.make ("sword", 2)
-		create card3.make ("sword", 3)
-		cards.put (card1, 0)
-		cards.put (card2, 1)
-		cards.put (card3, 2)
-		create player.make (1, 1)
-		player.set_cards (cards)
-		logic.play_card (card, player)
-		logic.update_player_cards (player, card1)
-		if not player.get_player_cards.has (card1) then
-			worked_well := true;
-		end
-		assert ("update_player_cards ok", worked_well)
- 	end
 
 
 
@@ -208,68 +175,6 @@ test_make_cards_random_order -- check if there isn't twice the same card in the 
  	end
 
 
-	test_update_table_cards_1
-	-- check if the card goes in the deck
-	note
-		testing: "covers/{TR_LOGIC}.update_table_cards"
-		testing: "user/TR" -- this is tag with the class-prefix
-	local
-	 	logic : TR_LOGIC
-	 	worked_well : BOOLEAN
-	 	card,card1,card2,card3: TR_CARD
-	 	player: TR_PLAYER
-	 	i: INTEGER
-	 	cards:ARRAY[TR_CARD]
- 	do
- 		worked_well := false
-		create logic.make
-		create card.make ("", 1)
-		create cards.make_filled (card, 0, 2)
-		create card1.make ("sword", 1)
-		create card2.make ("sword", 2)
-		create card3.make ("sword", 3)
-		cards.put (card1, 0)
-		cards.put (card2, 1)
-		cards.put (card3, 2)
-		create player.make (1, 1)
-		player.set_cards (cards)
-		logic.play_card (card, player)
-		logic.update_table_cards (card1);
-		if logic.get_table_cards.has (card1) then
-			worked_well := true;
-		end
-		assert ("update_table_cards_1 ok", worked_well)
- 	end
-
-
- 		test_update_table_cards_2
- 		-- check if calculate the point if deck_cards>4
-	note
-		testing: "covers/{TR_LOGIC}.update_table_cards"
-		testing: "user/TR" -- this is tag with the class-prefix
-	local
-	 	logic : TR_LOGIC
-	 	worked_well : BOOLEAN
-	 	card1,card2,card3,card4: TR_CARD
-	 	aux: INTEGER
-
- 	do
- 		worked_well := false
-		create logic.make
-		create card1.make ("sword", 1)
-		create card2.make ("sword", 2)
-		create card3.make ("sword", 3)
-		create card3.make ("sword", 4)
-		logic.update_table_cards (card1)
-		aux := logic.current_game_points;
-		logic.update_table_cards (card2)
-		logic.update_table_cards (card3)
-		logic.update_table_cards (card4)
-		if not (aux = logic.current_game_points) then
-			worked_well := true;
-		end
-		assert ("update_table_cards_1 ok", worked_well)
- 	end
 
 
 
@@ -934,8 +839,6 @@ feature -- test for: hwo_is_current_player and hwo_is_next_player
  		create player2.make (2,2)
  		create player3.make (3,1)
  		create player4.make (4,2)
- 		logic.set_team (player1,player3,1)
- 		logic.set_team (player2,player4,2)
 
  		--player_current := logic.hwo_is_current_player (player1)
  		worked_well := player_current.get_player_id>=1 and player_current.get_player_id<=4

@@ -987,98 +987,8 @@ feature -- manipulate the points
 
 
 
+feature -- Useful information to determine who has to do something
 
---  --------------------------------------------------------------------------------------------
-
---	hwo_is_next_player(player: TR_PLAYER):TR_PLAYER
---	do
---		if
---                                       player.get_player_id<4
---                               then
---                                       result:=all_players[player.get_player_id]
-
---                                       else
---                                               result:=all_players[0]
---                               end
--- end
-
---------------------------------------------------------------------------------------
-
-
-
-
---end_round()
---local
---c:TR_CARD
---do
---        create c.make ("",0)
---        c.set_to_void
---        all_players[0].set_player_current_card (c)
---        all_players[1].set_player_current_card (c)
---        all_players[2].set_player_current_card (c)
---        all_players[3].set_player_current_card (c)
-
---        if
---                all_players[1].get_player_posistion=deck_card_winner(deck_cards)
---                or all_players[3].get_player_posistion=deck_card_winner(deck_cards)
---        then
---                rounds.put (2,round_number-1)
---                game_state_obj.set_round (2,round_number-1)
---        else
---        rounds.put (1,round_number-1)
---        game_state_obj.set_round (1,round_number-1)
-
---        end
---        round_number:=round_number+1
---        game_state_obj.set_round_number (round_number)
---        if round_number=4 then end_hand
---        end
---  end
---------------------------------------------------------------------------------------
-
-
---deck_card_winner(the_card_in_array:ARRAY[TR_CARD]):INTEGER
---                local
---                        max:INTEGER
---                        i:INTEGER
---                        index:INTEGER
---                do
---                max:= -1
---                        from i:=0
---                        until i>3
---                        loop
---                                if the_card_in_array[i].get_card_weight_truco>max
---                                then
---                                        max := the_card_in_array[i].get_card_weight_truco
---                                        index:=i
---                                end
---                                i:=i+1
---                        end
---                        result := index
---                end
-
---------------------------------------------------------------------------------------
-
-
-
-
-
---	set_current_player_id(id:INTEGER)
---	do
---		game_state_obj.get_the_player_turn_id
---		current_player_id:=id
---		game_state_obj.set_the_player_turn_id (current_player_id)
---   end
-
---	get_current_player_id():INTEGER
---      do
---           result:=current_player_id
---     end
-
---	hwo_is_current_player ():TR_PLAYER
---	do
---		result:=all_players[game_state_obj.get_the_player_turn_id-1]
---	end
 
 	do_i_have_to_play(id : INTEGER) : BOOLEAN
 	do
@@ -1090,43 +1000,10 @@ feature -- manipulate the points
 		result := game_state_obj.do_i_have_to_answer_a_bet (id)
 	end
 
-
-
-player_id_who_is_dealer: INTEGER
-do
-        result:=current_dealer_id
-end
-
------------------------this function has no meanning or not used --------------------
-
-   update_player_scores(player:TR_PLAYER;points:INTEGER)
-                do
-                --ask  TR_PLAYER.set_score(current_score+points)
-   end
-
-
-
-  set_team(player_1,player_2:TR_PLAYER; the_team_id:INTEGER)
-                        do
-                        --player_1.set_team_id(the_team_id)
-                        --player_2.set_team_id(the_team_id)
-                        end
-
-        update_table_cards(played_card:TR_CARD)
-                do
-                -- put the card to table array cards
-                -- if array ==4
-                   -- update the state and count points
-                end
-
-        update_player_cards(player:TR_PLAYER;played_card:TR_CARD)
-                do
-                --delete the card from cards array
-                -- add it ti deck cards
-
-                end
-
-------------------------------------------
+	who_dealt : INTEGER
+	do
+	        result := game_state_obj.who_dealt
+	end
 
 
 end
