@@ -43,6 +43,8 @@ feature {ANY,TR_TEST_LOGIC}
 		p:TR_PLAYER-- used to initialize the all_players array
 		d:TR_CARD
 	do
+		create BC
+
 		create game_state_obj.make
 		create  p.make(0,0)-- create the player with id=0, teamid = 0
 		create d.make ("",0)--  ceate card
