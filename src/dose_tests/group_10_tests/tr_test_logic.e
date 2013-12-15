@@ -469,13 +469,15 @@ feature -- test for : is_envido_allowed is_real_envido_allowed is_falta_envido_a
     test_is_real_envido_allowed_1
 	local
 	 	logic : TR_LOGIC
-	 	player : TR_PLAYER
+	 	player, player2 : TR_PLAYER
 		real_envido_allowed : BOOLEAN
 	do
  	 	create logic.make
  	 	create player.make (1, 1)
+  	 	create player2.make (2, 2)
  	 	--real envido should be allowed if no one said it
- 	 	real_envido_allowed := logic.is_real_envido_allowed (player)
+ 		logic.send_envido (1)
+ 	 	real_envido_allowed := logic.is_real_envido_allowed (player2)
  		assert ("is_real_envido_allowed_1 ok", real_envido_allowed )
 	end
 
@@ -483,15 +485,18 @@ feature -- test for : is_envido_allowed is_real_envido_allowed is_falta_envido_a
 	local
 	 	logic : TR_LOGIC
 	 	player : TR_PLAYER
-	 	player2 : TR_PLAYER
+	 	player2, player3 : TR_PLAYER
 		real_envido_allowed : BOOLEAN
 	do
  	 	create logic.make
  	 	create player.make (1, 1)
  	 	create player2.make (2, 2)
+ 	 	create player2.make (3, 1)
  	 	--real envido should not be allowed if someone said it
- 	 	real_envido_allowed := logic.is_real_envido_allowed (player)
+ 	 	logic.send_envido (1)
  	 	real_envido_allowed := logic.is_real_envido_allowed (player2)
+ 	 	logic.send_re_envido (2)
+ 	 	real_envido_allowed := logic.is_real_envido_allowed (player3)
  		assert ("is_real_envido_allowed_2 ok", not real_envido_allowed )
 	end
 
@@ -508,6 +513,7 @@ feature -- test for : is_envido_allowed is_real_envido_allowed is_falta_envido_a
  	 	create player2.make (2, 2)
  	 	--real envido should be allowed if someone said envido
  	 	envido_allowed := logic.is_envido_allowed (player)
+ 	 	logic.send_envido (1)
  	 	real_envido_allowed := logic.is_real_envido_allowed (player2)
  		assert ("is_real_envido_allowed_3 ok", real_envido_allowed )
 	end
@@ -524,7 +530,8 @@ feature -- test for : is_envido_allowed is_real_envido_allowed is_falta_envido_a
  	 	create player.make (1, 1)
  	 	create player2.make (2, 1)
  	 	--real envido should not be allowed if someone from your team said envido
- 	 	envido_allowed := logic.is_envido_allowed (player)
+ 	 	envido_allowed := logic.is_envido_allowed (player2)
+ 	 	logic.send_envido (1)
  	 	real_envido_allowed := logic.is_real_envido_allowed (player2)
  		assert ("is_real_envido_allowed_3 ok", not real_envido_allowed )
 	end
