@@ -3018,9 +3018,9 @@ feature -- test bet_available and team_bet_available
 
 		create resultat.make_empty
 
-		resultat := ai.send_truco_difficulty (game_state, players.at (id_player-1), card_player , played_cards, players.at (id_team_mate-1), card_team_mate,team_mate_played_cards)
+		resultat := ai.send_truco_difficulty (game_state, players.at (id_player-1), card_player, played_cards, players.at (id_team_mate-1), card_team_mate,team_mate_played_cards)
 		print("le resultat est : " + resultat)
-		worked := resultat.is_equal ("truco") or resultat.is_equal("")
+		worked := resultat.is_equal ("truco") or resultat.is_empty
 		assert ("test of play_card_difficult ok", worked)
 	end
 
