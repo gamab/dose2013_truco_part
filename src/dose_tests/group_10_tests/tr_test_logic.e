@@ -656,11 +656,14 @@ test_send_envido
 	local
 		logic : TR_LOGIC
 		worked_well:BOOLEAN
+		BC: TR_BET_CONSTANTS
 	do
+		create BC
 		create logic.make
 		worked_well := false
-			logic.send_re_envido (1)
-			if logic.get_current_bet.is_equal ("re_envido") then
+			logic.send_envido (1)
+			logic.send_re_envido (2)
+			if logic.get_current_bet.is_equal (BC.real_envido) then
 				worked_well := true
 			end
 		assert ("send_re_envido ok",worked_well)
@@ -716,13 +719,16 @@ test_send_re_truco
 	local
 		logic : TR_LOGIC
 		worked_well:BOOLEAN
+		BC: TR_BET_CONSTANTS
 	do
+		create BC
 		create logic.make
 		worked_well := false
-			logic.send_re_truco (1)
-			if logic.get_current_bet = "re_truco" then
-				worked_well := true
-			end
+		logic.send_truco (1)
+		logic.send_re_truco (2)
+		if logic.get_current_bet.is_equal (BC.retruco) then
+			worked_well := true
+		end
 		assert ("send_re_truco",worked_well)
 	end
 
