@@ -29,7 +29,6 @@ feature{TR_LOGIC}
 	end_game				:BOOLEAN--true if and only if the end of the hand and be false otherwise
 	action					:BOOLEAN
 
-
 	who_dealt				: INTEGER -- who was the one who dealt the card
 
 	bc 						: TR_BET_CONSTANTS
@@ -208,7 +207,6 @@ feature{ANY}
 
 
 	is_envido_allowed(player: TR_PLAYER) : BOOLEAN
-
 	do
 		result:=is_first_round and current_bet.is_equal ("")
 	end
@@ -237,8 +235,6 @@ feature{ANY}
 	do
 		result:=(current_bet.is_equal (bc.retruco)  and (local_player.get_player_team_id /=betting_team))
 	end
-
-
 
 	set_action()
 	do
