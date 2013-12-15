@@ -28,9 +28,9 @@ feature{NONE,TR_TEST_LOGIC}
 --		action					:BOOLEAN--never mind
 --		who_bet_id				:INTEGER
 		game_state_obj			:TR_GAME_STATE
-		the_end_of_the_hand		:BOOLEAN
+--		the_end_of_the_hand		:BOOLEAN
 		final_winner			:INTEGER
-			current_player_id	:INTEGER
+--			current_player_id	:INTEGER
 			current_dealer_id	:INTEGER
 
 		BC						: TR_BET_CONSTANTS
@@ -62,8 +62,9 @@ feature {ANY,TR_TEST_LOGIC}
 		game_state_obj.update_deck_cards (deck_cards)
 		create cards.make_filled (d,0,39)-- all cards in the game
 
-		game_state_obj.set_the_player_turn_id (current_player_id)
-		current_player_id:=1
+
+--		current_player_id:=1
+		game_state_obj.set_the_player_turn_id (1)
 
 --		current_game_points:=0
 		game_state_obj.set_current_game_points (0)
@@ -77,7 +78,7 @@ feature {ANY,TR_TEST_LOGIC}
 		pos:=0
 		current_dealer_id:=0
 
-		the_end_of_the_hand:=false
+--		the_end_of_the_hand:=false
 		game_state_obj.set_end_hand_to_false
 		put_the_cards
 		make_cards_random_order
@@ -263,7 +264,7 @@ feature -- Working with cards
 		-- incrementing the id person who has to play
 		game_state_obj.set_the_player_turn_id (game_state_obj.who_dealt)
 		game_state_obj.inc_the_player_turn_id
-		current_player_id := game_state_obj.the_player_turn_id
+--		current_player_id := game_state_obj.the_player_turn_id
 		-- setting the round number to 1
 --		round_number := 1
 		game_state_obj.set_round_number (1)
@@ -555,7 +556,8 @@ feature -- Bets
 			add_points := game_state_obj.get_current_game_points
 
 			-- we set that the hand is ended
-			the_end_of_the_hand := True
+--			the_end_of_the_hand := True
+			game_state_obj.set_end_hand
 
 		-- ENVIDO		
 		elseif current_bet.is_equal (BC.envido) or current_bet.is_equal (BC.real_envido) or current_bet.is_equal (BC.falta_envido) then
@@ -689,7 +691,7 @@ feature -- Working with the gmae_state
 	do
 		game_state_obj:=the_game_state
 --		rounds:=game_state_obj.get_round
-		current_player_id:=game_state_obj.the_player_turn_id
+--		current_player_id:=game_state_obj.the_player_turn_id
 --		round_number:=game_state_obj.get_round_number
 --		team1_score:=game_state_obj.get_team1_score
 --		team2_score:=game_state_obj.get_team2_score
@@ -702,7 +704,7 @@ feature -- Working with the gmae_state
 --		action:=game_state_obj.get_action
 --		all_players:=game_state_obj.get_all_players
 		current_dealer_id := game_state_obj.who_dealt
-		the_end_of_the_hand := game_state_obj.end_hand
+--		the_end_of_the_hand := game_state_obj.end_hand
 	end
 
 
@@ -895,11 +897,11 @@ feature -- end of rounds
 		if round_number = 1 or round_number = 2 then
 			round_number := round_number+1
 			game_state_obj.set_round_number (round_number)
-			the_end_of_the_hand:=False
+--			the_end_of_the_hand:=False
 			game_state_obj.set_end_hand_to_false
 		-- else we call ed of hand
 		elseif round_number = 3 then
-			the_end_of_the_hand:=True
+--			the_end_of_the_hand:=True
 			game_state_obj.set_end_hand
 		end
 	end
@@ -916,7 +918,7 @@ feature -- end of hand
 
 	is_hand_ended :BOOLEAN
 	do
-		result:=the_end_of_the_hand
+		result:=game_state_obj.end_hand
 	end
 
 
@@ -926,7 +928,7 @@ feature -- end of hand
 		rounds : ARRAY[INTEGER]
 	do
 		-- we remember this is the end of the hand
-		the_end_of_the_hand:=True
+--		the_end_of_the_hand:=True
 		game_state_obj.set_end_hand
 
 		-- we empty the rounds winners array
