@@ -80,7 +80,7 @@ feature {ANY,TR_TEST_LOGIC}
 		game_state_obj.set_who_dealt(0)
 
 --		the_end_of_the_hand:=false
-		game_state_obj.set_end_hand_to_false
+		game_state_obj.set_end_hand
 		put_the_cards
 		make_cards_random_order
 	end
@@ -828,7 +828,7 @@ feature --new hand
 
 	is_new_hand : BOOLEAN
 	do
-		result := game_state_obj.the_deck_cards.at (0).get_card_type.is_empty and game_state_obj.round_number = 1
+		result := game_state_obj.the_deck_cards.at (0) = Void and game_state_obj.round_number = 1
 	end
 
 	new_hand

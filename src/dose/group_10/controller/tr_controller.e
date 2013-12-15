@@ -699,7 +699,7 @@ feature {NONE}
 			produce_player_array
 				-- set players in logic
 
-			logic.dealer
+			logic.new_hand
 				-- shuffles deck etc
 
 			Result := client.send_to_everyone (logic.get_current_game_state)
