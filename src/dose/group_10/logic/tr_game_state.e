@@ -225,7 +225,7 @@ feature{ANY}
 
 	is_truco_allowed(player: TR_PLAYER) :BOOLEAN
 	do
-		result:=(current_bet.is_equal (""))
+		result:=(not current_bet.is_equal (bc.truco) and not current_bet.is_equal (bc.retruco) and not current_bet.is_equal (bc.vale_cuatro))
 	end
 
 	is_retruco_allowed(local_player: TR_PLAYER):BOOLEAN
