@@ -13,7 +13,7 @@ create
 feature{NONE,TR_TEST_LOGIC}
 
 			cards				:ARRAY[TR_CARD]-- all game cards =  40 card
-		deck_cards				:ARRAY[TR_CARD]-- the cards on deck it will be only 4 cards
+--		deck_cards				:ARRAY[TR_CARD]-- the cards on deck it will be only 4 cards
 		rounds					:ARRAY[INTEGER]-- save the id of winners in every round
 --		all_players				:ARRAY[TR_PLAYER]-- the 4 players array
 
@@ -43,6 +43,7 @@ feature {ANY,TR_TEST_LOGIC}
 		p:TR_PLAYER-- used to initialize the all_players array
 		d:TR_CARD
 		all_players : ARRAY[TR_PLAYER]
+		deck_cards : ARRAY[TR_CARD]
 	do
 		create BC
 
@@ -271,10 +272,12 @@ feature -- Working with cards
 		new_player_turn: INTEGER
 		player_current_cards:ARRAY[TR_CARD]
 		all_players : ARRAY[TR_PLAYER]
+		deck_cards : ARRAY[TR_CARD]
 	do
 		all_players := game_state_obj.get_all_players
 		local_player.set_player_current_card (card)
 		create player_current_cards.make_from_array (local_player.get_player_cards)-- put player card here
+		deck_cards := game_state_obj.get_deck_cards
 		deck_cards.put (card.deep_twin,(local_player.get_player_posistion-1))
 		game_state_obj.update_deck_cards (deck_cards)
 		from
@@ -682,7 +685,7 @@ feature -- Working with the gmae_state
 		current_bet:=game_state_obj.get_current_bet
 		who_bet_id:=game_state_obj.get_who_bet_id
 		-- win_round (game_state_obj.get_winner_round)
-		deck_cards:=game_state_obj.get_deck_cards
+--		deck_cards:=game_state_obj.get_deck_cards
 		action:=game_state_obj.get_action
 --		all_players:=game_state_obj.get_all_players
 		current_dealer_id := game_state_obj.who_dealt
@@ -885,7 +888,7 @@ feature -- end of rounds
 	is_end_round():BOOLEAN
 		-- return wether this is the end of the round or not
 	do
-		result:=not(deck_cards[3].get_card_type.is_equal(""))
+		result:=not(game_state_obj.get_deck_cards[3].get_card_type.is_equal(""))
 	end
 
 
@@ -898,6 +901,8 @@ feature -- end of hand
 
 
 	end_hand
+	local
+		deck_cards : ARRAY[TR_CARD]
 	do
 		-- we remember this is the end of the hand
 		the_end_of_the_hand:=True
