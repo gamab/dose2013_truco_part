@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="dose_client_graphic" uuid="B648E7A4-0C71-47F5-9F98-BED8B157ADC6">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="dose_truco_part" uuid="B648E7A4-0C71-47F5-9F98-BED8B157ADC6">
 	<target name="dose">
 		<root cluster="main_ui" class="APPLICATION" feature="make_and_launch"/>
 		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="provisional">
