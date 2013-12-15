@@ -824,6 +824,44 @@ feature -- modifying and getting rounds
 		result:=game_state_obj.is_first_round
 	end
 
+feature --new hand
+
+	is_new_hand : BOOLEAN
+	do
+		result := game_state_obj.the_deck_cards.at (0).get_card_type.is_empty and game_state_obj.round_number = 1
+	end
+
+	new_hand
+		-- restarts a hand
+	require
+		hand_is_ended : is_hand_ended
+	local
+		deck_cards : ARRAY[TR_CARD]
+		rounds : ARRAY[INTEGER]
+	do
+		-- we empty the rounds winners array
+		create rounds.make_filled (-1,0,2)
+		game_state_obj.set_rounds(rounds)
+
+		-- there is no more actions
+		game_state_obj.remove_action
+
+		-- there is no more bets
+		game_state_obj.set_current_bet ("")
+
+		-- the cards played have to be deleted from the table
+		create deck_cards.make_filled (Void, 0, 3)
+		game_state_obj.update_deck_cards (deck_cards)
+
+		-- we deal the cards
+		dealer
+
+		-- setting the current game point to one
+		game_state_obj.set_current_game_points (1)
+
+		-- set the hand as not ended
+		game_state_obj.set_end_hand_to_false
+	end
 
 feature -- end of rounds
 
@@ -911,32 +949,12 @@ feature -- end of hand
 	end_hand
 	require
 		there_is_a_winner : is_there_a_winner_of_the_hand
-	local
-		deck_cards : ARRAY[TR_CARD]
-		rounds : ARRAY[INTEGER]
 	do
 		-- we remember this is the end of the hand
 		game_state_obj.set_end_hand
 
-		-- we empty the rounds winners array
-		create rounds.make_filled (-1,0,2)
-		game_state_obj.set_rounds(rounds)
-
-		-- there is no more actions
-		game_state_obj.remove_action
-
-		-- there is no more bets
-		game_state_obj.set_current_bet ("")
-
-		-- the cards played have to be deleted from the table
-		create deck_cards.make_filled (Void, 0, 3)
-		game_state_obj.update_deck_cards (deck_cards)
-
-		-- we deal the cards
-		dealer
-
-		-- setting the current game point to one
-		game_state_obj.set_current_game_points (1)
+		-- we add the game_points to the winning team
+		add_to_team_points(which_team_won_the_hand,game_state_obj.current_game_points)
 	end
 
 	which_team_won_the_hand : INTEGER
@@ -1033,7 +1051,6 @@ feature -- end of hand
 		result := there_is_a_winner
 	end
 
-
 feature -- end of game
 
 	is_end_of_game : BOOLEAN
@@ -1125,11 +1142,6 @@ feature -- Useful information to determine who has to do something
 	who_dealt : INTEGER
 	do
 	        result := game_state_obj.who_dealt
-	end
-
-	is_new_hand : BOOLEAN
-	do
-		result := game_state_obj.the_deck_cards.at (0).get_card_type.is_empty and game_state_obj.round_number = 1
 	end
 
 end
