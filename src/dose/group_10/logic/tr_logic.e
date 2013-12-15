@@ -1063,34 +1063,32 @@ feature -- manipulate the points
 
 
 
-  set_current_player_id(id:INTEGER)
-     do
-          current_player_id:=id
-          game_state_obj.set_the_player_turn_id (current_player_id)
-   end
+--	set_current_player_id(id:INTEGER)
+--	do
+--		game_state_obj.get_the_player_turn_id
+--		current_player_id:=id
+--		game_state_obj.set_the_player_turn_id (current_player_id)
+--   end
 
-   get_current_player_id():INTEGER
-      do
-           result:=current_player_id
-     end
+--	get_current_player_id():INTEGER
+--      do
+--           result:=current_player_id
+--     end
 
-   hwo_is_current_player ():TR_PLAYER
-       do
+--	hwo_is_current_player ():TR_PLAYER
+--	do
+--		result:=all_players[game_state_obj.get_the_player_turn_id-1]
+--	end
 
-        result:=all_players[get_current_player_id-1]
-     end
+	do_i_have_to_play(id : INTEGER) : BOOLEAN
+	do
+		result:=game_state_obj.do_i_have_to_play (id)
+	end
 
-do_i_have_to_play(id : INTEGER) : BOOLEAN
-
-do
-        result:= not(action) and (get_current_player_id=id)
- end
-
-do_i_have_to_answer_a_bet(id : INTEGER) : BOOLEAN
-
-do
-result := (action) and ((who_bet_id \\ 4)+1 = id)
-end
+	do_i_have_to_answer_a_bet(id : INTEGER) : BOOLEAN
+	do
+		result := game_state_obj.do_i_have_to_answer_a_bet (id)
+	end
 
 
 
