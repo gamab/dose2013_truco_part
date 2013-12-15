@@ -626,170 +626,8 @@ feature {ANY,TR_TEST_LOGIC}
 
 ---------------------------------------------------------------------------------------------------------------------
 
-	is_end_of_game : BOOLEAN
-	do
-		result := (game_state_obj.team1_score>=24 or game_state_obj.team2_score >= 24)
-	end
-
-feature
-
-	get_id_from_position_in_round (position : INTEGER) : INTEGER
-		-- returns a player ID from it's position in the round
-	require
-		position_is_possible : position >= 1 and position <= 4
-	local
-		i : INTEGER
-		players : ARRAY[TR_PLAYER]
-		id : INTEGER
-		found : BOOLEAN
-	do
-		players := game_state_obj.get_all_players
-		from
-			id := -1
-			i := players.lower
-		until
-			i > players.upper or found
-		loop
-			if players.at (i).get_player_posistion = position then
-				id := i + 1
-				found := True
-			end
-			i := i + 1
-		end
-
-		result := id
-
-	ensure
-		we_found_the_player : result /= -1
-	end
 
 
-	who_played_the_first_best_card : INTEGER
-		-- returns the player who played the first best card in the round
-	require
-		round_ended : game_state_obj.rounds.at (game_state_obj.rounds.upper) /= -1
-	local
-		table_cards : ARRAY[TR_CARD]
-		i : INTEGER
-		max_weight : INTEGER
-		position_max : INTEGER
-	do
-		from
-			-- we get the cards and we remember the weight of the first card
-			table_cards := game_state_obj.the_deck_cards
-			position_max := table_cards.lower
-			max_weight := table_cards.at (position_max).get_card_weight_truco
-			i := table_cards.lower + 1
-		until
-			i > table_cards.upper
-		loop
-			-- if the current card is better than the old one we remember its position and weight
-			if max_weight < table_cards.at (i).get_card_weight_truco then
-				max_weight := table_cards.at (i).get_card_weight_truco
-				position_max := i
-			end
-			i := i + 1
-		end
-		-- if there is more than one best card then there is a draw
-		result := get_id_from_position_in_round(position_max + 1)
-	end
-
-----------------------------------------------------------------------------------------------------------------------
-feature -- end of rounds
-
-	is_there_a_draw : BOOLEAN
-		-- returns if there is a draw or not in the current round
-	require
-		round_ended : game_state_obj.rounds.at (game_state_obj.rounds.upper) /= -1
-	local
-		table_cards : ARRAY[TR_CARD]
-		i : INTEGER
-		count : INTEGER
-		max_weight : INTEGER
-		position_max : INTEGER
-	do
-		from
-			-- we get the cards and we remember the weight of the first card
-			table_cards := game_state_obj.the_deck_cards
-			count := 1
-			position_max := table_cards.lower
-			max_weight := table_cards.at (position_max).get_card_weight_truco
-			i := table_cards.lower + 1
-		until
-			i > table_cards.upper
-		loop
-			-- if the current card is better than the old one we remember its weight
-			if max_weight < table_cards.at (i).get_card_weight_truco then
-				max_weight := table_cards.at (i).get_card_weight_truco
-				position_max := i
-				count := 1
-			-- if the current card is as good as the old one
-			-- and it is not my friends card
-			-- we remember there is another better card
-			elseif max_weight = table_cards.at (i).get_card_weight_truco and (i = position_max + 1 or i = position_max + 3) then
-				count := count + 1
-			end
-			i := i + 1
-		end
-		-- if there is more than one best card then there is a draw
-		result := count > 1
-	end
-
-	win_round(winner_id:INTEGER)
-		-- set who wins the round (0 if it is a draw)
-		-- in case of draw the winner must be the first to have play the highest card
-	require
-		round_ended : game_state_obj.rounds.at (game_state_obj.rounds.upper) /= -1
-		id_possible : winner_id >= 1 and winner_id <= 3
-	local
-		draw : BOOLEAN
-	do
-		-- we get the round number from the game state
-		round_number := game_state_obj.round_number
-
-		-- first we look if there is a draw
-		draw := is_there_a_draw
-
-		-- if there is a draw we put that the winning player is 0	
-		if draw then
-			rounds.put (0,round_number-1)
-			game_state_obj.set_round (0, round_number - 1)
-		else
-			rounds.put (winner_id,round_number-1)
-			game_state_obj.set_round (winner_id, round_number - 1)
-		end
-
-		-- then we set the winner of the round
-		set_players_positions(winner_id)
-		game_state_obj.set_winner_round (winner_id)
-	end
-
-
-	end_round
-		-- Make all modification necessary to the end of the round
-		-- set the end of the hand to true in case it was the last round
-	local
-		winner_id : INTEGER
-	do
-		-- first we search for the best player
-		winner_id := who_played_the_first_best_card
-
-		-- then we call win round that set the winner of the round and does the necessary modifications
-		win_round(winner_id)
-
-		-- if we are in the first or second round
-		-- we just go to the next round
-		if round_number = 1 or round_number = 2 then
-			round_number := round_number+1
-			game_state_obj.set_round_number (round_number)
-			the_end_of_the_hand:=False
-			game_state_obj.set_end_hand_to_false
-		-- else we call ed of hand
-		elseif round_number = 3 then
-			the_end_of_the_hand:=True
-			game_state_obj.set_end_hand
-		end
-	end
 -------------------------------------------------------------------------------------------
 
 
@@ -861,6 +699,8 @@ feature -- end of rounds
    end
 --------------------------------------------------------------------------------------------------------------------------
 
+feature -- end of hand
+
 	is_hand_ended():BOOLEAN
 	do
 		result:=the_end_of_the_hand
@@ -916,7 +756,183 @@ feature -- end of rounds
 		end
 		game_state_obj.set_all_players (all_players)
 	end
--------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------------------------
+feature -- control and search for information
+
+	get_id_from_position_in_round (position : INTEGER) : INTEGER
+		-- returns a player ID from it's position in the round
+	require
+		position_is_possible : position >= 1 and position <= 4
+	local
+		i : INTEGER
+		players : ARRAY[TR_PLAYER]
+		id : INTEGER
+		found : BOOLEAN
+	do
+		players := game_state_obj.get_all_players
+		from
+			id := -1
+			i := players.lower
+		until
+			i > players.upper or found
+		loop
+			if players.at (i).get_player_posistion = position then
+				id := i + 1
+				found := True
+			end
+			i := i + 1
+		end
+
+		result := id
+
+	ensure
+		we_found_the_player : result /= -1
+	end
+
+
+	who_played_the_first_best_card : INTEGER
+		-- returns the player who played the first best card in the round
+	require
+		round_ended : is_end_round
+	local
+		table_cards : ARRAY[TR_CARD]
+		i : INTEGER
+		max_weight : INTEGER
+		position_max : INTEGER
+	do
+		from
+			-- we get the cards and we remember the weight of the first card
+			table_cards := game_state_obj.the_deck_cards
+			position_max := table_cards.lower
+			max_weight := table_cards.at (position_max).get_card_weight_truco
+			i := table_cards.lower + 1
+		until
+			i > table_cards.upper
+		loop
+			-- if the current card is better than the old one we remember its position and weight
+			if max_weight < table_cards.at (i).get_card_weight_truco then
+				max_weight := table_cards.at (i).get_card_weight_truco
+				position_max := i
+			end
+			i := i + 1
+		end
+		-- if there is more than one best card then there is a draw
+		result := get_id_from_position_in_round(position_max + 1)
+	end
+
+	is_there_a_draw : BOOLEAN
+		-- returns if there is a draw or not in the current round
+	require
+		round_ended : is_end_round
+	local
+		table_cards : ARRAY[TR_CARD]
+		i : INTEGER
+		count : INTEGER
+		max_weight : INTEGER
+		position_max : INTEGER
+	do
+		from
+			-- we get the cards and we remember the weight of the first card
+			table_cards := game_state_obj.the_deck_cards
+			count := 1
+			position_max := table_cards.lower
+			max_weight := table_cards.at (position_max).get_card_weight_truco
+			i := table_cards.lower + 1
+		until
+			i > table_cards.upper
+		loop
+			-- if the current card is better than the old one we remember its weight
+			if max_weight < table_cards.at (i).get_card_weight_truco then
+				max_weight := table_cards.at (i).get_card_weight_truco
+				position_max := i
+				count := 1
+			-- if the current card is as good as the old one
+			-- and it is not my friends card
+			-- we remember there is another better card
+			elseif max_weight = table_cards.at (i).get_card_weight_truco and (i = position_max + 1 or i = position_max + 3) then
+				count := count + 1
+			end
+			i := i + 1
+		end
+		-- if there is more than one best card then there is a draw
+		result := count > 1
+	end
+
+feature -- end of rounds
+
+	win_round(winner_id:INTEGER)
+		-- set who wins the round (0 if it is a draw)
+		-- in case of draw the winner must be the first to have play the highest card
+	require
+		round_ended : is_end_round
+		id_possible : winner_id >= 1 and winner_id <= 3
+	local
+		draw : BOOLEAN
+	do
+		-- we get the round number from the game state
+		round_number := game_state_obj.round_number
+
+		-- first we look if there is a draw
+		draw := is_there_a_draw
+
+		-- if there is a draw we put that the winning player is 0	
+		if draw then
+			rounds.put (0,round_number-1)
+			game_state_obj.set_round (0, round_number - 1)
+		else
+			rounds.put (winner_id,round_number-1)
+			game_state_obj.set_round (winner_id, round_number - 1)
+		end
+
+		-- then we set the winner of the round
+		set_players_positions(winner_id)
+		game_state_obj.set_winner_round (winner_id)
+	end
+
+
+	end_round
+		-- Make all modification necessary to the end of the round
+		-- set the end of the hand to true in case it was the last round
+	require
+		round_ended : is_end_round
+	local
+		winner_id : INTEGER
+	do
+		-- first we search for the best player
+		winner_id := who_played_the_first_best_card
+
+		-- then we call win round that set the winner of the round and does the necessary modifications
+		win_round(winner_id)
+
+		-- if we are in the first or second round
+		-- we just go to the next round
+		if round_number = 1 or round_number = 2 then
+			round_number := round_number+1
+			game_state_obj.set_round_number (round_number)
+			the_end_of_the_hand:=False
+			game_state_obj.set_end_hand_to_false
+		-- else we call ed of hand
+		elseif round_number = 3 then
+			the_end_of_the_hand:=True
+			game_state_obj.set_end_hand
+		end
+	end
+
+
+	is_end_round():BOOLEAN
+		-- return wether this is the end of the round or not
+	do
+		result:=not(deck_cards[3].get_card_type.is_equal(""))
+	end
+
+
+feature -- end of game
+
+	is_end_of_game : BOOLEAN
+	do
+		result := (game_state_obj.team1_score>=24 or game_state_obj.team2_score >= 24)
+	end
 
 	end_game()
 	require
@@ -928,6 +944,9 @@ feature -- end of rounds
 			final_winner:= 2
 		end
 	end
+
+
+
 
 
 
@@ -979,12 +998,7 @@ feature -- end of rounds
 
 ------------------------------------------------------------------------------------
 
-  is_end_round():BOOLEAN
-do
 
-result:=not(deck_cards[3].get_card_type.is_equal(""))
-
-end
 
 
 --end_round()
