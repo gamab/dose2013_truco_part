@@ -18,7 +18,7 @@ feature{NONE,TR_TEST_LOGIC}
 --		all_players				:ARRAY[TR_PLAYER]-- the 4 players array
 
 		pos						:INTEGER -- counter for cards
-		round_number			:INTEGER-- the round number 1  2  3
+--		round_number			:INTEGER-- the round number 1  2  3
 		team1_score				:INTEGER-- score of the team1
 		team2_score				:INTEGER--score of the team2
 		betting_team			:INTEGER-- The team hwo send last bet
@@ -68,8 +68,7 @@ feature {ANY,TR_TEST_LOGIC}
 		current_game_points:=0
 		game_state_obj.set_current_game_points (current_game_points)
 
-		round_number:=1
-		game_state_obj.set_round_number (round_number)
+		game_state_obj.set_round_number (1)
 
 		current_bet:=""
 		game_state_obj.set_current_bet (current_bet)
@@ -265,7 +264,7 @@ feature -- Working with cards
 		game_state_obj.inc_the_player_turn_id
 		current_player_id := game_state_obj.the_player_turn_id
 		-- setting the round number to 1
-		round_number := 1
+--		round_number := 1
 		game_state_obj.set_round_number (1)
 		-- setting the positions of the players
 		set_players_positions (game_state_obj.the_player_turn_id)
@@ -685,7 +684,7 @@ feature -- Working with the gmae_state
 		game_state_obj:=the_game_state
 --		rounds:=game_state_obj.get_round
 		current_player_id:=game_state_obj.the_player_turn_id
-		round_number:=game_state_obj.get_round_number
+--		round_number:=game_state_obj.get_round_number
 		team1_score:=game_state_obj.get_team1_score
 		team2_score:=game_state_obj.get_team2_score
 		betting_team:=game_state_obj.get_betting_team
@@ -812,7 +811,7 @@ feature -- modifying and getting rounds
 
 	set_round_number(num:INTEGER)--rounds seeter and getter will used by AI
 	do
-		round_number:=num
+--		round_number:=num
 		game_state_obj.set_round_number (num)
 	end
 
@@ -843,6 +842,7 @@ feature -- end of rounds
 	local
 		draw : BOOLEAN
 		rounds : ARRAY[INTEGER]
+		round_number : INTEGER
 	do
 		-- we get the round number from the game state
 		round_number := game_state_obj.round_number
@@ -873,7 +873,11 @@ feature -- end of rounds
 		round_ended : is_end_round
 	local
 		winner_id : INTEGER
+		round_number : INTEGER
 	do
+		-- we retrieve the round number
+		round_number := game_state_obj.get_round_number
+
 		-- first we search for the best player
 		winner_id := who_played_the_first_best_card
 
