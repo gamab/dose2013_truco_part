@@ -537,7 +537,7 @@ feature -- Bets
 -------------------------------------------
 
 	send_reject(team:INTEGER)
-		-- makes changes considering this team rejected te current_bet 
+		-- makes changes considering this team rejected te current_bet
 	require
 		team_exists : team >= 1 and team <= 2
 	local
@@ -988,21 +988,21 @@ feature -- manipulate the points
 
 
 
-  --------------------------------------------------------------------------------------------
+--  --------------------------------------------------------------------------------------------
 
-   hwo_is_next_player(player: TR_PLAYER):TR_PLAYER
-                        do
-                               if
-                                       player.get_player_id<4
-                               then
-                                       result:=all_players[player.get_player_id]
+--	hwo_is_next_player(player: TR_PLAYER):TR_PLAYER
+--	do
+--		if
+--                                       player.get_player_id<4
+--                               then
+--                                       result:=all_players[player.get_player_id]
 
-                                       else
-                                               result:=all_players[0]
-                               end
- end
+--                                       else
+--                                               result:=all_players[0]
+--                               end
+-- end
 
-------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
 
 
 
