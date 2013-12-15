@@ -74,6 +74,7 @@ feature {ANY,TR_TEST_LOGIC}
 	end
 
 
+feature -- Working with cards
 
 ----------------------------PUT_THE_CARDS-------------------------------------------
 
@@ -205,24 +206,7 @@ feature {ANY,TR_TEST_LOGIC}
 		c[size] := tmp
 	end
 
-----------------------------------------------------------------------------
 
-	set_player_info(a_name:STRING ;  a_id, a_team_id:INTEGER)-- will used by controller to send information
-	local
-		player : TR_PLAYER
-	do
-		create player.make (a_id, a_team_id)
-		player.set_player_name(a_name)
-		all_players[a_id-1] := player
-		game_state_obj.set_all_players (all_players)
-	end
-
------------------------------------------------------------
-
-	get_players():ARRAY[TR_PLAYER]
-	do
-		result := game_state_obj.get_all_players
-	end
 -----------------------------------------------------------
 	get_cards():ARRAY[TR_CARD]
 	do
@@ -283,26 +267,35 @@ feature {ANY,TR_TEST_LOGIC}
 		set_players_positions (game_state_obj.the_player_turn_id)
 	end
 
---------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
-	set_round_number(num:INTEGER)--rounds seeter and getter will used by AI
+	set_player_info(a_name:STRING ;  a_id, a_team_id:INTEGER)-- will used by controller to send information
+	local
+		player : TR_PLAYER
 	do
-		round_number:=num
-		game_state_obj.set_round_number (num)
+		create player.make (a_id, a_team_id)
+		player.set_player_name(a_name)
+		all_players[a_id-1] := player
+		game_state_obj.set_all_players (all_players)
 	end
 
-	get_round_number():INTEGER
+-----------------------------------------------------------
+
+	get_players():ARRAY[TR_PLAYER]
 	do
-		result := game_state_obj.get_round_number
+		result := game_state_obj.get_all_players
 	end
 
-----------------------------------------------------------------------------------------------------------------
 
-	is_first_round():BOOLEAN
-	do
-		result:=game_state_obj.is_first_round
-	end
 
+
+-- #########
+
+
+
+
+
+feature -- Bets
 ----------------------------------------------------------------------------------------------------------------
 
 	is_envido_allowed(player: TR_PLAYER) : BOOLEAN
@@ -700,8 +693,6 @@ feature {ANY,TR_TEST_LOGIC}
 --------------------------------------------------------------------------------------------------------------------------
 
 
----------------------------------------------------------------------
-
 	set_players_positions(winner_id:INTEGER)
 	local
 		j:INTEGER
@@ -828,6 +819,25 @@ feature -- control and search for information
 
 --------------------------------------------------------------------------------------------	
 
+feature -- modifying and getting rounds
+
+	set_round_number(num:INTEGER)--rounds seeter and getter will used by AI
+	do
+		round_number:=num
+		game_state_obj.set_round_number (num)
+	end
+
+	get_round_number():INTEGER
+	do
+		result := game_state_obj.get_round_number
+	end
+
+
+	is_first_round():BOOLEAN
+	do
+		result:=game_state_obj.is_first_round
+	end
+
 
 feature -- end of rounds
 
@@ -899,13 +909,13 @@ feature -- end of rounds
 
 feature -- end of hand
 
-	is_hand_ended():BOOLEAN
+	is_hand_ended :BOOLEAN
 	do
 		result:=the_end_of_the_hand
 	end
 
 
-	end_hand()
+	end_hand
 	do
 		-- we remember this is the end of the hand
 		the_end_of_the_hand:=True
