@@ -683,61 +683,50 @@ feature -- end of rounds
 	end
 ------------------------------------------------------------------------------------------------------------
 
-   play_card(card: TR_CARD; local_player: TR_PLAYER)
-               local
-                    i:INTEGER
-                    new_player_turn: INTEGER
-                    player_current_cards:ARRAY[TR_CARD]
-               do
-
-               		all_players := game_state_obj.get_all_players
-
-
-                   local_player.set_player_current_card (card)
-                   create player_current_cards.make_from_array (local_player.get_player_cards)-- put player card here
-                                deck_cards.put (card,(local_player.get_player_posistion-1))
-                                game_state_obj.update_deck_cards (deck_cards)
-                    from
-                              i:=0
-                     until
-                              i>2
-                     loop
-                            if
-                                    player_current_cards[i].get_card_type.is_equal (card.get_card_type)
-                                    and player_current_cards[i].get_card_value=card.get_card_value
-                            then
-                                    player_current_cards[i].set_to_void()
-                                    local_player.set_cards (player_current_cards)
-                                    i:=2
-                          end
-                                                    i:=i+1
-                      end
-
-
-
-
-                    from i:=0 until i=4 loop
-                      	if all_players.at (i).get_player_name.is_equal (local_player.get_player_name) then
-                      		all_players.at (i) := local_player
-                      		i:=3
-                      	end
-                      	i:=i+1
-                      end
-
-                     new_player_turn := game_state_obj.the_player_turn_id\\4 + 1
-                     game_state_obj.set_the_player_turn_id (new_player_turn)
-
-					game_state_obj.set_all_players (all_players)
-
-
-
+	play_card(card: TR_CARD; local_player: TR_PLAYER)
+	local
+		i:INTEGER
+		new_player_turn: INTEGER
+		player_current_cards:ARRAY[TR_CARD]
+	do
+		all_players := game_state_obj.get_all_players
+		local_player.set_player_current_card (card)
+		create player_current_cards.make_from_array (local_player.get_player_cards)-- put player card here
+		deck_cards.put (card.deep_twin,(local_player.get_player_posistion-1))
+		game_state_obj.update_deck_cards (deck_cards)
+		from
+			i:=0
+		until
+			i>2
+		loop
+			if player_current_cards[i].get_card_type.is_equal (card.get_card_type)
+				and player_current_cards[i].get_card_value=card.get_card_value	then
+					player_current_cards[i].set_to_void()
+					local_player.set_cards (player_current_cards)
+					i:=2
+			end
+			i:=i+1
+		end
+		from
+			i:=0
+		until
+			i=4
+		loop
+			if all_players.at (i).get_player_name.is_equal (local_player.get_player_name) then
+				all_players.at (i) := local_player
+				i:=3
+			end
+			i:=i+1
+		end
+		new_player_turn := game_state_obj.the_player_turn_id\\4 + 1
+		game_state_obj.set_the_player_turn_id (new_player_turn)
+		game_state_obj.set_all_players (all_players)
    end
 --------------------------------------------------------------------------------------------------------------------------
 
 	is_hand_ended():BOOLEAN
 	do
 		result:=the_end_of_the_hand
-
 	end
 --------------------------------------------------------------------------------------------
 
