@@ -870,29 +870,48 @@ feature -- end of rounds
 
 -------------------------------------------
 
-        send_reject(team:INTEGER)
-                do
-                        if team = 1
-                        then
-                                team2_score := current_game_points
-                                all_players[1].set_player_team_score (team2_score)
-                                all_players[3].set_player_team_score (team2_score)
-                                game_state_obj.set_team2_score (team2_score)
+	send_reject(team:INTEGER)
+	local
+		add_points : INTEGER
+	do
+		-- TRUCO		
+		if current_bet.is_equal (BC.truco) or current_bet.is_equal (BC.retruco) or current_bet.is_equal (BC.vale_cuatro) then
 
-                        else
-                                team1_score :=current_game_points
-                                all_players[0].set_player_team_score (team1_score)
-                                all_players[2].set_player_team_score (team1_score)
-                                game_state_obj.set_team1_score (team1_score)
+			-- we get the game points
+			add_points := game_state_obj.get_current_game_points
 
-                        end
-                        current_bet:=""
-                        game_state_obj.set_current_bet (current_bet)
-                        action:=false
-                        game_state_obj.remove_action
-                        betting_team:=team
-                        game_state_obj.set_betting_team (team)
-                end
+			-- we set that the hand is ended
+			the_end_of_the_hand := True
+
+		-- ENVIDO		
+		elseif current_bet.is_equal (BC.envido) or current_bet.is_equal (BC.real_envido) or current_bet.is_equal (BC.falta_envido) then
+			-- we treat the bet to know the points we will need to add
+			if current_bet.is_equal (BC.envido)  then
+				add_points := 1
+			elseif current_bet.is_equal (BC.real_envido)  then
+				add_points := 2
+			elseif current_bet.is_equal (BC.falta_envido)  then
+				add_points := 3
+			end
+		end
+
+		-- set the points
+		if team = 1 then
+			team2_score := add_points
+			all_players[1].set_player_team_score (team2_score)
+			all_players[3].set_player_team_score (team2_score)
+			game_state_obj.set_team2_score (team2_score)
+		else
+			team1_score := add_points
+			all_players[0].set_player_team_score (team1_score)
+			all_players[2].set_player_team_score (team1_score)
+			game_state_obj.set_team1_score (team1_score)
+		end
+
+		action:=false
+		game_state_obj.remove_action
+
+	end
 
 
 end_game()
