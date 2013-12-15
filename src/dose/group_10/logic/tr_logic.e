@@ -62,8 +62,9 @@ feature {ANY,TR_TEST_LOGIC}
 		game_state_obj.update_deck_cards (deck_cards)
 		create cards.make_filled (d,0,39)-- all cards in the game
 
-		game_state_obj.set_the_player_turn_id (current_player_id)
 		current_player_id:=1
+		game_state_obj.set_the_player_turn_id (current_player_id)
+
 
 --		current_game_points:=0
 		game_state_obj.set_current_game_points (0)
