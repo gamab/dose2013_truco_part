@@ -924,12 +924,13 @@ feature -- end of hand
 
 
 	end_hand
+	require
+		hand_ended : game_state_obj.end_hand
 	local
 		deck_cards : ARRAY[TR_CARD]
 		rounds : ARRAY[INTEGER]
 	do
 		-- we remember this is the end of the hand
---		the_end_of_the_hand:=True
 		game_state_obj.set_end_hand
 
 		-- we empty the rounds winners array
@@ -937,11 +938,9 @@ feature -- end of hand
 		game_state_obj.set_rounds(rounds)
 
 		-- there is no more actions
---		action:=false
 		game_state_obj.remove_action
 
 		-- there is no more bets
---		current_bet:=""
 		game_state_obj.set_current_bet ("")
 
 		-- the cards played have to be deleted from the table
@@ -951,7 +950,6 @@ feature -- end of hand
 		-- we deal the cards
 		dealer
 	end
-
 
 
 feature -- end of game
@@ -1045,6 +1043,11 @@ feature -- Useful information to determine who has to do something
 	who_dealt : INTEGER
 	do
 	        result := game_state_obj.who_dealt
+	end
+
+	is_new_hand : BOOLEAN
+	do
+		result := game_state_obj.the_deck_cards.at (0).get_card_type.is_empty and game_state_obj.round_number = 1
 	end
 
 end
