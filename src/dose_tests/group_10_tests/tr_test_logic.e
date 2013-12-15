@@ -209,6 +209,7 @@ feature -- test for : is_truco_allowed is_retruco_allowed is_vale_cuatro_allowed
 		create player.make (1,1)
 		create player2.make (2,2)
 		truco_allowed := logic.is_truco_allowed (player)
+		logic.send_truco (1)
 		truco_allowed := logic.is_truco_allowed (player2)
 		assert ("is_truco_allowed_2 ok", not truco_allowed )
  	end
@@ -283,6 +284,7 @@ feature -- test for : is_truco_allowed is_retruco_allowed is_vale_cuatro_allowed
  		create player2.make (2, 2)
  		-- retruco is meant to be allowed if truco has been said by a player in the other team
 		truco_allowed := logic.is_truco_allowed (player)
+		logic.send_truco (1)
  		retruco_allowed := logic.is_retruco_allowed (player2)
  		assert ("is_retruco_allowed_4 ok", retruco_allowed)
  	end
@@ -340,7 +342,9 @@ feature -- test for : is_truco_allowed is_retruco_allowed is_vale_cuatro_allowed
  		create player2.make (2, 2)
  		-- vale cuatro is meant to be allowed if someone said truco and the other team said retruco and this someone says vale cuatro
  		truco_allowed := logic.is_truco_allowed (player)
+ 		logic.send_truco (1)
  		retruco_allowed := logic.is_retruco_allowed (player2)
+ 		logic.send_re_truco (2)
  		vale_cuatro_allowed := logic.is_vale_cuatro_allowed (player)
  		assert ("is_vale_cuatro_allowed_3", vale_cuatro_allowed)
  	end
@@ -416,7 +420,9 @@ feature -- test for : is_truco_allowed is_retruco_allowed is_vale_cuatro_allowed
  		-- someone from the other team said retruco
  		-- and then someone else from the first team says vale cuatro once again
  		truco_allowed := logic.is_truco_allowed (player)
+ 		logic.send_truco (1)
  		retruco_allowed := logic.is_vale_cuatro_allowed (player2)
+ 		logic.send_re_truco (2)
  		vale_cuatro_allowed := logic.is_vale_cuatro_allowed (player3)
  		assert ("is_vale_cuatro_allowed_6", vale_cuatro_allowed)
  	end
