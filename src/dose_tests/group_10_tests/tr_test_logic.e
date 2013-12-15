@@ -742,13 +742,19 @@ test_send_accept
 	local
 		logic : TR_LOGIC
 		worked_well:BOOLEAN
+		player, player2: TR_PLAYER
 	do
 		create logic.make
+		create player.make (1, 1)
+		create player.make (2, 2)
 		worked_well := false
-			logic.send_accept (1)
-			if logic.get_current_bet = "accept" then
-				worked_well := true
-			end
+		logic.send_truco (1)
+		logic.send_accept (2)
+		print ( logic.get_current_bet + "%N")
+		print ( logic.get_action.out + "%N")
+		if logic.get_current_bet.is_equal ("truco") and logic.get_action = false then
+			worked_well := true
+		end
 		assert ("send_accept ok",worked_well)
 
 	end
