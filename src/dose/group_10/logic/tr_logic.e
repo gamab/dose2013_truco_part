@@ -699,39 +699,6 @@ feature {ANY,TR_TEST_LOGIC}
    end
 --------------------------------------------------------------------------------------------------------------------------
 
-feature -- end of hand
-
-	is_hand_ended():BOOLEAN
-	do
-		result:=the_end_of_the_hand
-	end
---------------------------------------------------------------------------------------------
-
-	end_hand()
-	do
-		-- we remember this is the end of the hand
-		the_end_of_the_hand:=True
-		game_state_obj.set_end_hand
-
-		-- we empty the rounds winners array
-		create rounds.make_filled (-1,0,2)
-		game_state_obj.set_rounds(rounds)
-
-		-- there is no more actions
-		action:=false
-		game_state_obj.remove_action
-
-		-- there is no more bets
-		current_bet:=""
-		game_state_obj.set_current_bet ("")
-
-		-- the cards played have to be deleted from the table
-		create deck_cards.make_filled (Void, 0, 3)
-		game_state_obj.update_deck_cards (deck_cards)
-
-		-- we deal the cards
-		dealer
-	end
 
 ---------------------------------------------------------------------
 
@@ -859,6 +826,9 @@ feature -- control and search for information
 		result := count > 1
 	end
 
+--------------------------------------------------------------------------------------------	
+
+
 feature -- end of rounds
 
 	win_round(winner_id:INTEGER)
@@ -925,6 +895,42 @@ feature -- end of rounds
 	do
 		result:=not(deck_cards[3].get_card_type.is_equal(""))
 	end
+
+
+feature -- end of hand
+
+	is_hand_ended():BOOLEAN
+	do
+		result:=the_end_of_the_hand
+	end
+
+
+	end_hand()
+	do
+		-- we remember this is the end of the hand
+		the_end_of_the_hand:=True
+		game_state_obj.set_end_hand
+
+		-- we empty the rounds winners array
+		create rounds.make_filled (-1,0,2)
+		game_state_obj.set_rounds(rounds)
+
+		-- there is no more actions
+		action:=false
+		game_state_obj.remove_action
+
+		-- there is no more bets
+		current_bet:=""
+		game_state_obj.set_current_bet ("")
+
+		-- the cards played have to be deleted from the table
+		create deck_cards.make_filled (Void, 0, 3)
+		game_state_obj.update_deck_cards (deck_cards)
+
+		-- we deal the cards
+		dealer
+	end
+
 
 
 feature -- end of game
