@@ -672,20 +672,40 @@ test_send_envido
 
 
 
-	est_send_falta_envido
+	test_send_falta_envido
 	note
 		testing: "covers/{TR_LOGIC}.send_falta_envido"
 		testing: "user/TR" -- this is tag with the class-prefix
 	local
 		logic : TR_LOGIC
 		worked_well:BOOLEAN
+		players : ARRAY[TR_PLAYER]
 	do
 		create logic.make
+
+		players := logic.get_players
+
+		logic.set_player_info ("1", 1, 1)
+		logic.set_player_info ("2", 2, 2)
+		logic.set_player_info ("3", 3, 1)
+		logic.set_player_info ("4", 4, 2)
+
+		players.at (0).set_player_posistion (1)
+		players.at (1).set_player_posistion (2)
+		players.at (2).set_player_posistion (3)
+		players.at (3).set_player_posistion (4)
+
 		worked_well := false
-			logic.send_falta_envido (1)
-			if logic.get_current_bet.is_equal("falta_envido") then
-				worked_well := true
-			end
+
+		logic.send_envido (1)
+		logic.send_accept (2)
+		logic.send_re_envido (2)
+		logic.send_accept (1)
+		logic.send_falta_envido (3)
+		print( "Current bet : " + logic.get_current_bet.out + "%N" )
+		if logic.get_current_bet.is_equal("faltaenvido") then
+			worked_well := true
+		end
 		assert ("send_falta_envido ok",worked_well)
 
 	end
@@ -768,13 +788,19 @@ test_send_accept
 	local
 		logic : TR_LOGIC
 		worked_well:BOOLEAN
+		player,player1 : TR_PLAYER
 	do
 		create logic.make
+		create player.make (1, 1)
+		create player.make (2, 2)
 		worked_well := false
-			logic.send_reject (1)
-			if logic.get_current_bet = "reject" then
-				worked_well := true
-			end
+		logic.send_envido (1)
+		logic.send_reject (2)
+		print ( logic.get_current_bet + "%N")
+		print ( logic.get_action.out + "%N")
+		if logic.get_current_bet.is_equal ("envido") and logic.get_action = false then
+			worked_well := true
+		end
 		assert ("send_reject ok",worked_well)
 
 	end
@@ -876,70 +902,6 @@ feature -- test for: end_game
 		worked_well := logic.is_real_envido_allowed (player)
  		assert ("end_game ok", not worked_well)
  	end
-
-
-feature -- test for: hwo_is_current_player and hwo_is_next_player
-
- 	test_hwo_is_current_player_1
- 	note
-		testing: "covers/{TR_LOGIC}.hwo_is_current_player"
-		testing: "user/TR"
- 	local
- 		logic: TR_LOGIC
- 		worked_well:BOOLEAN
-	 	player1: TR_PLAYER
-	 	player2: TR_PLAYER
-	 	player3: TR_PLAYER
-	 	player4: TR_PLAYER
-	 	player_current: TR_PLAYER
- 	do
- 		create logic.make
- 		create player1.make (1,1)
- 		create player2.make (2,2)
- 		create player3.make (3,1)
- 		create player4.make (4,2)
-
- 		--player_current := logic.hwo_is_current_player (player1)
- 		worked_well := player_current.get_player_id>=1 and player_current.get_player_id<=4
-
- 		assert ("hwo_is_current_player ok", worked_well)
- 	end
-
-
- 	test_hwo_is_next_player_1
- 	note
-		testing: "covers/{TR_LOGIC}.hwo_is_next_player"
-		testing: "user/TR"
- 	local
- 		logic: TR_LOGIC
- 		worked_well:BOOLEAN
-	 	player1: TR_PLAYER
-	 	player2: TR_PLAYER
-	 	player3: TR_PLAYER
-	 	player4: TR_PLAYER
-	 	player_current: TR_PLAYER
-	 	player_next: TR_PLAYER
-	 	id_next_player: INTEGER
- 	do
--- 		create logic.make
--- 		create player1.make (1,1)
--- 		create player2.make (2,2)
--- 		create player3.make (3,1)
--- 		create player4.make (4,2)
--- 		logic.set_team (player1,player3,1)
--- 		logic.set_team (player2,player4,2)
-
--- 		--player_current := logic.hwo_is_current_player (player1)
--- 		player_next := logic.hwo_is_next_player (player1)
--- 		if  player_current.get_player_id = 4 then
--- 			id_next_player := 1
--- 		else
--- 			id_next_player := player_current.get_player_id+1
--- 		end
--- 		worked_well := (id_next_player = player_next.get_player_id)
- 		assert ("hwo_is_next_player ok", worked_well)
- 	end
-
 
 feature -- test for: end_hand
 
