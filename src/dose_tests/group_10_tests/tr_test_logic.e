@@ -244,7 +244,9 @@ feature -- test for : is_truco_allowed is_retruco_allowed is_vale_cuatro_allowed
  		create player.make (1, 1)
  		-- retruco is not meant to be allowed if truco has been said by the same player
 		truco_allowed := logic.is_truco_allowed (player)
+		logic.send_truco (1)
  		retruco_allowed := logic.is_retruco_allowed (player)
+ 		logic.send_re_truco (1)
  		assert ("is_retruco_allowed_2 ok", not retruco_allowed)
  	end
 
@@ -264,7 +266,9 @@ feature -- test for : is_truco_allowed is_retruco_allowed is_vale_cuatro_allowed
  		create player2.make (2, 1)
  		-- retruco is not meant to be allowed if truco has been said by a player in the same team
 		truco_allowed := logic.is_truco_allowed (player)
+		logic.send_truco (1)
  		retruco_allowed := logic.is_retruco_allowed (player2)
+ 		logic.send_re_truco (2)
  		assert ("is_retruco_allowed_3 ok", not retruco_allowed)
  	end
 
@@ -367,7 +371,9 @@ feature -- test for : is_truco_allowed is_retruco_allowed is_vale_cuatro_allowed
  		create player2.make (2, 2)
  		-- vale cuatro is not meant to be allowed if someone said truco and the other team said retruco and the other team says vale cuatro once again
  		truco_allowed := logic.is_truco_allowed (player)
+ 		logic.send_truco (1)
  		retruco_allowed := logic.is_retruco_allowed (player2)
+ 		logic.send_re_truco (2)
  		vale_cuatro_allowed := logic.is_vale_cuatro_allowed (player2)
  		assert ("is_vale_cuatro_allowed_4", not vale_cuatro_allowed)
  	end
@@ -393,8 +399,11 @@ feature -- test for : is_truco_allowed is_retruco_allowed is_vale_cuatro_allowed
  		-- someone from the other team said retruco
  		-- and then someone else from the other team says vale cuatro once again
  		truco_allowed := logic.is_truco_allowed (player)
+ 		logic.send_truco (1)
  		retruco_allowed := logic.is_vale_cuatro_allowed (player2)
+ 		logic.send_re_truco (2)
  		vale_cuatro_allowed := logic.is_vale_cuatro_allowed (player3)
+ 		logic.send_valle_cuatro (3)
  		assert ("is_vale_cuatro_allowed_5", not vale_cuatro_allowed)
  	end
 
