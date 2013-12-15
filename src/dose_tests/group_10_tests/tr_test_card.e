@@ -89,9 +89,9 @@ feature -- Test routines
 		real_card_weight: INTEGER
    do
    		worked_well := false
-   		real_card_weight := 4
-   		create card.make ("swords", 4)
-   		weight := card.get_card_weight_envido
+   		real_card_weight := 13
+   		create card.make ("swords", 1)
+   		weight := card.get_card_weight_truco
    		if weight = real_card_weight  then
    			worked_well := true
    		end
@@ -112,9 +112,9 @@ feature -- Test routines
 		real_card_weight: INTEGER
    do
    		worked_well := false
-   		real_card_weight := 13
+   		real_card_weight := 1
    		create card.make ("swords", 1)
-   		weight := card.get_card_weight_truco
+   		weight := card.get_card_weight_envido
    		if weight = real_card_weight  then
    			worked_well := true
    		end
