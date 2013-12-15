@@ -19,8 +19,8 @@ feature{NONE,TR_TEST_LOGIC}
 
 		pos						:INTEGER -- counter for cards
 --		round_number			:INTEGER-- the round number 1  2  3
-		team1_score				:INTEGER-- score of the team1
-		team2_score				:INTEGER--score of the team2
+--		team1_score				:INTEGER-- score of the team1
+--		team2_score				:INTEGER--score of the team2
 		betting_team			:INTEGER-- The team hwo send last bet
 		current_game_points		:INTEGER-- raise of the game , first it 1 but when you press envido and accept it will be 2 and so on
 		current_bet				:STRING-- if there a bet  what's this bet
@@ -685,8 +685,8 @@ feature -- Working with the gmae_state
 --		rounds:=game_state_obj.get_round
 		current_player_id:=game_state_obj.the_player_turn_id
 --		round_number:=game_state_obj.get_round_number
-		team1_score:=game_state_obj.get_team1_score
-		team2_score:=game_state_obj.get_team2_score
+--		team1_score:=game_state_obj.get_team1_score
+--		team2_score:=game_state_obj.get_team2_score
 		betting_team:=game_state_obj.get_betting_team
 		current_game_points:=game_state_obj.get_current_game_points
 		current_bet:=game_state_obj.get_current_bet
@@ -956,7 +956,7 @@ feature -- end of game
 	require
 		game_can_end : is_end_of_game
 	do
-		if team1_score >=24 then
+		if game_state_obj.get_team1_score >=24 then
 			final_winner :=1
 		else
 			final_winner:= 2
@@ -983,6 +983,8 @@ feature -- manipulate the points
 		-- add a certain amount of points to the give team's points
 	local
 		all_players : ARRAY[TR_PLAYER]
+		team1_score : INTEGER
+		team2_score : INTEGER
 	do
 		all_players := game_state_obj.get_all_players
 
