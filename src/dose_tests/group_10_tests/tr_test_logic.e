@@ -569,18 +569,25 @@ feature -- test for : is_envido_allowed is_real_envido_allowed is_falta_envido_a
 		testing: "user/TR" -- this is tag with the class-prefix
 	local
 	 	logic : TR_LOGIC
-	 	player : TR_PLAYER
-	 	player2 : TR_PLAYER
+	 	players : ARRAY[TR_PLAYER]
 		real_envido_allowed : BOOLEAN
 		falta_envido_allowed : BOOLEAN
 	do
- 	 	create logic.make
- 	 	create player.make (1, 1)
- 	 	create player2.make (2, 1)
+		create logic.make
+
+ 	 	logic.set_player_info ("Player", 1, 1)
+ 	 	logic.set_player_info ("Player2", 2, 2)
+ 	 	logic.set_player_info ("Player3", 3, 1)
+ 	 	logic.set_player_info ("Player4", 4, 2)
+
+ 	 	players := logic.get_players
+
+ 	 	--falta envido should be allowed if someone said real_envido
+ 	 	logic.send_envido (1)
+ 	 	logic.send_re_envido (2)
  	 	--falta envido should not be allowed if someone said real_envido
  	 	--and someone else from the same team said falta_envido
- 	 	real_envido_allowed := logic.is_real_envido_allowed (player)
- 	 	falta_envido_allowed := logic.is_falta_envido_allowed (player2)
+ 	 	falta_envido_allowed := logic.is_falta_envido_allowed (players[1])
  		assert ("is_falta_envido_allowed_2 ok", not falta_envido_allowed )
  	end
 
@@ -590,16 +597,27 @@ feature -- test for : is_envido_allowed is_real_envido_allowed is_falta_envido_a
 		testing: "user/TR" -- this is tag with the class-prefix
 	local
 	 	logic : TR_LOGIC
-	 	player2 : TR_PLAYER
+	 	players : ARRAY[TR_PLAYER]
 		real_envido_allowed : BOOLEAN
 		falta_envido_allowed : BOOLEAN
 	do
- 	 	create logic.make
- 	 	create player2.make (2, 1)
+		create logic.make
+
+ 	 	logic.set_player_info ("Player", 1, 1)
+ 	 	logic.set_player_info ("Player2", 2, 2)
+ 	 	logic.set_player_info ("Player3", 3, 1)
+ 	 	logic.set_player_info ("Player4", 4, 2)
+
+ 	 	players := logic.get_players
+
+ 	 	--falta envido should be allowed if someone said real_envido
+ 	 	logic.send_envido (1)
+
  	 	--falta envido should not be allowed if no one said real_envido
- 	 	falta_envido_allowed := logic.is_falta_envido_allowed (player2)
+ 	 	falta_envido_allowed := logic.is_falta_envido_allowed (players[1])
  		assert ("is_falta_envido_allowed_3 ok", not falta_envido_allowed )
  	end
+
 
 
 feature -- test for : send_envido send_re_envido send_falta_envido
