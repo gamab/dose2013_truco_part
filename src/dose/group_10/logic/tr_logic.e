@@ -24,7 +24,7 @@ feature{NONE,TR_TEST_LOGIC}
 		betting_team			:INTEGER-- The team hwo send last bet
 		current_game_points		:INTEGER-- raise of the game , first it 1 but when you press envido and accept it will be 2 and so on
 		current_bet				:STRING-- if there a bet  what's this bet
-		game_state				:STRING--never mind
+
 		action					:BOOLEAN--never mind
 		who_bet_id				:INTEGER
 		game_state_obj			:TR_GAME_STATE
@@ -61,7 +61,6 @@ feature {ANY,TR_TEST_LOGIC}
 		game_state_obj.set_round_number (round_number)
 		current_bet:=""
 		game_state_obj.set_current_bet (current_bet)
-		game_state:=""
 		pos:=0
 		current_dealer_id:=1
 		the_end_of_the_hand:=false
@@ -497,27 +496,160 @@ feature {ANY,TR_TEST_LOGIC}
 	do
 		result := (game_state_obj.team1_score>=24 or game_state_obj.team2_score >= 24)
 	end
-----------------------------------------not implemented yet --------------------------------------------------------------------
 
-	win_round(winner:TR_PLAYER)
+feature
+
+	get_id_from_position_in_round (position : INTEGER) : INTEGER
+		-- returns a player ID from it's position in the round
+	require
+		position_is_possible : position >= 1 and position <= 4
+	local
+		i : INTEGER
+		players : ARRAY[TR_PLAYER]
+		id : INTEGER
+		found : BOOLEAN
 	do
+		players := game_state_obj.get_all_players
+		from
+			id := -1
+			i := players.lower
+		until
+			i > players.upper or found
+		loop
+			if players.at (i).get_player_posistion = position then
+				id := i + 1
+				found := True
+			end
+			i := i + 1
+		end
+
+		result := id
+
+	ensure
+		we_found_the_player : result /= -1
+	end
+
+
+	who_played_the_first_best_card : INTEGER
+		-- returns the player who played the first best card in the round
+	require
+		round_ended : game_state_obj.rounds.at (game_state_obj.rounds.upper) /= -1
+	local
+		table_cards : ARRAY[TR_CARD]
+		i : INTEGER
+		max_weight : INTEGER
+		position_max : INTEGER
+	do
+		from
+			-- we get the cards and we remember the weight of the first card
+			table_cards := game_state_obj.the_deck_cards
+			position_max := table_cards.lower
+			max_weight := table_cards.at (position_max).get_card_weight_truco
+			i := table_cards.lower + 1
+		until
+			i > table_cards.upper
+		loop
+			-- if the current card is better than the old one we remember its position and weight
+			if max_weight < table_cards.at (i).get_card_weight_truco then
+				max_weight := table_cards.at (i).get_card_weight_truco
+				position_max := i
+			end
+			i := i + 1
+		end
+		-- if there is more than one best card then there is a draw
+		result := get_id_from_position_in_round(position_max + 1)
+	end
+
+----------------------------------------------------------------------------------------------------------------------
+feature -- end of rounds
+
+	is_there_a_draw : BOOLEAN
+		-- returns if there is a draw or not in the current round
+	require
+		round_ended : game_state_obj.rounds.at (game_state_obj.rounds.upper) /= -1
+	local
+		table_cards : ARRAY[TR_CARD]
+		i : INTEGER
+		count : INTEGER
+		max_weight : INTEGER
+		position_max : INTEGER
+	do
+		from
+			-- we get the cards and we remember the weight of the first card
+			table_cards := game_state_obj.the_deck_cards
+			count := 1
+			position_max := table_cards.lower
+			max_weight := table_cards.at (position_max).get_card_weight_truco
+			i := table_cards.lower + 1
+		until
+			i > table_cards.upper
+		loop
+			-- if the current card is better than the old one we remember its weight
+			if max_weight < table_cards.at (i).get_card_weight_truco then
+				max_weight := table_cards.at (i).get_card_weight_truco
+				position_max := i
+				count := 1
+			-- if the current card is as good as the old one
+			-- and it is not my friends card
+			-- we remember there is another better card
+			elseif max_weight = table_cards.at (i).get_card_weight_truco and (i = position_max + 1 or i = position_max + 3) then
+				count := count + 1
+			end
+			i := i + 1
+		end
+		-- if there is more than one best card then there is a draw
+		result := count > 1
+	end
+
+	win_round(winner_id:INTEGER)
+		-- set who wins the round (0 if it is a draw)
+		-- in case of draw the winner must be the first to have play the highest card
+	require
+		round_ended : game_state_obj.rounds.at (game_state_obj.rounds.upper) /= -1
+		id_possible : winner_id >= 1 and winner_id <= 3
+	local
+		draw : BOOLEAN
+	do
+		-- we get the round number from the game state
 		round_number := game_state_obj.round_number
 
-		if round_number > 0 then
-			rounds.put (winner.get_player_team_id,round_number-1)
-			game_state_obj.set_round (winner.get_player_team_id,round_number-1)
-			if round_number < 3 then
-				round_number:=round_number+1
-				game_state_obj.set_round_number (round_number)
-				set_players_positions(winner.get_player_id)-- will reorder players
-			else
-				the_end_of_the_hand:=true
-				round_number:=1
-				game_state_obj.set_round_number (1)
-				set_players_positions(1)
-			end
+		-- first we look if there is a draw
+		draw := is_there_a_draw
 
-			game_state_obj.set_winner_round (winner)
+		-- if there is a draw we put that the winning player is 0	
+		if draw then
+			rounds.put (0,round_number-1)
+			game_state_obj.set_round (0, round_number - 1)
+		else
+			rounds.put (winner_id,round_number-1)
+			game_state_obj.set_round (winner_id, round_number - 1)
+		end
+
+		-- then we set the winner of the round
+		set_players_positions(winner_id)
+		game_state_obj.set_winner_round (winner_id)
+	end
+
+
+	end_round
+	local
+		winner_id : INTEGER
+	do
+		-- first we search for the best player
+		winner_id := who_played_the_first_best_card
+
+		-- then we call win round that set the winner of the round and does the necessary modifications
+		win_round(winner_id)
+
+		-- if we are in the first or second round
+		-- we just go to the next round
+		if round_number = 1 or round_number = 2 then
+			round_number := round_number+1
+			game_state_obj.set_round_number (round_number)
+		-- else we call ed of hand
+		elseif round_number = 3 then
+			the_end_of_the_hand:=true
+			end_hand
 		end
 	end
 -------------------------------------------------------------------------------------------
@@ -893,57 +1025,57 @@ result:=not(deck_cards[3].get_card_type.is_equal(""))
 end
 
 
-end_round()
-local
-c:TR_CARD
-do
-        create c.make ("",0)
-        c.set_to_void
-        all_players[0].set_player_current_card (c)
-        all_players[1].set_player_current_card (c)
-        all_players[2].set_player_current_card (c)
-        all_players[3].set_player_current_card (c)
+--end_round()
+--local
+--c:TR_CARD
+--do
+--        create c.make ("",0)
+--        c.set_to_void
+--        all_players[0].set_player_current_card (c)
+--        all_players[1].set_player_current_card (c)
+--        all_players[2].set_player_current_card (c)
+--        all_players[3].set_player_current_card (c)
 
-        if
-                all_players[1].get_player_posistion=deck_card_winner(deck_cards)
-                or all_players[3].get_player_posistion=deck_card_winner(deck_cards)
-        then
-                rounds.put (2,round_number-1)
-                game_state_obj.set_round (2,round_number-1)
-        else
-        rounds.put (1,round_number-1)
-        game_state_obj.set_round (1,round_number-1)
+--        if
+--                all_players[1].get_player_posistion=deck_card_winner(deck_cards)
+--                or all_players[3].get_player_posistion=deck_card_winner(deck_cards)
+--        then
+--                rounds.put (2,round_number-1)
+--                game_state_obj.set_round (2,round_number-1)
+--        else
+--        rounds.put (1,round_number-1)
+--        game_state_obj.set_round (1,round_number-1)
 
-        end
-        round_number:=round_number+1
-        game_state_obj.set_round_number (round_number)
-        if round_number=4 then end_hand
-        end
-  end
-------------------------------------------------------------------------------------
+--        end
+--        round_number:=round_number+1
+--        game_state_obj.set_round_number (round_number)
+--        if round_number=4 then end_hand
+--        end
+--  end
+--------------------------------------------------------------------------------------
 
 
-deck_card_winner(the_card_in_array:ARRAY[TR_CARD]):INTEGER
-                local
-                        max:INTEGER
-                        i:INTEGER
-                        index:INTEGER
-                do
-                max:= -1
-                        from i:=0
-                        until i>3
-                        loop
-                                if the_card_in_array[i].get_card_weight_truco>max
-                                then
-                                        max := the_card_in_array[i].get_card_weight_truco
-                                        index:=i
-                                end
-                                i:=i+1
-                        end
-                        result := index
-                end
+--deck_card_winner(the_card_in_array:ARRAY[TR_CARD]):INTEGER
+--                local
+--                        max:INTEGER
+--                        i:INTEGER
+--                        index:INTEGER
+--                do
+--                max:= -1
+--                        from i:=0
+--                        until i>3
+--                        loop
+--                                if the_card_in_array[i].get_card_weight_truco>max
+--                                then
+--                                        max := the_card_in_array[i].get_card_weight_truco
+--                                        index:=i
+--                                end
+--                                i:=i+1
+--                        end
+--                        result := index
+--                end
 
-------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
 
    get_round():ARRAY[INTEGER]
             do
@@ -1002,17 +1134,6 @@ end
                         --player_1.set_team_id(the_team_id)
                         --player_2.set_team_id(the_team_id)
                         end
-
-
-          set_game_state(current_state:STRING)
-                do
-                --game_state:=current_state
-                end
-
-          current_game_state():STRING
-                do
-                result:=game_state
-                end
 
         update_table_cards(played_card:TR_CARD)
                 do

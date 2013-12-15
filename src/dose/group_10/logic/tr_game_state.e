@@ -166,9 +166,11 @@ feature{ANY}
 		result:=end_hand
 	end
 
-	set_winner_round(a_winner:TR_PLAYER)
+	set_winner_round(a_winner:INTEGER)
+	require
+		id_possible : a_winner >= 1 and a_winner <= 3
 	do
-		the_winner:=a_winner
+		the_winner:=all_players.at (a_winner - 1)
 	end
 
 	get_winner_round():TR_PLAYER

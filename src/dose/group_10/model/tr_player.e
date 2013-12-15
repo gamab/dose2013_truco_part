@@ -8,7 +8,7 @@ class
         TR_PLAYER
 inherit
 	STORABLE
-        
+
 
 create
         make
@@ -21,7 +21,7 @@ feature {NONE,TR_TEST_PLAYER}
         player_name              :STRING
         player_id                :INTEGER
         player_team_id           :INTEGER
-        player_position          :INTEGER
+        player_position          :INTEGER -- Goes from 1 to 4
         the_player_team_score    :INTEGER
         played_card_counter      :INTEGER
         player_score             :INTEGER
