@@ -206,13 +206,6 @@ feature -- Working with cards
 		c[size] := tmp
 	end
 
-
------------------------------------------------------------
-	get_cards():ARRAY[TR_CARD]
-	do
-		result:=cards
-	end
-
 ----------------------------------Dealer----------------------------------
 	dealer()
 		-- Dealing the cards to the players, setting the dealer id and setting the player's who has to play id
@@ -269,31 +262,58 @@ feature -- Working with cards
 
 ----------------------------------------------------------------------------
 
-	set_player_info(a_name:STRING ;  a_id, a_team_id:INTEGER)-- will used by controller to send information
+
+	play_card(card: TR_CARD; local_player: TR_PLAYER)
 	local
-		player : TR_PLAYER
+		i:INTEGER
+		new_player_turn: INTEGER
+		player_current_cards:ARRAY[TR_CARD]
 	do
-		create player.make (a_id, a_team_id)
-		player.set_player_name(a_name)
-		all_players[a_id-1] := player
+		all_players := game_state_obj.get_all_players
+		local_player.set_player_current_card (card)
+		create player_current_cards.make_from_array (local_player.get_player_cards)-- put player card here
+		deck_cards.put (card.deep_twin,(local_player.get_player_posistion-1))
+		game_state_obj.update_deck_cards (deck_cards)
+		from
+			i:=0
+		until
+			i>2
+		loop
+			if player_current_cards[i].get_card_type.is_equal (card.get_card_type)
+				and player_current_cards[i].get_card_value=card.get_card_value	then
+					player_current_cards[i].set_to_void()
+					local_player.set_cards (player_current_cards)
+					i:=2
+			end
+			i:=i+1
+		end
+		from
+			i:=0
+		until
+			i=4
+		loop
+			if all_players.at (i).get_player_name.is_equal (local_player.get_player_name) then
+				all_players.at (i) := local_player
+				i:=3
+			end
+			i:=i+1
+		end
+		new_player_turn := game_state_obj.the_player_turn_id\\4 + 1
+		game_state_obj.set_the_player_turn_id (new_player_turn)
 		game_state_obj.set_all_players (all_players)
+   end
+
+---------------------------------------------------------------------------------------------------------------------
+	get_table_cards():ARRAY[TR_CARD]
+	do
+		result:=game_state_obj.the_deck_cards
 	end
 
 -----------------------------------------------------------
-
-	get_players():ARRAY[TR_PLAYER]
+	get_cards():ARRAY[TR_CARD]
 	do
-		result := game_state_obj.get_all_players
+		result:=cards
 	end
-
-
-
-
--- #########
-
-
-
-
 
 feature -- Bets
 ----------------------------------------------------------------------------------------------------------------
@@ -589,14 +609,56 @@ feature -- Bets
 
 	end
 
-
-
-
-
 ---------------------------------------------------------------------------------------------------------------------
-	get_table_cards():ARRAY[TR_CARD]
+
+	get_current_bet : STRING
 	do
-		result:=game_state_obj.the_deck_cards
+		result := game_state_obj.current_bet
+	end
+
+feature -- Working with players	
+------------------------------------------------------------------------------------------------------------
+
+
+	set_player_info(a_name:STRING ;  a_id, a_team_id:INTEGER)-- will used by controller to send information
+	local
+		player : TR_PLAYER
+	do
+		create player.make (a_id, a_team_id)
+		player.set_player_name(a_name)
+		all_players[a_id-1] := player
+		game_state_obj.set_all_players (all_players)
+	end
+
+-----------------------------------------------------------
+
+	get_players():ARRAY[TR_PLAYER]
+	do
+		result := game_state_obj.get_all_players
+	end
+
+-----------------------------------------------------------
+
+	set_players_positions(winner_id:INTEGER)
+	local
+		j:INTEGER
+		i:INTEGER
+	do
+		all_players := game_state_obj.get_all_players
+		i:=winner_id-1
+		from
+			j:=0
+		until
+			j>3
+		loop
+			if i>3 then
+				i:=0
+			end
+			all_players[i].set_player_posistion (j+1)
+			j:=j+1
+			i:=i+1
+		end
+		game_state_obj.set_all_players (all_players)
 	end
 ---------------------------------------------------------------------------------------------------------------------
 
@@ -610,18 +672,8 @@ feature -- Bets
 			result:=game_state_obj.team2_score
 		end
 	end
----------------------------------------------------------------------------------------------------------------------
 
-	get_current_bet : STRING
-	do
-		result := game_state_obj.current_bet
-	end
-
----------------------------------------------------------------------------------------------------------------------
-
-
-
--------------------------------------------------------------------------------------------
+feature -- Working with the gmae_state
 
 
 	set_current_game_state(the_game_state:TR_GAME_STATE)
@@ -649,73 +701,7 @@ feature -- Bets
 	do
 		result:=game_state_obj
 	end
-------------------------------------------------------------------------------------------------------------
 
-	play_card(card: TR_CARD; local_player: TR_PLAYER)
-	local
-		i:INTEGER
-		new_player_turn: INTEGER
-		player_current_cards:ARRAY[TR_CARD]
-	do
-		all_players := game_state_obj.get_all_players
-		local_player.set_player_current_card (card)
-		create player_current_cards.make_from_array (local_player.get_player_cards)-- put player card here
-		deck_cards.put (card.deep_twin,(local_player.get_player_posistion-1))
-		game_state_obj.update_deck_cards (deck_cards)
-		from
-			i:=0
-		until
-			i>2
-		loop
-			if player_current_cards[i].get_card_type.is_equal (card.get_card_type)
-				and player_current_cards[i].get_card_value=card.get_card_value	then
-					player_current_cards[i].set_to_void()
-					local_player.set_cards (player_current_cards)
-					i:=2
-			end
-			i:=i+1
-		end
-		from
-			i:=0
-		until
-			i=4
-		loop
-			if all_players.at (i).get_player_name.is_equal (local_player.get_player_name) then
-				all_players.at (i) := local_player
-				i:=3
-			end
-			i:=i+1
-		end
-		new_player_turn := game_state_obj.the_player_turn_id\\4 + 1
-		game_state_obj.set_the_player_turn_id (new_player_turn)
-		game_state_obj.set_all_players (all_players)
-   end
---------------------------------------------------------------------------------------------------------------------------
-
-
-	set_players_positions(winner_id:INTEGER)
-	local
-		j:INTEGER
-		i:INTEGER
-	do
-		all_players := game_state_obj.get_all_players
-		i:=winner_id-1
-		from
-			j:=0
-		until
-			j>3
-		loop
-			if i>3 then
-				i:=0
-			end
-			all_players[i].set_player_posistion (j+1)
-			j:=j+1
-			i:=i+1
-		end
-		game_state_obj.set_all_players (all_players)
-	end
-
-----------------------------------------------------------------------------------------------------------------------
 feature -- control and search for information
 
 	get_id_from_position_in_round (position : INTEGER) : INTEGER
@@ -817,7 +803,6 @@ feature -- control and search for information
 		result := count > 1
 	end
 
---------------------------------------------------------------------------------------------	
 
 feature -- modifying and getting rounds
 
@@ -827,11 +812,15 @@ feature -- modifying and getting rounds
 		game_state_obj.set_round_number (num)
 	end
 
-	get_round_number():INTEGER
+	get_round_number:INTEGER
 	do
 		result := game_state_obj.get_round_number
 	end
 
+	get_round:ARRAY[INTEGER]
+	do
+		result:=rounds
+	end
 
 	is_first_round():BOOLEAN
 	do
@@ -1069,10 +1058,7 @@ feature -- end of game
 
 --------------------------------------------------------------------------------------
 
-   get_round():ARRAY[INTEGER]
-            do
-              result:=rounds
-            end
+
 
 
 
