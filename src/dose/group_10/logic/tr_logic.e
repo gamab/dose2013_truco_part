@@ -691,21 +691,6 @@ feature -- Working with the gmae_state
 	set_current_game_state(the_game_state:TR_GAME_STATE)
 	do
 		game_state_obj:=the_game_state
---		rounds:=game_state_obj.get_round
---		current_player_id:=game_state_obj.the_player_turn_id
---		round_number:=game_state_obj.get_round_number
---		team1_score:=game_state_obj.get_team1_score
---		team2_score:=game_state_obj.get_team2_score
---		betting_team:=game_state_obj.get_betting_team
---		current_game_points:=game_state_obj.get_current_game_points
---		current_bet:=game_state_obj.get_current_bet
---		who_bet_id:=game_state_obj.get_who_bet_id
-		-- win_round (game_state_obj.get_winner_round)
---		deck_cards:=game_state_obj.get_deck_cards
---		action:=game_state_obj.get_action
---		all_players:=game_state_obj.get_all_players
---		current_dealer_id := game_state_obj.who_dealt
---		the_end_of_the_hand := game_state_obj.end_hand
 	end
 
 
@@ -951,6 +936,55 @@ feature -- end of hand
 		dealer
 	end
 
+	which_team_won_the_hand : INTEGER
+	require
+		hand_ended : game_state_obj.end_hand
+	local
+		team : INTEGER
+		rounds : ARRAY[INTEGER]
+		players : ARRAY[TR_PLAYER]
+		team_won_first : INTEGER
+	do
+		rounds := game_state_obj.get_round
+		players := game_state_obj.all_players
+
+		-- if it is par the team is the team that won the second round
+		if rounds.at (0) = 0 then
+			if rounds.at (1) = 0 then
+				if rounds.at (2) = 0 then
+					-- if there are three draws then it is the one after the dealer who wins
+					team := players[game_state_obj.who_dealt \\ 4].get_player_team_id
+				else
+					-- if there are two draws then it is the one who won the third round that wins
+					team := players[rounds.at (2)].get_player_team_id
+				end
+			else
+				-- if there is only one draw then this is the one who won the second round that wins
+				team := players[rounds.at (1)].get_player_team_id
+			end
+		-- we remember the team who won the first round
+		else
+			team_won_first := players[rounds.at (0)].get_player_team_id
+
+			-- if it also won, or if there is a draw in the second round then it won the hand
+			if rounds.at (1) = 0 or players[rounds.at (1)].get_player_team_id = team_won_first then
+				team := team_won_first
+			-- if the other team won the second round
+			else
+				-- if there is a draw in the last one then the first team wins
+				if rounds.at (2) = 0 then
+					team := team_won_first
+				else
+					-- then the team who wins is the last one wins
+					team := players[rounds.at (2)].get_player_team_id
+				end
+			end
+		end
+
+		result := team
+	ensure
+		team_exist : result = 1 or result = 2
+	end
 
 feature -- end of game
 
