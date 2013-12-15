@@ -83,7 +83,7 @@ test_make_cards_random_order -- check if there isn't twice the same card in the 
 
 	 do
 	 	create logic.make
-	 	logic.update_team_points (1, 20 )
+	 	logic.add_to_team_points (1, 20 )
 	 	if logic.get_team_points (1) = logic.team1_score then
 	 		worked_well := true;
 	 	end
@@ -104,7 +104,7 @@ test_make_cards_random_order -- check if there isn't twice the same card in the 
 		create player_1.make (1, 1)
 		create player_2.make (2, 1)
 		logic.set_team (player_1, player_2, 1)
-		logic.update_team_points (1,2)
+		logic.add_to_team_points (1,2)
 		assert ("update_team_score ok", logic.get_team_points (1) = 2)
  	end
 
@@ -824,7 +824,7 @@ test_send_accept
 		logic : TR_LOGIC
 	do
 		create logic.make
-		logic.update_team_points (1, 24)
+		logic.add_to_team_points (1, 24)
 		assert ("is_end_of_game ok",logic.is_end_of_game())
 
 	end
@@ -838,7 +838,7 @@ test_send_accept
 		logic : TR_LOGIC
 	do
 		create logic.make
-		logic.update_team_points (1, 12)
+		logic.add_to_team_points (1, 12)
 		assert ("is_end_of_game ok",not logic.is_end_of_game())
 
 	end
@@ -856,7 +856,7 @@ feature -- test for: update_game_points
  	do
  		create logic.make
  		game_points1 := logic.current_game_points
- 		logic.update_game_points (2)
+ 		logic.add_to_game_points (2)
  		game_points2 := logic.current_game_points
  		worked_well:= (game_points1 = game_points2+2)
  		assert ("update_game_points ok",worked_well)
@@ -873,7 +873,7 @@ feature -- test for: update_game_points
  	do
  		create logic.make
  		game_points1 := logic.current_game_points
- 		logic.update_game_points (2)
+ 		logic.add_to_game_points (2)
  		game_points2 := logic.current_game_points
  		worked_well:= not (game_points1 = game_points2+3)
  		assert ("update_game_points ok",worked_well)

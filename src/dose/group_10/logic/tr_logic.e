@@ -703,7 +703,7 @@ feature -- Working with the gmae_state
 		result:=game_state_obj
 	end
 
-feature -- control and search for information
+feature -- control and search for information usefull to end rounds
 
 	get_id_from_position_in_round (position : INTEGER) : INTEGER
 		-- returns a player ID from it's position in the round
@@ -954,37 +954,39 @@ feature -- end of game
 
 
 
+feature -- manipulate the points
+
+
+	add_to_game_points(point: INTEGER)
+		-- add a certain amount of points to the current game points
+	do
+		current_game_points:=game_state_obj.get_current_game_points
+		current_game_points:=current_game_points+point
+		game_state_obj.set_current_game_points (current_game_points)
+	end
 
 
 
-   update_game_points(point: INTEGER)
-                do
-                current_game_points:=current_game_points+point
-                game_state_obj.set_current_game_points (current_game_points)
-                            end
+	add_to_team_points(a_team_id,a_team_points:INTEGER)
+		-- add a certain amount of points to the give team's points
+	do
+		if a_team_id=1 then
+			team1_score:=game_state_obj.team1_score
+			team1_score:=team1_score+a_team_points
+			all_players[0].set_player_team_score (team1_score)
+			all_players[2].set_player_team_score (team1_score)
+			game_state_obj.set_team1_score (team1_score)
+		else
+			team2_score:=game_state_obj.team2_score
+			team2_score:=team2_score+a_team_points
+			all_players[1].set_player_team_score (team2_score)
+			all_players[3].set_player_team_score (team2_score)
+			game_state_obj.set_team2_score (team2_score)
+		end
+	end
 
 
 
-  update_team_points(a_team_id,a_team_points:INTEGER)
-
-                 do
-                 if
-                     a_team_id=1
-                 then
-                     team1_score:=team1_score+a_team_points
-                     all_players[0].set_player_team_score (team1_score)
-                        all_players[2].set_player_team_score (team1_score)
-                        game_state_obj.set_team1_score (team1_score)
-
-                 else
-                      team2_score:=team2_score+a_team_points
-                      all_players[1].set_player_team_score (team2_score)
-                          all_players[3].set_player_team_score (team2_score)
-                          game_state_obj.set_team2_score (team2_score)
-
-
-                 end
-   end
 
 
 
