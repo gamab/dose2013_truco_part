@@ -31,7 +31,7 @@ feature{NONE,TR_TEST_LOGIC}
 --		the_end_of_the_hand		:BOOLEAN
 		final_winner			:INTEGER
 --			current_player_id	:INTEGER
-			current_dealer_id	:INTEGER
+--			current_dealer_id	:INTEGER
 
 		BC						: TR_BET_CONSTANTS
 
@@ -76,7 +76,8 @@ feature {ANY,TR_TEST_LOGIC}
 		game_state_obj.set_current_bet ("")
 
 		pos:=0
-		current_dealer_id:=0
+--		current_dealer_id:=0
+		game_state_obj.set_who_dealt(0)
 
 --		the_end_of_the_hand:=false
 		game_state_obj.set_end_hand_to_false
@@ -260,7 +261,7 @@ feature -- Working with cards
 		game_state_obj.set_all_players (all_players)
 		-- incrementing the person who distribued
 		game_state_obj.inc_who_dealt
-		current_dealer_id := game_state_obj.who_dealt
+--		current_dealer_id := game_state_obj.who_dealt
 		-- incrementing the id person who has to play
 		game_state_obj.set_the_player_turn_id (game_state_obj.who_dealt)
 		game_state_obj.inc_the_player_turn_id
@@ -703,7 +704,7 @@ feature -- Working with the gmae_state
 --		deck_cards:=game_state_obj.get_deck_cards
 --		action:=game_state_obj.get_action
 --		all_players:=game_state_obj.get_all_players
-		current_dealer_id := game_state_obj.who_dealt
+--		current_dealer_id := game_state_obj.who_dealt
 --		the_end_of_the_hand := game_state_obj.end_hand
 	end
 

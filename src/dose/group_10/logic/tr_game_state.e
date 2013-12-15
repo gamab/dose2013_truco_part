@@ -291,6 +291,11 @@ feature -- dealing
 		who_dealt := who_dealt \\ 4 + 1
 	end
 
+	set_who_dealt(dealer_id : INTEGER)
+	do
+		who_dealt := dealer_id
+	end
+
 feature -- player turn
 
 	set_the_player_turn_id(a_player_id:INTEGER)
