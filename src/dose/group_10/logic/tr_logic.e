@@ -489,10 +489,7 @@ feature -- Bets
 	send_accept(team:INTEGER)
 	local
 		add_score : INTEGER
-		id : INTEGER
-		cur_id : INTEGER
-		count : INTEGER
-		max : INTEGER
+		id_winner : INTEGER
 	do
 		-- we get the players
 		all_players := game_state_obj.get_all_players
@@ -501,14 +498,9 @@ feature -- Bets
 		-- TRUCO
 
 		if current_bet.is_equal (BC.truco) or current_bet.is_equal (BC.retruco) or current_bet.is_equal (BC.vale_cuatro) then
-			-- we get the game points
-			current_game_points := game_state_obj.get_current_game_points
 
-			-- we increment it by one
-			current_game_points := current_game_points+1
-
-			-- we set the current_game points
-			game_state_obj.set_current_game_points (current_game_points)
+			-- we add one to the value of current game points
+			add_to_game_points(1)
 
 		-- ENVIDO		
 		elseif current_bet.is_equal (BC.envido) or current_bet.is_equal (BC.real_envido) or current_bet.is_equal (BC.falta_envido) then
@@ -527,35 +519,13 @@ feature -- Bets
 				end
 			end
 
-			-- we are searching for the first player to have the highest envido points
-			from
-				count := 2
-				id := get_id_from_position_in_round(1)
-				max := all_players.at (id-1).cards_points
-				cur_id := id \\ 4 + 1
-			until
-				count > 4
-			loop
-				if all_players.at (cur_id - 1).cards_points > max then
-					max := all_players.at (cur_id - 1).cards_points
-					id := cur_id
-				end
-
-				cur_id := cur_id \\ 4 + 1
-				count := count + 1
-			end
+			id_winner := who_is_the_first_to_have_highest_envido_points
 
 			-- we set the points of the best player
-			if id = 1 or id = 3 then
-                team1_score := team1_score + add_score
-                all_players[0].set_player_team_score (team1_score)
-                all_players[2].set_player_team_score (team1_score)
-                game_state_obj.set_team2_score (team1_score)
-			elseif id = 2 or id = 4 then
-                team2_score := team2_score + add_score
-                all_players[1].set_player_team_score (team2_score)
-                all_players[3].set_player_team_score (team2_score)
-                game_state_obj.set_team2_score (team2_score)
+			if id_winner = 1 or id_winner = 3 then
+                add_to_team_points(1,add_score)
+            elseif id_winner = 2 or id_winner = 4 then
+                add_to_team_points(2,add_score)
 			end
 
 		end
@@ -567,6 +537,9 @@ feature -- Bets
 -------------------------------------------
 
 	send_reject(team:INTEGER)
+		-- makes changes considering this team rejected te current_bet 
+	require
+		team_exists : team >= 1 and team <= 2
 	local
 		add_points : INTEGER
 	do
@@ -591,17 +564,12 @@ feature -- Bets
 			end
 		end
 
-		-- set the points
+
+		-- we set the points of the best player
 		if team = 1 then
-			team2_score := add_points
-			all_players[1].set_player_team_score (team2_score)
-			all_players[3].set_player_team_score (team2_score)
-			game_state_obj.set_team2_score (team2_score)
+			add_to_team_points(2,add_points)
 		else
-			team1_score := add_points
-			all_players[0].set_player_team_score (team1_score)
-			all_players[2].set_player_team_score (team1_score)
-			game_state_obj.set_team1_score (team1_score)
+			add_to_team_points(1,add_points)
 		end
 
 		action:=false
@@ -615,6 +583,37 @@ feature -- Bets
 	do
 		result := game_state_obj.current_bet
 	end
+
+feature -- Searching for points in envido
+
+	who_is_the_first_to_have_highest_envido_points : INTEGER
+		-- searchs for the first player to have the highest envido points
+	local
+		id : INTEGER
+		cur_id : INTEGER
+		count : INTEGER
+		max : INTEGER
+	do
+		from
+			count := 2
+			id := get_id_from_position_in_round(1)
+			max := all_players.at (id-1).cards_points
+			cur_id := id \\ 4 + 1
+		until
+			count > 4
+		loop
+			if all_players.at (cur_id - 1).cards_points > max then
+				max := all_players.at (cur_id - 1).cards_points
+				id := cur_id
+			end
+
+			cur_id := cur_id \\ 4 + 1
+			count := count + 1
+		end
+		result := id
+	end
+
+
 
 feature -- Working with players	
 ------------------------------------------------------------------------------------------------------------
@@ -661,18 +660,7 @@ feature -- Working with players
 		end
 		game_state_obj.set_all_players (all_players)
 	end
----------------------------------------------------------------------------------------------------------------------
 
-	get_team_points(a_team_id:INTEGER):INTEGER
-	require
-		team_valid : a_team_id>0 and a_team_id<3
-	do
-		if a_team_id=1 then
-			result:=game_state_obj.team1_score
-		else
-			result:=game_state_obj.team2_score
-		end
-	end
 
 feature -- Working with the gmae_state
 
@@ -985,6 +973,16 @@ feature -- manipulate the points
 		end
 	end
 
+	get_team_points(a_team_id:INTEGER):INTEGER
+	require
+		team_valid : a_team_id>0 and a_team_id<3
+	do
+		if a_team_id=1 then
+			result:=game_state_obj.team1_score
+		else
+			result:=game_state_obj.team2_score
+		end
+	end
 
 
 
