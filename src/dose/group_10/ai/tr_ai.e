@@ -483,6 +483,7 @@ feature {NONE, TR_TEST_AI} --Send
             index: INTEGER
             bet : STRING
     do
+    	bet := ""
     			create cards_available_player_current.make_filled (void, 0,5)
                 cards_available_player_current := card_available(current_card_player, current_played_card)
                 if current_state_game.is_truco_allowed(current_player) then
@@ -504,9 +505,6 @@ feature {NONE, TR_TEST_AI} --Send
                                         bet := BC.Vale_Cuatro
                                 end
                         end
-
-                else
-                        bet := ""
                 end
                 result := bet
         ensure

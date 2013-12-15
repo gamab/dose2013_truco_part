@@ -1371,6 +1371,9 @@ feature {NONE}
 				if l_ai_2_action then
 					ai_team.next_move (logic.get_current_game_state.get_all_players()[3].get_player_id, logic)
 				end
+
+				-- send the updated game state to the network
+				send_network_game_update (logic.get_current_game_state)
 			end
 		end
 
