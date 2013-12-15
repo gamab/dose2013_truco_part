@@ -893,7 +893,7 @@ feature -- end of rounds
 	end
 
 
-	is_end_round():BOOLEAN
+	is_end_round :BOOLEAN
 		-- return wether this is the end of the round or not
 	do
 		result:=not(game_state_obj.get_deck_cards[3].get_card_type.is_equal(""))
@@ -940,8 +940,9 @@ feature -- end of hand
 	end
 
 	which_team_won_the_hand : INTEGER
+		-- returns the team number of the winning team
 	require
-		hand_ended : game_state_obj.end_hand
+		there_is_a_winner : is_there_a_winner_of_the_hand
 	local
 		team : INTEGER
 		rounds : ARRAY[INTEGER]
@@ -988,6 +989,50 @@ feature -- end of hand
 	ensure
 		team_exist : result = 1 or result = 2
 	end
+
+
+	is_there_a_winner_of_the_hand : BOOLEAN
+		-- returns  whether there is a winner of the hand or not
+	local
+		there_is_a_winner : BOOLEAN
+		rounds : ARRAY[INTEGER]
+		players : ARRAY[TR_PLAYER]
+		team_won_first : INTEGER
+	do
+		rounds := game_state_obj.get_round
+		players := game_state_obj.all_players
+
+		-- if it is par the team is the team that won the second round
+		if rounds.at (0) = 0 then
+			if rounds.at (1) = 0 then
+				-- if there is two draws and someone won the last round there is a winner
+				if rounds.at(2) /= -1 then
+					there_is_a_winner := True
+				end
+			-- if there is one draw and some won the second round there is a winner
+			elseif rounds.at(1) /= -1 then
+				there_is_a_winner := True
+			end
+		-- we remember the team who won the first round
+		elseif rounds.at (0) /= -1 then
+
+			team_won_first := players[rounds.at (0)].get_player_team_id
+
+			if rounds.at (1) = 0 then
+				there_is_a_winner := True
+			elseif rounds.at (1) /= -1 then
+				if players[rounds.at (1)].get_player_team_id = team_won_first then
+					there_is_a_winner := True
+				-- if the other team won the second round
+				elseif rounds.at (2) /= -1 then
+					there_is_a_winner := True
+				end
+			end
+		end
+
+		result := there_is_a_winner
+	end
+
 
 feature -- end of game
 
