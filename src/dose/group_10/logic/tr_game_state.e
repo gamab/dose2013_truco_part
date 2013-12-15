@@ -31,6 +31,9 @@ feature{TR_LOGIC}
 
 
 	who_dealt				: INTEGER -- who was the one who dealt the card
+
+	bc 						: TR_BET_CONSTANTS
+
 feature{ANY}
 
 	make
@@ -203,34 +206,36 @@ feature{ANY}
 		result:=the_deck_cards
 	end
 
+
 	is_envido_allowed(player: TR_PLAYER) : BOOLEAN
+
 	do
 		result:=is_first_round and current_bet.is_equal ("")
 	end
 
 	is_real_envido_allowed(local_player: TR_PLAYER):BOOLEAN
 	do
-		result:=(current_bet.is_equal ("envido") and get_action=true and (local_player.get_player_team_id /=betting_team))
+		result:= is_first_round and (current_bet.is_equal (bc.envido) and (local_player.get_player_team_id /=betting_team))
 	end
 
 	is_falta_envido_allowed(local_player: TR_PLAYER) : BOOLEAN
 	do
-		result:=(current_bet.is_equal ("realenvido") and get_action=true and (local_player.get_player_team_id /=betting_team))
+		result:= is_first_round AND (current_bet.is_equal (bc.real_envido) and (local_player.get_player_team_id /=betting_team))
 	end
 
 	is_truco_allowed(player: TR_PLAYER) :BOOLEAN
 	do
-		result:=(current_bet.is_equal ("") and get_action()=false)
+		result:=(current_bet.is_equal (""))
 	end
 
 	is_retruco_allowed(local_player: TR_PLAYER):BOOLEAN
 	do
-		result:=(current_bet.is_equal ("truco") and get_action()=true and (local_player.get_player_team_id /=betting_team))
+		result:=(current_bet.is_equal (bc.truco) and (local_player.get_player_team_id /=betting_team))
 	end
 
 	is_vale_cuatro_allowed(local_player: TR_PLAYER):BOOLEAN
 	do
-		result:=(current_bet.is_equal ("retruco") and get_action()=true and (local_player.get_player_team_id /=betting_team))
+		result:=(current_bet.is_equal (bc.retruco)  and (local_player.get_player_team_id /=betting_team))
 	end
 
 
