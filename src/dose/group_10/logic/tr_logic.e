@@ -655,26 +655,25 @@ feature -- end of rounds
 -------------------------------------------------------------------------------------------
 
 
-   set_current_game_state(the_game_state:TR_GAME_STATE)
-              do
-                   game_state_obj:=the_game_state
-                   rounds:=game_state_obj.get_round
-                   current_player_id:=game_state_obj.the_player_turn_id
-                   round_number:=game_state_obj.get_round_number
-                   team1_score:=game_state_obj.get_team1_score
-                   team2_score:=game_state_obj.get_team2_score
-                   betting_team:=game_state_obj.get_betting_team
-                   current_game_points:=game_state_obj.get_current_game_points
-                   current_bet:=game_state_obj.get_current_bet
-                   who_bet_id:=game_state_obj.get_who_bet_id
-                  -- win_round (game_state_obj.get_winner_round)
-                   deck_cards:=game_state_obj.get_deck_cards
-                   action:=game_state_obj.get_action
-                   all_players:=game_state_obj.get_all_players
+	set_current_game_state(the_game_state:TR_GAME_STATE)
+	do
+		game_state_obj:=the_game_state
+		rounds:=game_state_obj.get_round
+		current_player_id:=game_state_obj.the_player_turn_id
+		round_number:=game_state_obj.get_round_number
+		team1_score:=game_state_obj.get_team1_score
+		team2_score:=game_state_obj.get_team2_score
+		betting_team:=game_state_obj.get_betting_team
+		current_game_points:=game_state_obj.get_current_game_points
+		current_bet:=game_state_obj.get_current_bet
+		who_bet_id:=game_state_obj.get_who_bet_id
+		-- win_round (game_state_obj.get_winner_round)
+		deck_cards:=game_state_obj.get_deck_cards
+		action:=game_state_obj.get_action
+		all_players:=game_state_obj.get_all_players
+		current_dealer_id := game_state_obj.who_dealt
+	end
 
-
-
-   end
 
 	get_current_game_state():TR_GAME_STATE
 	do
