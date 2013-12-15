@@ -26,10 +26,10 @@ test_make
 	 	worked_well := false;
 	 	logic.make
 	 	-- we check if the teams are initialized correctly
-	 	if logic.team1_score = 0 AND logic.team2_score = 0 AND logic.current_game_points = 0 then
+	 	if logic.game_state_obj.get_team1_score = 0 AND logic.game_state_obj.get_team2_score = 0 AND logic.get_current_game_points = 0 then
 	 		-- check if all the arrays are correctly set
-	 		if logic.cards.count = 40 and logic.get_table_cards.count = 36 AND logic.get_round.count = 3 AND logic.all_players.count = 4 then
-	 			if logic.current_bet = "" AND logic.action = false AND logic.betting_team = 0 then
+	 		if logic.cards.count = 40 and logic.get_table_cards.count = 36 AND logic.get_round.count = 3 AND logic.game_state_obj.get_all_players.count = 4 then
+	 			if logic.get_current_bet.is_empty AND not logic.get_action AND logic.get_betting_team = 0 then
 	 				worked_well := true;
 	 			end
 	 		end
@@ -84,7 +84,7 @@ test_make_cards_random_order -- check if there isn't twice the same card in the 
 	 do
 	 	create logic.make
 	 	logic.add_to_team_points (1, 20 )
-	 	if logic.get_team_points (1) = logic.team1_score then
+	 	if logic.get_team_points (1) = logic.game_state_obj.get_team1_score then
 	 		worked_well := true;
 	 	end
 	 	assert ("make ok", worked_well )
@@ -595,7 +595,7 @@ test_send_envido
 		create logic.make
 		worked_well := false
 		logic.send_envido (1)
-		if logic.current_bet = "envido" then
+		if logic.get_current_bet.is_equal ("envido") then
 			worked_well := true
 		end
 
@@ -613,7 +613,7 @@ test_send_envido
 		create logic.make
 		worked_well := false
 			logic.send_re_envido (1)
-			if logic.current_bet = "re_envido" then
+			if logic.get_current_bet.is_equal ("re_envido") then
 				worked_well := true
 			end
 		assert ("send_re_envido ok",worked_well)
@@ -633,7 +633,7 @@ test_send_envido
 		create logic.make
 		worked_well := false
 			logic.send_falta_envido (1)
-			if logic.current_bet = "falta_envido" then
+			if logic.get_current_bet.is_equal("falta_envido") then
 				worked_well := true
 			end
 		assert ("send_falta_envido ok",worked_well)
@@ -654,7 +654,7 @@ test_send_truco
 		create logic.make
 		worked_well := false
 		logic.send_truco (1)
-		if logic.current_bet.is_equal ("truco") then
+		if logic.get_current_bet.is_equal ("truco") then
 			worked_well := true
 		end
 		assert ("send_truco ok",worked_well)
@@ -673,7 +673,7 @@ test_send_re_truco
 		create logic.make
 		worked_well := false
 			logic.send_re_truco (1)
-			if logic.current_bet = "re_truco" then
+			if logic.get_current_bet = "re_truco" then
 				worked_well := true
 			end
 		assert ("send_re_truco",worked_well)
@@ -693,7 +693,7 @@ test_send_accept
 		create logic.make
 		worked_well := false
 			logic.send_accept (1)
-			if logic.current_bet = "accept" then
+			if logic.get_current_bet = "accept" then
 				worked_well := true
 			end
 		assert ("send_accept ok",worked_well)
@@ -713,7 +713,7 @@ test_send_accept
 		create logic.make
 		worked_well := false
 			logic.send_reject (1)
-			if logic.current_bet = "reject" then
+			if logic.get_current_bet = "reject" then
 				worked_well := true
 			end
 		assert ("send_reject ok",worked_well)
@@ -760,9 +760,9 @@ feature -- test for: update_game_points
  		game_points1,game_points2:INTEGER
  	do
  		create logic.make
- 		game_points1 := logic.current_game_points
+ 		game_points1 := logic.get_current_game_points
  		logic.add_to_game_points (2)
- 		game_points2 := logic.current_game_points
+ 		game_points2 := logic.get_current_game_points
  		worked_well:= (game_points1 = game_points2+2)
  		assert ("update_game_points ok",worked_well)
  	end
@@ -777,9 +777,9 @@ feature -- test for: update_game_points
  		game_points1,game_points2:INTEGER
  	do
  		create logic.make
- 		game_points1 := logic.current_game_points
+ 		game_points1 := logic.get_current_game_points
  		logic.add_to_game_points (2)
- 		game_points2 := logic.current_game_points
+ 		game_points2 := logic.get_current_game_points
  		worked_well:= not (game_points1 = game_points2+3)
  		assert ("update_game_points ok",worked_well)
  	end

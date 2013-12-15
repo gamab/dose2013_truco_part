@@ -23,9 +23,9 @@ feature -- Test routines
 		card: TR_CARD
 
 	do
-		create card.make ("sword", 1 )
+		create card.make ("swords", 1 )
 		worked_well := false
-		if (card.get_card_type = "sword" and card.get_card_value = 4) then
+		if (card.get_card_type.is_equal ("swords") and card.get_card_value = 1) then
 			worked_well := true
 		end
 		assert ("make ok", worked_well )
@@ -44,9 +44,9 @@ feature -- Test routines
 		card_type: STRING
 	do
 		worked_well := false
-		card.make ("sword", 4)
+		create card.make ("swords", 4)
 		card_type := card.get_card_type;
-		if card_type = "sword" then
+		if card_type.is_equal ("swords") then
 			worked_well := true;
 		end
 		assert ("get_card_type ok", worked_well )
@@ -66,7 +66,7 @@ feature -- Test routines
 		card_value: INTEGER
    do
    		worked_well:= false
-   		card.make ("sword", 4)
+   		create card.make ("swords", 4)
    		card_value := card.get_card_value;
    		if card_value = 4 then
    			worked_well := true;
@@ -89,8 +89,8 @@ feature -- Test routines
 		real_card_weight: INTEGER
    do
    		worked_well := false
-   		real_card_weight := 15
-   		card.make ("sword", 1)
+   		real_card_weight := 13
+   		create card.make ("swords", 1)
    		weight := card.get_card_weight_truco
    		if weight = real_card_weight  then
    			worked_well := true
@@ -113,8 +113,8 @@ feature -- Test routines
    do
    		worked_well := false
    		real_card_weight := 1
-   		card.make ("sword", 1)
-   		weight := card.get_card_weight_truco
+   		create card.make ("swords", 1)
+   		weight := card.get_card_weight_envido
    		if weight = real_card_weight  then
    			worked_well := true
    		end

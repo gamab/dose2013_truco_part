@@ -13,20 +13,20 @@ create
 feature{NONE,TR_TEST_LOGIC}
 
 			cards				:ARRAY[TR_CARD]-- all game cards =  40 card
-		deck_cards				:ARRAY[TR_CARD]-- the cards on deck it will be only 4 cards
-		rounds					:ARRAY[INTEGER]-- save the id of winners in every round
-		all_players				:ARRAY[TR_PLAYER]-- the 4 players array
+--		deck_cards				:ARRAY[TR_CARD]-- the cards on deck it will be only 4 cards
+--		rounds					:ARRAY[INTEGER]-- save the id of winners in every round
+--		all_players				:ARRAY[TR_PLAYER]-- the 4 players array
 
 		pos						:INTEGER -- counter for cards
-		round_number			:INTEGER-- the round number 1  2  3
-		team1_score				:INTEGER-- score of the team1
-		team2_score				:INTEGER--score of the team2
-		betting_team			:INTEGER-- The team hwo send last bet
-		current_game_points		:INTEGER-- raise of the game , first it 1 but when you press envido and accept it will be 2 and so on
-		current_bet				:STRING-- if there a bet  what's this bet
+--		round_number			:INTEGER-- the round number 1  2  3
+--		team1_score				:INTEGER-- score of the team1
+--		team2_score				:INTEGER--score of the team2
+--		betting_team			:INTEGER-- The team hwo send last bet
+--		current_game_points		:INTEGER-- raise of the game , first it 1 but when you press envido and accept it will be 2 and so on
+--		current_bet				:STRING-- if there a bet  what's this bet
 
-		action					:BOOLEAN--never mind
-		who_bet_id				:INTEGER
+--		action					:BOOLEAN--never mind
+--		who_bet_id				:INTEGER
 		game_state_obj			:TR_GAME_STATE
 		the_end_of_the_hand		:BOOLEAN
 		final_winner			:INTEGER
@@ -42,31 +42,41 @@ feature {ANY,TR_TEST_LOGIC}
 	local
 		p:TR_PLAYER-- used to initialize the all_players array
 		d:TR_CARD
+		all_players : ARRAY[TR_PLAYER]
+		deck_cards : ARRAY[TR_CARD]
+		rounds : ARRAY[INTEGER]
 	do
 		create BC
 
 		create game_state_obj.make
 		create  p.make(0,0)-- create the player with id=0, teamid = 0
 		create d.make ("",0)--  ceate card
+
 		create all_players.make_filled (p,0,3)-- make all_players array with size 4 and initialize
 		game_state_obj.set_all_players (all_players)
+
 		create rounds.make_filled (-1, 0,2)-- array to save who win	
+		game_state_obj.set_rounds (rounds)
 
 		create deck_cards.make_filled (d,0,3)-- cards on deck
 		game_state_obj.update_deck_cards (deck_cards)
 		create cards.make_filled (d,0,39)-- all cards in the game
 
-		game_state_obj.set_the_player_turn_id (1)
-		current_player_id:=1
 		game_state_obj.set_the_player_turn_id (current_player_id)
-		current_game_points:=0
-		game_state_obj.set_current_game_points (current_game_points)
-		round_number:=1
-		game_state_obj.set_round_number (round_number)
-		current_bet:=""
-		game_state_obj.set_current_bet (current_bet)
+		current_player_id:=1
+
+--		current_game_points:=0
+		game_state_obj.set_current_game_points (0)
+
+--		round_number := 1
+		game_state_obj.set_round_number (1)
+
+--		current_bet:=""
+		game_state_obj.set_current_bet ("")
+
 		pos:=0
-		current_dealer_id:=1
+		current_dealer_id:=0
+
 		the_end_of_the_hand:=false
 		game_state_obj.set_end_hand_to_false
 		put_the_cards
@@ -215,6 +225,7 @@ feature -- Working with cards
 		a_card:TR_CARD
 		i:INTEGER_32
 		j:INTEGER
+		all_players : ARRAY[TR_PLAYER]
 	do
 		all_players := game_state_obj.get_all_players
 		i := 1
@@ -254,7 +265,7 @@ feature -- Working with cards
 		game_state_obj.inc_the_player_turn_id
 		current_player_id := game_state_obj.the_player_turn_id
 		-- setting the round number to 1
-		round_number := 1
+--		round_number := 1
 		game_state_obj.set_round_number (1)
 		-- setting the positions of the players
 		set_players_positions (game_state_obj.the_player_turn_id)
@@ -268,10 +279,13 @@ feature -- Working with cards
 		i:INTEGER
 		new_player_turn: INTEGER
 		player_current_cards:ARRAY[TR_CARD]
+		all_players : ARRAY[TR_PLAYER]
+		deck_cards : ARRAY[TR_CARD]
 	do
 		all_players := game_state_obj.get_all_players
 		local_player.set_player_current_card (card)
 		create player_current_cards.make_from_array (local_player.get_player_cards)-- put player card here
+		deck_cards := game_state_obj.get_deck_cards
 		deck_cards.put (card.deep_twin,(local_player.get_player_posistion-1))
 		game_state_obj.update_deck_cards (deck_cards)
 		from
@@ -331,17 +345,16 @@ feature -- Bets
 	do
 		game_state_obj.set_current_bet (BC.envido)
 		game_state_obj.set_action
-		current_bet:=BC.envido
-		action:=true
-		who_bet_id:=a_betting_player_id
-		game_state_obj.set_who_bet_id (who_bet_id)
+--		current_bet:=BC.envido
+--		action:=true
+--		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (a_betting_player_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
-			betting_team:=1
+			game_state_obj.set_betting_team (1)
 		else
-			betting_team:=2
+			game_state_obj.set_betting_team (2)
 		end
-		game_state_obj.set_betting_team (betting_team)
 	end
 
  --------------------------------------------------------------------
@@ -357,18 +370,16 @@ feature -- Bets
 	do
 		game_state_obj.set_current_bet (BC.real_envido)
 		game_state_obj.set_action
-		current_bet:=BC.real_envido
-		action:=true
-		who_bet_id:=a_betting_player_id
-		game_state_obj.set_who_bet_id (who_bet_id)
+--		current_bet:=BC.real_envido
+--		action:=true
+--		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (a_betting_player_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
-			betting_team:=1
+			game_state_obj.set_betting_team (1)
 		else
-			betting_team:=2
+			game_state_obj.set_betting_team (2)
 		end
-
-		game_state_obj.set_betting_team (betting_team)
 	end
 ------------------------------------------------------------------------------------------------------------
 
@@ -385,19 +396,17 @@ feature -- Bets
 	do
 		game_state_obj.set_current_bet (BC.falta_envido)
 		game_state_obj.set_action
-		current_bet:=BC.falta_envido
-		action:=true
-		who_bet_id:=a_betting_player_id
-		game_state_obj.set_who_bet_id (who_bet_id)
+--		current_bet:=BC.falta_envido
+--		action:=true
+--		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (a_betting_player_id)
 
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
-			betting_team:=1
+			game_state_obj.set_betting_team (1)
 		else
-			betting_team:=2
+			game_state_obj.set_betting_team (2)
 		end
-
-		game_state_obj.set_betting_team (betting_team)
 	end
 -------------------------------------------------------------------------------------------------------
 
@@ -414,18 +423,16 @@ feature -- Bets
 	do
 		game_state_obj.set_current_bet (BC.truco)
 		game_state_obj.set_action
-		current_bet:=BC.truco
-		action:=true
-		who_bet_id:=a_betting_player_id
-		game_state_obj.set_who_bet_id (who_bet_id)
+--		current_bet:=BC.truco
+--		action:=true
+--		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (a_betting_player_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
-			betting_team:=1
+			game_state_obj.set_betting_team (1)
 		else
-			betting_team:=2
+			game_state_obj.set_betting_team (2)
 		end
-
-		game_state_obj.set_betting_team (betting_team)
 
 	end
 ------------------------------------------------------------------------------------------------------------------------
@@ -442,17 +449,16 @@ feature -- Bets
 	do
 		game_state_obj.set_current_bet (BC.retruco)
 		game_state_obj.set_action
-		current_bet:=BC.retruco
-		action:=true
-		who_bet_id:=a_betting_player_id
-		game_state_obj.set_who_bet_id (who_bet_id)
+--		current_bet:=BC.retruco
+--		action:=true
+--		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (a_betting_player_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
-			betting_team:=1
+	 		game_state_obj.set_betting_team (1)
 		else
-			betting_team:=2
+	 		game_state_obj.set_betting_team (2)
 		end
-	   game_state_obj.set_betting_team (betting_team)
 
 	end
 ---------------------------------------------------------------------------------------------------------------------
@@ -470,19 +476,16 @@ feature -- Bets
 	do
 		game_state_obj.set_current_bet (BC.vale_cuatro)
 		game_state_obj.set_action
-		current_bet:=BC.vale_cuatro
-		action:=true
-		who_bet_id:=a_betting_player_id
-		game_state_obj.set_who_bet_id (who_bet_id)
+--		current_bet:=BC.vale_cuatro
+--		action:=true
+--		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (a_betting_player_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
-			betting_team:=1
+			game_state_obj.set_betting_team (1)
 		else
-			betting_team:=2
+			game_state_obj.set_betting_team (2)
 		end
-
-		game_state_obj.set_betting_team (betting_team)
-
 	end
 
 
@@ -490,10 +493,9 @@ feature -- Bets
 	local
 		add_score : INTEGER
 		id_winner : INTEGER
+		current_bet : STRING
 	do
-		-- we get the players
-		all_players := game_state_obj.get_all_players
-
+		current_bet := game_state_obj.current_bet
 
 		-- TRUCO
 
@@ -530,7 +532,7 @@ feature -- Bets
 
 		end
 
-		action:=false
+--		action:=false
 		game_state_obj.remove_action
 	end
 
@@ -542,7 +544,10 @@ feature -- Bets
 		team_exists : team >= 1 and team <= 2
 	local
 		add_points : INTEGER
+		current_bet : STRING
 	do
+		current_bet := game_state_obj.current_bet
+
 		-- TRUCO		
 		if current_bet.is_equal (BC.truco) or current_bet.is_equal (BC.retruco) or current_bet.is_equal (BC.vale_cuatro) then
 
@@ -572,7 +577,7 @@ feature -- Bets
 			add_to_team_points(1,add_points)
 		end
 
-		action:=false
+--		action:=false
 		game_state_obj.remove_action
 
 	end
@@ -584,6 +589,16 @@ feature -- Bets
 		result := game_state_obj.current_bet
 	end
 
+	get_betting_team : INTEGER
+	do
+		result := game_state_obj.betting_team
+	end
+
+	get_action : BOOLEAN
+	do
+		result := game_state_obj.action
+	end
+
 feature -- Searching for points in envido
 
 	who_is_the_first_to_have_highest_envido_points : INTEGER
@@ -593,7 +608,9 @@ feature -- Searching for points in envido
 		cur_id : INTEGER
 		count : INTEGER
 		max : INTEGER
+		all_players : ARRAY[TR_PLAYER]
 	do
+		all_players := game_state_obj.get_all_players
 		from
 			count := 2
 			id := get_id_from_position_in_round(1)
@@ -610,6 +627,7 @@ feature -- Searching for points in envido
 			cur_id := cur_id \\ 4 + 1
 			count := count + 1
 		end
+		game_state_obj.set_all_players (all_players)
 		result := id
 	end
 
@@ -622,6 +640,7 @@ feature -- Working with players
 	set_player_info(a_name:STRING ;  a_id, a_team_id:INTEGER)-- will used by controller to send information
 	local
 		player : TR_PLAYER
+		all_players : ARRAY[TR_PLAYER]
 	do
 		all_players := game_state_obj.get_all_players
 		create player.make (a_id, a_team_id)
@@ -643,6 +662,7 @@ feature -- Working with players
 	local
 		j:INTEGER
 		i:INTEGER
+		all_players : ARRAY[TR_PLAYER]
 	do
 		all_players := game_state_obj.get_all_players
 		i:=winner_id-1
@@ -668,19 +688,19 @@ feature -- Working with the gmae_state
 	set_current_game_state(the_game_state:TR_GAME_STATE)
 	do
 		game_state_obj:=the_game_state
-		rounds:=game_state_obj.get_round
+--		rounds:=game_state_obj.get_round
 		current_player_id:=game_state_obj.the_player_turn_id
-		round_number:=game_state_obj.get_round_number
-		team1_score:=game_state_obj.get_team1_score
-		team2_score:=game_state_obj.get_team2_score
-		betting_team:=game_state_obj.get_betting_team
-		current_game_points:=game_state_obj.get_current_game_points
-		current_bet:=game_state_obj.get_current_bet
-		who_bet_id:=game_state_obj.get_who_bet_id
+--		round_number:=game_state_obj.get_round_number
+--		team1_score:=game_state_obj.get_team1_score
+--		team2_score:=game_state_obj.get_team2_score
+--		betting_team:=game_state_obj.get_betting_team
+--		current_game_points:=game_state_obj.get_current_game_points
+--		current_bet:=game_state_obj.get_current_bet
+--		who_bet_id:=game_state_obj.get_who_bet_id
 		-- win_round (game_state_obj.get_winner_round)
-		deck_cards:=game_state_obj.get_deck_cards
-		action:=game_state_obj.get_action
-		all_players:=game_state_obj.get_all_players
+--		deck_cards:=game_state_obj.get_deck_cards
+--		action:=game_state_obj.get_action
+--		all_players:=game_state_obj.get_all_players
 		current_dealer_id := game_state_obj.who_dealt
 		the_end_of_the_hand := game_state_obj.end_hand
 	end
@@ -797,7 +817,7 @@ feature -- modifying and getting rounds
 
 	set_round_number(num:INTEGER)--rounds seeter and getter will used by AI
 	do
-		round_number:=num
+--		round_number:=num
 		game_state_obj.set_round_number (num)
 	end
 
@@ -808,7 +828,7 @@ feature -- modifying and getting rounds
 
 	get_round:ARRAY[INTEGER]
 	do
-		result:=rounds
+		result:=game_state_obj.rounds
 	end
 
 	is_first_round():BOOLEAN
@@ -827,9 +847,12 @@ feature -- end of rounds
 		id_possible : winner_id >= 1 and winner_id <= 3
 	local
 		draw : BOOLEAN
+		rounds : ARRAY[INTEGER]
+		round_number : INTEGER
 	do
 		-- we get the round number from the game state
 		round_number := game_state_obj.round_number
+		rounds := game_state_obj.rounds
 
 		-- first we look if there is a draw
 		draw := is_there_a_draw
@@ -856,7 +879,11 @@ feature -- end of rounds
 		round_ended : is_end_round
 	local
 		winner_id : INTEGER
+		round_number : INTEGER
 	do
+		-- we retrieve the round number
+		round_number := game_state_obj.get_round_number
+
 		-- first we search for the best player
 		winner_id := who_played_the_first_best_card
 
@@ -881,7 +908,7 @@ feature -- end of rounds
 	is_end_round():BOOLEAN
 		-- return wether this is the end of the round or not
 	do
-		result:=not(deck_cards[3].get_card_type.is_equal(""))
+		result:=not(game_state_obj.get_deck_cards[3].get_card_type.is_equal(""))
 	end
 
 
@@ -894,6 +921,9 @@ feature -- end of hand
 
 
 	end_hand
+	local
+		deck_cards : ARRAY[TR_CARD]
+		rounds : ARRAY[INTEGER]
 	do
 		-- we remember this is the end of the hand
 		the_end_of_the_hand:=True
@@ -904,11 +934,11 @@ feature -- end of hand
 		game_state_obj.set_rounds(rounds)
 
 		-- there is no more actions
-		action:=false
+--		action:=false
 		game_state_obj.remove_action
 
 		-- there is no more bets
-		current_bet:=""
+--		current_bet:=""
 		game_state_obj.set_current_bet ("")
 
 		-- the cards played have to be deleted from the table
@@ -932,7 +962,7 @@ feature -- end of game
 	require
 		game_can_end : is_end_of_game
 	do
-		if team1_score >=24 then
+		if game_state_obj.get_team1_score >=24 then
 			final_winner :=1
 		else
 			final_winner:= 2
@@ -945,19 +975,23 @@ feature -- end of game
 feature -- manipulate the points
 
 
-	add_to_game_points(point: INTEGER)
+	add_to_game_points(points : INTEGER)
 		-- add a certain amount of points to the current game points
 	do
-		current_game_points:=game_state_obj.get_current_game_points
-		current_game_points:=current_game_points+point
-		game_state_obj.set_current_game_points (current_game_points)
+		game_state_obj.set_current_game_points (game_state_obj.get_current_game_points + points)
 	end
 
 
 
 	add_to_team_points(a_team_id,a_team_points:INTEGER)
 		-- add a certain amount of points to the give team's points
+	local
+		all_players : ARRAY[TR_PLAYER]
+		team1_score : INTEGER
+		team2_score : INTEGER
 	do
+		all_players := game_state_obj.get_all_players
+
 		if a_team_id=1 then
 			team1_score:=game_state_obj.team1_score
 			team1_score:=team1_score+a_team_points
@@ -971,6 +1005,8 @@ feature -- manipulate the points
 			all_players[3].set_player_team_score (team2_score)
 			game_state_obj.set_team2_score (team2_score)
 		end
+
+		 game_state_obj.set_all_players (all_players)
 	end
 
 	get_team_points(a_team_id:INTEGER):INTEGER
@@ -984,7 +1020,10 @@ feature -- manipulate the points
 		end
 	end
 
-
+	get_current_game_points : INTEGER
+	do
+		result := game_state_obj.current_game_points
+	end
 
 
 feature -- Useful information to determine who has to do something
@@ -1004,6 +1043,5 @@ feature -- Useful information to determine who has to do something
 	do
 	        result := game_state_obj.who_dealt
 	end
-
 
 end
