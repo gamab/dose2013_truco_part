@@ -816,7 +816,7 @@ feature -- test for: update_game_points
  		game_points1 := logic.get_current_game_points
  		logic.add_to_game_points (2)
  		game_points2 := logic.get_current_game_points
- 		worked_well:= (game_points1 = game_points2+2)
+ 		worked_well:= (game_points1+2 = game_points2)
  		assert ("update_game_points ok",worked_well)
  	end
 
