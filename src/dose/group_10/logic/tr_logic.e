@@ -758,21 +758,26 @@ feature -- end of rounds
 
 ---------------------------------------------------------------------
 
-  set_players_positions(winner_id:INTEGER)
-
-                local
-                        j:INTEGER
-                        i:INTEGER
-      do
-                          i:=winner_id-1
-                          from j:=0 until j>3
-                          loop
-                                  if  i>3 then i:=0
-                                  end
-                                  all_players[i].set_player_posistion (j+1);
-                                  j:=j+1;i:=i+1
-                          end
-      end
+	set_players_positions(winner_id:INTEGER)
+	local
+		j:INTEGER
+		i:INTEGER
+	do
+		i:=winner_id-1
+		from
+			j:=0
+		until
+			j>3
+		loop
+			if i>3 then
+				i:=0
+			end
+			all_players[i].set_player_posistion (j+1)
+			j:=j+1
+			i:=i+1
+		end
+		game_state_obj.set_all_players (all_players)
+	end
 -------------------------------------------------------
 
         send_accept(team:INTEGER)
