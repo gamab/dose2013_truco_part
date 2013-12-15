@@ -16,6 +16,7 @@ inherit
 feature {NONE} -- Access
 
 	ai: TR_AI
+	BC: TR_BET_CONSTANTS
 
 feature {NONE} -- Events
 
@@ -1999,7 +2000,7 @@ feature -- test accept_envido
 		worked_well : BOOLEAN
 	do
 		create ai.make_ai_with_players("difficult",2,4,2)
-		worked_well := ai.accept_envido(25,ai.envido,20)
+		worked_well := ai.accept_envido(25,BC.envido,20)
 		assert ("test_accept_envido ok", worked_well)
 	end
 
@@ -2011,7 +2012,7 @@ feature -- test accept_envido
 		worked_well : BOOLEAN
 	do
 		create ai.make_ai_with_players("difficult",2,4,2)
-		worked_well := ai.accept_envido(30,ai.real_envido,20)
+		worked_well := ai.accept_envido(30,BC.real_envido,20)
 		assert ("test_accept_envido ok", worked_well)
 	end
 
@@ -2023,7 +2024,7 @@ feature -- test accept_envido
 		worked_well : BOOLEAN
 	do
 		create ai.make_ai_with_players("difficult",2,4,2)
-		worked_well := ai.accept_envido(31,ai.falta_envido,20)
+		worked_well := ai.accept_envido(31,BC.falta_envido,20)
 		assert ("test_accept_envido ok", worked_well)
 	end
 
@@ -2035,7 +2036,7 @@ feature -- test accept_envido
 		worked_well : BOOLEAN
 	do
 		create ai.make_ai_with_players("difficult",2,4,2)
-		worked_well := NOT ai.accept_envido(24,ai.envido,20)
+		worked_well := NOT ai.accept_envido(24,BC.envido,20)
 		assert ("test_accept_envido ok", worked_well)
 	end
 
@@ -2047,7 +2048,7 @@ feature -- test accept_envido
 		worked_well : BOOLEAN
 	do
 		create ai.make_ai_with_players("difficult",2,4,2)
-		worked_well := NOT ai.accept_envido(29,ai.real_envido,20)
+		worked_well := NOT ai.accept_envido(29,BC.real_envido,20)
 		assert ("test_accept_envido ok", worked_well)
 	end
 
@@ -2059,7 +2060,7 @@ feature -- test accept_envido
 		worked_well : BOOLEAN
 	do
 		create ai.make_ai_with_players("difficult",2,4,2)
-		worked_well := NOT ai.accept_envido(30,ai.falta_envido,20)
+		worked_well := NOT ai.accept_envido(30,BC.falta_envido,20)
 		assert ("test_accept_envido ok", worked_well)
 	end
 
@@ -2071,7 +2072,7 @@ feature -- test accept_envido
 		worked_well : BOOLEAN
 	do
 		create ai.make_ai_with_players("difficult",2,4,2)
-		worked_well := NOT ai.accept_envido(32,ai.falta_envido,15)
+		worked_well := NOT ai.accept_envido(32,BC.falta_envido,15)
 		assert ("test_accept_envido ok", worked_well)
 	end
 
@@ -2201,7 +2202,7 @@ feature -- send_envido
 
 		print("Making the second AI player play %N")
 		bet :=ai.send_envido (players[id_team_mate-1], ai.envido_points_b, 0, game_state)
-		worked := (bet = ai.envido)
+		worked := (bet = BC.envido)
 
 		assert ("send_envido ok", worked)
 	end
@@ -2321,7 +2322,7 @@ feature -- send_envido
 		print("Making the first AI player play %N")
 		card_played := ai.play_card_difficult (id_player, id_team_mate,card_player,card_team_mate,played_cards,team_mate_played_cards, game_state)
 		bet :=ai.send_envido (players[id_player-1], ai.envido_points_a, 0, game_state)
-		worked := NOT (bet = ai.envido)
+		worked := NOT (bet = BC.envido)
 
 		assert ("send_envido ok", worked)
 	end
