@@ -25,7 +25,7 @@ feature{NONE,TR_TEST_LOGIC}
 --		current_game_points		:INTEGER-- raise of the game , first it 1 but when you press envido and accept it will be 2 and so on
 --		current_bet				:STRING-- if there a bet  what's this bet
 
-		action					:BOOLEAN--never mind
+--		action					:BOOLEAN--never mind
 		who_bet_id				:INTEGER
 		game_state_obj			:TR_GAME_STATE
 		the_end_of_the_hand		:BOOLEAN
@@ -346,7 +346,7 @@ feature -- Bets
 		game_state_obj.set_current_bet (BC.envido)
 		game_state_obj.set_action
 --		current_bet:=BC.envido
-		action:=true
+--		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
 
@@ -371,7 +371,7 @@ feature -- Bets
 		game_state_obj.set_current_bet (BC.real_envido)
 		game_state_obj.set_action
 --		current_bet:=BC.real_envido
-		action:=true
+--		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
 
@@ -397,7 +397,7 @@ feature -- Bets
 		game_state_obj.set_current_bet (BC.falta_envido)
 		game_state_obj.set_action
 --		current_bet:=BC.falta_envido
-		action:=true
+--		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
 
@@ -424,7 +424,7 @@ feature -- Bets
 		game_state_obj.set_current_bet (BC.truco)
 		game_state_obj.set_action
 --		current_bet:=BC.truco
-		action:=true
+--		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
 
@@ -450,7 +450,7 @@ feature -- Bets
 		game_state_obj.set_current_bet (BC.retruco)
 		game_state_obj.set_action
 --		current_bet:=BC.retruco
-		action:=true
+--		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
 
@@ -477,7 +477,7 @@ feature -- Bets
 		game_state_obj.set_current_bet (BC.vale_cuatro)
 		game_state_obj.set_action
 --		current_bet:=BC.vale_cuatro
-		action:=true
+--		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
 
@@ -532,7 +532,7 @@ feature -- Bets
 
 		end
 
-		action:=false
+--		action:=false
 		game_state_obj.remove_action
 	end
 
@@ -577,7 +577,7 @@ feature -- Bets
 			add_to_team_points(1,add_points)
 		end
 
-		action:=false
+--		action:=false
 		game_state_obj.remove_action
 
 	end
@@ -594,6 +594,11 @@ feature -- Bets
 		result := game_state_obj.betting_team
 	end
 
+	get_action : BOOLEAN
+	do
+		result := game_state_obj.action
+	end
+	
 feature -- Searching for points in envido
 
 	who_is_the_first_to_have_highest_envido_points : INTEGER
@@ -694,7 +699,7 @@ feature -- Working with the gmae_state
 		who_bet_id:=game_state_obj.get_who_bet_id
 		-- win_round (game_state_obj.get_winner_round)
 --		deck_cards:=game_state_obj.get_deck_cards
-		action:=game_state_obj.get_action
+--		action:=game_state_obj.get_action
 --		all_players:=game_state_obj.get_all_players
 		current_dealer_id := game_state_obj.who_dealt
 		the_end_of_the_hand := game_state_obj.end_hand
@@ -929,7 +934,7 @@ feature -- end of hand
 		game_state_obj.set_rounds(rounds)
 
 		-- there is no more actions
-		action:=false
+--		action:=false
 		game_state_obj.remove_action
 
 		-- there is no more bets
