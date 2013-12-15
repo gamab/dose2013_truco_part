@@ -28,7 +28,7 @@ test_make
 	 	-- we check if the teams are initialized correctly
 	 	if logic.team1_score = 0 AND logic.team2_score = 0 AND logic.current_game_points = 0 then
 	 		-- check if all the arrays are correctly set
-	 		if logic.cards.count = 40 and logic.get_table_cards.count = 36 AND logic.get_round.count = 3 AND logic.all_players.count = 4 then
+	 		if logic.cards.count = 40 and logic.get_table_cards.count = 36 AND logic.get_round.count = 3 AND logic.game_state_obj.get_all_players.count = 4 then
 	 			if logic.current_bet = "" AND logic.action = false AND logic.betting_team = 0 then
 	 				worked_well := true;
 	 			end

@@ -15,7 +15,7 @@ feature{NONE,TR_TEST_LOGIC}
 			cards				:ARRAY[TR_CARD]-- all game cards =  40 card
 		deck_cards				:ARRAY[TR_CARD]-- the cards on deck it will be only 4 cards
 		rounds					:ARRAY[INTEGER]-- save the id of winners in every round
-		all_players				:ARRAY[TR_PLAYER]-- the 4 players array
+--		all_players				:ARRAY[TR_PLAYER]-- the 4 players array
 
 		pos						:INTEGER -- counter for cards
 		round_number			:INTEGER-- the round number 1  2  3
@@ -42,6 +42,7 @@ feature {ANY,TR_TEST_LOGIC}
 	local
 		p:TR_PLAYER-- used to initialize the all_players array
 		d:TR_CARD
+		all_players : ARRAY[TR_PLAYER]
 	do
 		create BC
 
@@ -215,6 +216,7 @@ feature -- Working with cards
 		a_card:TR_CARD
 		i:INTEGER_32
 		j:INTEGER
+		all_players : ARRAY[TR_PLAYER]
 	do
 		all_players := game_state_obj.get_all_players
 		i := 1
@@ -268,6 +270,7 @@ feature -- Working with cards
 		i:INTEGER
 		new_player_turn: INTEGER
 		player_current_cards:ARRAY[TR_CARD]
+		all_players : ARRAY[TR_PLAYER]
 	do
 		all_players := game_state_obj.get_all_players
 		local_player.set_player_current_card (card)
@@ -491,10 +494,6 @@ feature -- Bets
 		add_score : INTEGER
 		id_winner : INTEGER
 	do
-		-- we get the players
-		all_players := game_state_obj.get_all_players
-
-
 		-- TRUCO
 
 		if current_bet.is_equal (BC.truco) or current_bet.is_equal (BC.retruco) or current_bet.is_equal (BC.vale_cuatro) then
@@ -593,7 +592,9 @@ feature -- Searching for points in envido
 		cur_id : INTEGER
 		count : INTEGER
 		max : INTEGER
+		all_players : ARRAY[TR_PLAYER]
 	do
+		all_players := game_state_obj.get_all_players
 		from
 			count := 2
 			id := get_id_from_position_in_round(1)
@@ -610,6 +611,7 @@ feature -- Searching for points in envido
 			cur_id := cur_id \\ 4 + 1
 			count := count + 1
 		end
+		game_state_obj.set_all_players (all_players)
 		result := id
 	end
 
@@ -622,6 +624,7 @@ feature -- Working with players
 	set_player_info(a_name:STRING ;  a_id, a_team_id:INTEGER)-- will used by controller to send information
 	local
 		player : TR_PLAYER
+		all_players : ARRAY[TR_PLAYER]
 	do
 		all_players := game_state_obj.get_all_players
 		create player.make (a_id, a_team_id)
@@ -643,6 +646,7 @@ feature -- Working with players
 	local
 		j:INTEGER
 		i:INTEGER
+		all_players : ARRAY[TR_PLAYER]
 	do
 		all_players := game_state_obj.get_all_players
 		i:=winner_id-1
@@ -680,7 +684,7 @@ feature -- Working with the gmae_state
 		-- win_round (game_state_obj.get_winner_round)
 		deck_cards:=game_state_obj.get_deck_cards
 		action:=game_state_obj.get_action
-		all_players:=game_state_obj.get_all_players
+--		all_players:=game_state_obj.get_all_players
 		current_dealer_id := game_state_obj.who_dealt
 		the_end_of_the_hand := game_state_obj.end_hand
 	end
@@ -957,7 +961,11 @@ feature -- manipulate the points
 
 	add_to_team_points(a_team_id,a_team_points:INTEGER)
 		-- add a certain amount of points to the give team's points
+	local
+		all_players : ARRAY[TR_PLAYER]
 	do
+		all_players := game_state_obj.get_all_players
+
 		if a_team_id=1 then
 			team1_score:=game_state_obj.team1_score
 			team1_score:=team1_score+a_team_points
@@ -971,6 +979,8 @@ feature -- manipulate the points
 			all_players[3].set_player_team_score (team2_score)
 			game_state_obj.set_team2_score (team2_score)
 		end
+
+		 game_state_obj.set_all_players (all_players)
 	end
 
 	get_team_points(a_team_id:INTEGER):INTEGER
