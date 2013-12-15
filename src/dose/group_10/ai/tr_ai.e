@@ -48,6 +48,18 @@ feature {ANY} -- Update hand
                 --local copy of the array
                 player_cards_a:= player_ai_1.get_player_cards.deep_twin
                 player_cards_b:= player_ai_2.get_player_cards.deep_twin
+
+
+                print(id_player_a.out + " %N")
+                print(player_cards_a[0].get_card_value.out + " " + player_cards_a[0].get_card_type.out + " %N ")
+                print(player_cards_a[1].get_card_value.out + " " + player_cards_a[1].get_card_type.out + " %N ")
+                print(player_cards_a[2].get_card_value.out + " " + player_cards_a[2].get_card_type.out + " %N ")
+
+                print(id_player_b.out + " %N")
+                print(player_cards_b[0].get_card_value.out + " " + player_cards_b[0].get_card_type.out + " %N ")
+                print(player_cards_b[1].get_card_value.out + " " + player_cards_b[1].get_card_type.out + " %N ")
+                print(player_cards_b[2].get_card_value.out + " " + player_cards_b[2].get_card_type.out + " %N ")
+
                 --sort the cards
                 insertion_sort_by_weight_truco (player_cards_a)
                 insertion_sort_by_weight_truco (player_cards_b)
