@@ -120,12 +120,12 @@ feature {ANY} -- Next move
                 end
 
                 if current_state_game.get_current_game_state.do_i_have_to_answer_a_bet (current_player_id) then
-                        if bet.is_equal(Envido) OR bet.is_equal(Real_envido) OR bet.is_equal(Falta_envido) then
+                        if bet.is_equal(BC.Envido) OR bet.is_equal(BC.Real_envido) OR bet.is_equal(BC.Falta_envido) then
                                 if accept_envido(points,bet,point_max) then
                                         my_bet := send_envido (current_player, points, point_max, current_state_game)
-                                        if my_bet.is_equal(Real_envido) then
+                                        if my_bet.is_equal(BC.Real_envido) then
                                                 current_state_game.send_re_envido (current_player_id)
-                                        elseif my_bet.is_equal(Falta_envido) then
+                                        elseif my_bet.is_equal(BC.Falta_envido) then
                                                 current_state_game.send_falta_envido (current_player_id)
                                         else -- only accept
                                                 current_state_game.send_accept (current_player_id)
@@ -134,12 +134,12 @@ feature {ANY} -- Next move
                                         current_state_game.send_reject (current_player.get_player_team_id)
                                 end
                         else
-                                if bet.is_equal(Truco) OR bet.is_equal(Retruco) OR bet.is_equal(Vale_cuatro) then
+                                if bet.is_equal(BC.Truco) OR bet.is_equal(BC.Retruco) OR bet.is_equal(BC.Vale_cuatro) then
                                         if accept_truco_easy (bet, current_state_game,player_cards,played_cards) then
                                                 my_bet := send_truco_easy (current_state_game, current_player,player_cards,played_cards)
-                                                if my_bet.is_equal(Retruco) then
+                                                if my_bet.is_equal(BC.Retruco) then
                                                         current_state_game.send_re_truco (current_player_id)
-                                                elseif my_bet.is_equal(Vale_cuatro) then
+                                                elseif my_bet.is_equal(BC.Vale_cuatro) then
                                                         current_state_game.send_valle_cuatro (current_player_id)
                                                 else -- only accept
                                                         current_state_game.send_accept (current_player_id)
@@ -152,15 +152,15 @@ feature {ANY} -- Next move
 
                 elseif current_state_game.get_current_game_state.do_i_have_to_play (current_player_id) then
                         my_bet := send_envido (current_player, points, point_max, current_state_game)
-                        if my_bet.is_equal(Envido) then
+                        if my_bet.is_equal(BC.Envido) then
                                 current_state_game.send_envido (current_player_id)
                         else
                                 my_bet := send_truco_easy (current_state_game, current_player,player_cards,played_cards)
-                                if my_bet.is_equal(Truco) then
+                                if my_bet.is_equal(BC.Truco) then
                                         current_state_game.send_truco (current_player_id)
-                                elseif my_bet.is_equal(Retruco) then
+                                elseif my_bet.is_equal(BC.Retruco) then
                                         current_state_game.send_re_truco (current_player_id)
-                                elseif my_bet.is_equal(Vale_cuatro) then
+                                elseif my_bet.is_equal(BC.Vale_cuatro) then
                                         current_state_game.send_valle_cuatro (current_player_id)
                                 else
                                         card_to_play := play_card_easy(current_player_id, player_cards,played_cards,current_state_game)
@@ -223,12 +223,12 @@ feature {ANY} -- Next move
                 partner_player := player_for_id (partner_player_id, current_state_game.get_current_game_state.get_all_players)
 
                 if current_state_game.get_current_game_state.do_i_have_to_answer_a_bet (current_player_id) then
-                        if bet.is_equal(Envido) OR bet.is_equal(Real_envido) OR bet.is_equal(Falta_envido) then
+                        if bet.is_equal(BC.Envido) OR bet.is_equal(BC.Real_envido) OR bet.is_equal(BC.Falta_envido) then
                                 if accept_envido(points,bet,point_max) then
                                         my_bet := send_envido (current_player, points, point_max, current_state_game)
-                                        if my_bet.is_equal(Real_envido) then
+                                        if my_bet.is_equal(BC.Real_envido) then
                                                 current_state_game.send_re_envido (current_player_id)
-                                        elseif my_bet.is_equal(Falta_envido) then
+                                        elseif my_bet.is_equal(BC.Falta_envido) then
                                                 current_state_game.send_falta_envido (current_player_id)
                                         else -- only accept
                                                 current_state_game.send_accept (current_player_id)
@@ -237,12 +237,12 @@ feature {ANY} -- Next move
                                         current_state_game.send_reject (current_player.get_player_team_id)
                                 end
                         else
-                                if bet.is_equal(Truco) OR bet.is_equal(Retruco) OR bet.is_equal(Vale_cuatro) then
+                                if bet.is_equal(BC.Truco) OR bet.is_equal(BC.Retruco) OR bet.is_equal(BC.Vale_cuatro) then
                                         if accept_truco_dif (bet, current_state_game,player_cards,played_cards,partner_player_cards,partner_played_cards) then
                                                 my_bet :=  send_truco_difficulty (current_state_game, current_player,player_cards,played_cards,partner_player,partner_player_cards,partner_played_cards)
-                                                if my_bet.is_equal(Retruco) then
+                                                if my_bet.is_equal(BC.Retruco) then
                                                         current_state_game.send_re_truco (current_player_id)
-                                                elseif my_bet.is_equal(Vale_cuatro) then
+                                                elseif my_bet.is_equal(BC.Vale_cuatro) then
                                                         current_state_game.send_valle_cuatro (current_player_id)
                                                 else -- only accept
                                                         current_state_game.send_accept (current_player_id)
@@ -255,15 +255,15 @@ feature {ANY} -- Next move
 
                 elseif current_state_game.get_current_game_state.do_i_have_to_play (current_player_id) then
                         my_bet := send_envido (current_player, points, point_max, current_state_game)
-                        if my_bet.is_equal(Envido) then
+                        if my_bet.is_equal(BC.Envido) then
                                 current_state_game.send_envido (current_player_id)
                         else
                                 my_bet := send_truco_difficulty (current_state_game, current_player,player_cards,played_cards,partner_player,partner_player_cards,partner_played_cards)
-                                if my_bet.is_equal(Truco) then
+                                if my_bet.is_equal(BC.Truco) then
                                         current_state_game.send_truco (current_player_id)
-                                elseif my_bet.is_equal(Retruco) then
+                                elseif my_bet.is_equal(BC.Retruco) then
                                         current_state_game.send_re_truco (current_player_id)
-                                elseif my_bet.is_equal(Vale_cuatro) then
+                                elseif my_bet.is_equal(BC.Vale_cuatro) then
                                         current_state_game.send_valle_cuatro (current_player_id)
                                 else
                                         card_to_play := play_card_difficult(current_player_id, partner_player_id, player_cards,partner_player_cards,played_cards, partner_played_cards,current_state_game)
@@ -303,25 +303,25 @@ feature {NONE, TR_TEST_AI} --Accept
     -- Accept Real Envido: if the points are above Floor_to_real_envido
     -- Accept Falta Envido: if the points are above Floor_to_falta_envido and if the nearest team to win missing 6 points
     require
-		proposition_envido_valid: proposition.is_equal(Envido) or proposition.is_equal(Real_envido) or proposition.is_equal(Falta_envido)
+		proposition_envido_valid: proposition.is_equal(BC.Envido) or proposition.is_equal(BC.Real_envido) or proposition.is_equal(BC.Falta_envido)
 		point_team_max_valid:  point_team_max >= 0 AND point_team_max <= 24
 		envido_points_valid:       envido_points >= 0 and envido_points <= 33
     local
     	send : BOOLEAN
 	do
-		if proposition.is_equal(Envido) then
+		if proposition.is_equal(BC.Envido) then
 			if envido_points >= Floor_to_envido then
 				send := True
 			else
             	send:= False
         	end
-		elseif proposition.is_equal(Real_envido)  then
+		elseif proposition.is_equal(BC.Real_envido)  then
         	if envido_points >= Floor_to_real_envido then
             	send := True
             else
             	send := False
             end
-       	elseif proposition.is_equal(Falta_envido)  then
+       	elseif proposition.is_equal(BC.Falta_envido)  then
         	if envido_points >= Floor_to_falta_envido then
             --if the nearest team to win missing 6 points
             	if point_team_max > 18 then
@@ -352,12 +352,12 @@ feature {NONE, TR_TEST_AI} --Accept
             index: INTEGER
     do
             cards_available := card_available(player1_card, played_card)
-                 if proposition.is_equal(Truco) then
+                 if proposition.is_equal(BC.Truco) then
                         if current_state_game.get_round[0] = 2 then
                                         flag :=  bet_available (cards_available, 8)
-                        elseif proposition.is_equal(Retruco) then
+                        elseif proposition.is_equal(BC.Retruco) then
                                 flag :=  bet_available (cards_available, 10)
-                        elseif proposition.is_equal(Vale_cuatro) then
+                        elseif proposition.is_equal(BC.Vale_cuatro) then
                                 flag :=  bet_available (cards_available, 12)
                         else
                                 flag := false
@@ -384,13 +384,13 @@ feature {NONE, TR_TEST_AI} --Accept
     do
             current_cards_available := card_available(current_player_card, current_played_card)
             partner_cards_available := card_available(partner_player_card, partner_played_card)
-                if proposition.is_equal(Truco) then
+                if proposition.is_equal(BC.Truco) then
                         if current_state_game.get_round[0] = 2 then
                                 flag :=  bet_available (current_cards_available, 8) or bet_available (current_cards_available, 8)
                         end
-                elseif proposition.is_equal(Retruco) then
+                elseif proposition.is_equal(BC.Retruco) then
                         flag := bet_available (current_cards_available, 10) or bet_available (current_cards_available, 10)
-                elseif proposition.is_equal(Vale_cuatro) then
+                elseif proposition.is_equal(BC.Vale_cuatro) then
                         flag := bet_available (current_cards_available, 12) or bet_available (current_cards_available, 12)
                 else
                         flag := false
@@ -454,20 +454,20 @@ feature {NONE, TR_TEST_AI} --Send
             if position_in_round = 3 or position_in_round = 4 then
             --If I am 3rd or 4th pocicion of the round
                         if points_player > Floor_to_envido AND current_state_game.is_envido_allowed (player) then
-                                chant := Envido
+                                chant := BC.Envido
 
                         elseif points_player > Floor_to_real_envido AND current_state_game.is_real_envido_allowed (player) then
-                                chant := Real_envido
+                                chant := BC.Real_envido
 
                         elseif points_player > Floor_to_falta_envido AND current_state_game.is_falta_envido_allowed (player) then
                             if point_team_max > 18 then
-                                        chant := Falta_envido
+                                        chant := BC.Falta_envido
                             end
                         end
                 end
                 result:= chant
         ensure
-                expected_result: result.is_equal(Envido) or  result.is_equal(Real_envido) or result.is_equal(Falta_envido) or result.is_equal("")
+                expected_result: result.is_equal(BC.Envido) or  result.is_equal(BC.Real_envido) or result.is_equal(BC.Falta_envido) or result.is_equal("")
     end
 
         --need other parameters, cards_aviable, satet_game.
@@ -486,20 +486,20 @@ feature {NONE, TR_TEST_AI} --Send
                 if current_state_game.is_truco_allowed(current_player) then
                         if current_state_game.get_round[0] = 2 or current_state_game.get_round[0] = 2 then
                                 if bet_available(cards_available_player_current, 8) then
-                                        result := Truco
+                                        result := BC.Truco
                                 end
                         end
                 elseif current_state_game.is_retruco_allowed(current_player) then
                         if current_state_game.get_round[0] = 2 or current_state_game.get_round[0] = 2 then
                                 if bet_available(cards_available_player_current,10) then
-                                        result := Retruco
+                                        result := BC.Retruco
                                 end
                         end
 
                 elseif current_state_game.is_vale_cuatro_allowed(current_player) then
                         if current_state_game.get_round[0] = 2 or current_state_game.get_round[0] = 2 then
                                 if bet_available(cards_available_player_current,12) then
-                                        result := Vale_Cuatro
+                                        result := BC.Vale_Cuatro
                                 end
                         end
 
@@ -507,7 +507,7 @@ feature {NONE, TR_TEST_AI} --Send
                         result := ""
                 end
         ensure
-                expected_result: result.is_equal(Truco) or  result.is_equal(Retruco) or result.is_equal(Vale_Cuatro) or result.is_equal("")
+                expected_result: result.is_equal(BC.Truco) or  result.is_equal(BC.Retruco) or result.is_equal(BC.Vale_Cuatro) or result.is_equal("")
     end
 
 
@@ -608,7 +608,7 @@ feature {NONE,TR_TEST_AI}
                                 end
                         end
                         if flag then
-                                result := Truco
+                                result := BC.Truco
                         else
                                 result := ""
                         end
@@ -666,7 +666,7 @@ feature {NONE,TR_TEST_AI}
                                 end
                         end
                         if flag then
-                                result := Retruco
+                                result := BC.Retruco
                         else
                                 result := ""
                         end
@@ -724,14 +724,14 @@ feature {NONE,TR_TEST_AI}
                                 end
                         end
                         if flag then
-                                result := Vale_cuatro
+                                result := BC.Vale_cuatro
                         else
                                 result := ""
                         end
                 end
 
         ensure
-                expected_result: result.is_equal(Truco) or  result.is_equal(Retruco) or result.is_equal(Vale_Cuatro) or result.is_equal("")
+                expected_result: result.is_equal(BC.Truco) or  result.is_equal(BC.Retruco) or result.is_equal(BC.Vale_Cuatro) or result.is_equal("")
         end
 
 
@@ -1552,13 +1552,14 @@ feature {NONE,TR_TEST_AI} -- Attribut
     Floor_to_falta_envido: INTEGER = 31
     --floor to accept or send the 'falta envido'
 
-    --bets
-    Envido: STRING = "envido"
-    Real_envido: STRING = "realenvido"
-    Falta_envido: STRING = "faltaenvido"
+--    --bets
+--    Envido      : STRING = envido
+--    Real_envido : STRING = BC.real_envido
+--    Falta_envido: STRING = {TR_BET_CONSTANTS}.falta_envido
 
-    Truco: STRING = "truco"
-    Retruco: STRING = "retruco"
-    Vale_cuatro: STRING = "vallecuatro"
+--    Truco       : STRING = {TR_BET_CONSTANTS}.truco
+--    Retruco     : STRING = {TR_BET_CONSTANTS}.retruco
+--    Vale_cuatro : STRING = {TR_BET_CONSTANTS}.vale_cuatro
 
+    BC : TR_BET_CONSTANTS
 end
