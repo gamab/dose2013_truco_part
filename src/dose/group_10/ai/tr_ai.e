@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
             new_difficulty_valid: new_difficulty.is_equal ("easy") or new_difficulty.is_equal ("difficult")
             Players_in_pairs_valid: id_player_ai_1 = 2 and id_player_ai_2 = 4
         do
+        		create BC
                 difficulty  := new_difficulty
                 id_player_a := id_player_ai_1
                 id_player_b := id_player_ai_2

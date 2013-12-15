@@ -1999,6 +1999,7 @@ feature -- test accept_envido
 	local
 		worked_well : BOOLEAN
 	do
+		create BC
 		create ai.make_ai_with_players("difficult",2,4,2)
 		worked_well := ai.accept_envido(25,BC.envido,20)
 		assert ("test_accept_envido ok", worked_well)
@@ -2011,6 +2012,7 @@ feature -- test accept_envido
 	local
 		worked_well : BOOLEAN
 	do
+		create BC
 		create ai.make_ai_with_players("difficult",2,4,2)
 		worked_well := ai.accept_envido(30,BC.real_envido,20)
 		assert ("test_accept_envido ok", worked_well)
@@ -2023,6 +2025,7 @@ feature -- test accept_envido
 	local
 		worked_well : BOOLEAN
 	do
+		create BC
 		create ai.make_ai_with_players("difficult",2,4,2)
 		worked_well := ai.accept_envido(31,BC.falta_envido,20)
 		assert ("test_accept_envido ok", worked_well)
@@ -2035,6 +2038,7 @@ feature -- test accept_envido
 	local
 		worked_well : BOOLEAN
 	do
+		create BC
 		create ai.make_ai_with_players("difficult",2,4,2)
 		worked_well := NOT ai.accept_envido(24,BC.envido,20)
 		assert ("test_accept_envido ok", worked_well)
@@ -2047,6 +2051,7 @@ feature -- test accept_envido
 	local
 		worked_well : BOOLEAN
 	do
+		create BC
 		create ai.make_ai_with_players("difficult",2,4,2)
 		worked_well := NOT ai.accept_envido(29,BC.real_envido,20)
 		assert ("test_accept_envido ok", worked_well)
@@ -2059,6 +2064,7 @@ feature -- test accept_envido
 	local
 		worked_well : BOOLEAN
 	do
+		create BC
 		create ai.make_ai_with_players("difficult",2,4,2)
 		worked_well := NOT ai.accept_envido(30,BC.falta_envido,20)
 		assert ("test_accept_envido ok", worked_well)
@@ -2071,6 +2077,7 @@ feature -- test accept_envido
 	local
 		worked_well : BOOLEAN
 	do
+		create BC
 		create ai.make_ai_with_players("difficult",2,4,2)
 		worked_well := NOT ai.accept_envido(32,BC.falta_envido,15)
 		assert ("test_accept_envido ok", worked_well)
@@ -2100,6 +2107,8 @@ feature -- send_envido
 		card_played : TR_CARD
 		worked: BOOLEAN
 	do
+		create BC
+		
 		-- create players ids
 		id_player := 2
 		id_team_mate := 4
@@ -2229,6 +2238,8 @@ feature -- send_envido
 		card_played : TR_CARD
 		worked: BOOLEAN
 	do
+		create BC
+
 		-- create players ids
 		id_player := 2
 		id_team_mate := 4
