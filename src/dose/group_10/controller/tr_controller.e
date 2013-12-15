@@ -1357,9 +1357,9 @@ feature {NONE}
 		do
 			if ai_team /= Void then
 				-- update ai cards if we've started a new hand
---				if logic.is_new_hand then
---					ai_team.update_hand (logic.get_players[1], logic.get_players[3])
---				end
+				if logic.is_new_hand then
+					ai_team.update_hand (logic.get_players[1], logic.get_players[3])
+				end
 
 				l_ai_1_action := logic.get_current_game_state.do_i_have_to_play (2) or logic.get_current_game_state.do_i_have_to_answer_a_bet (2)
 				l_ai_2_action := logic.get_current_game_state.do_i_have_to_play (4) or logic.get_current_game_state.do_i_have_to_answer_a_bet (4)
