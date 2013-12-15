@@ -262,7 +262,9 @@ feature {ANY,TR_TEST_LOGIC}
 				pos:=pos+1
 				i:=i+1
 			end
+			-- setting the players initial cards and points
 			all_players[j].set_cards (array_of_cards)
+			all_players[j].at_init_calculate_points
 			j:=j+1
 		end
 		-- setting the new players

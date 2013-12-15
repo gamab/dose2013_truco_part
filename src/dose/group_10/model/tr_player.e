@@ -63,7 +63,6 @@ feature{ANY,TR_TEST_PLAYER}
     	create player_current_card.make ("",0)
         create player_cards.make_filled (player_current_card,0,2)
         create player_played_cards.make_filled (player_current_card,0,2)
-        cards_points := calculate_points(player_played_cards)
         player_id := a_player_id
         player_team_id := a_team_id
         played_card_counter:=0
@@ -72,6 +71,14 @@ feature{ANY,TR_TEST_PLAYER}
 		player_score:=0
 		is_current_card:=false
    	end
+
+   	at_init_calculate_points
+   		--needs to be called after dealing to set the point of the player
+   	do
+        cards_points := calculate_points(player_played_cards)
+   	end
+
+feature --setters and getters
 
 	set_player_name(the_player_name:STRING)
     do
