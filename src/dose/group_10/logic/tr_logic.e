@@ -910,7 +910,7 @@ feature -- end of hand
 
 	end_hand
 	require
-		hand_ended : game_state_obj.end_hand
+		there_is_a_winner : is_there_a_winner_of_the_hand
 	local
 		deck_cards : ARRAY[TR_CARD]
 		rounds : ARRAY[INTEGER]
