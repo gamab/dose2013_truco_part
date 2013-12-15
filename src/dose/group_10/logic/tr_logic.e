@@ -26,7 +26,7 @@ feature{NONE,TR_TEST_LOGIC}
 --		current_bet				:STRING-- if there a bet  what's this bet
 
 --		action					:BOOLEAN--never mind
-		who_bet_id				:INTEGER
+--		who_bet_id				:INTEGER
 		game_state_obj			:TR_GAME_STATE
 		the_end_of_the_hand		:BOOLEAN
 		final_winner			:INTEGER
@@ -347,8 +347,8 @@ feature -- Bets
 		game_state_obj.set_action
 --		current_bet:=BC.envido
 --		action:=true
-		who_bet_id:=a_betting_player_id
-		game_state_obj.set_who_bet_id (who_bet_id)
+--		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (a_betting_player_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
 			game_state_obj.set_betting_team (1)
@@ -372,8 +372,8 @@ feature -- Bets
 		game_state_obj.set_action
 --		current_bet:=BC.real_envido
 --		action:=true
-		who_bet_id:=a_betting_player_id
-		game_state_obj.set_who_bet_id (who_bet_id)
+--		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (a_betting_player_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
 			game_state_obj.set_betting_team (1)
@@ -398,8 +398,8 @@ feature -- Bets
 		game_state_obj.set_action
 --		current_bet:=BC.falta_envido
 --		action:=true
-		who_bet_id:=a_betting_player_id
-		game_state_obj.set_who_bet_id (who_bet_id)
+--		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (a_betting_player_id)
 
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
@@ -425,8 +425,8 @@ feature -- Bets
 		game_state_obj.set_action
 --		current_bet:=BC.truco
 --		action:=true
-		who_bet_id:=a_betting_player_id
-		game_state_obj.set_who_bet_id (who_bet_id)
+--		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (a_betting_player_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
 			game_state_obj.set_betting_team (1)
@@ -451,8 +451,8 @@ feature -- Bets
 		game_state_obj.set_action
 --		current_bet:=BC.retruco
 --		action:=true
-		who_bet_id:=a_betting_player_id
-		game_state_obj.set_who_bet_id (who_bet_id)
+--		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (a_betting_player_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
 	 		game_state_obj.set_betting_team (1)
@@ -478,8 +478,8 @@ feature -- Bets
 		game_state_obj.set_action
 --		current_bet:=BC.vale_cuatro
 --		action:=true
-		who_bet_id:=a_betting_player_id
-		game_state_obj.set_who_bet_id (who_bet_id)
+--		who_bet_id:=a_betting_player_id
+		game_state_obj.set_who_bet_id (a_betting_player_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
 			game_state_obj.set_betting_team (1)
@@ -598,7 +598,7 @@ feature -- Bets
 	do
 		result := game_state_obj.action
 	end
-	
+
 feature -- Searching for points in envido
 
 	who_is_the_first_to_have_highest_envido_points : INTEGER
@@ -696,7 +696,7 @@ feature -- Working with the gmae_state
 --		betting_team:=game_state_obj.get_betting_team
 --		current_game_points:=game_state_obj.get_current_game_points
 --		current_bet:=game_state_obj.get_current_bet
-		who_bet_id:=game_state_obj.get_who_bet_id
+--		who_bet_id:=game_state_obj.get_who_bet_id
 		-- win_round (game_state_obj.get_winner_round)
 --		deck_cards:=game_state_obj.get_deck_cards
 --		action:=game_state_obj.get_action
