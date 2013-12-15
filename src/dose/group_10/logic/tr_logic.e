@@ -21,7 +21,7 @@ feature{NONE,TR_TEST_LOGIC}
 --		round_number			:INTEGER-- the round number 1  2  3
 --		team1_score				:INTEGER-- score of the team1
 --		team2_score				:INTEGER--score of the team2
-		betting_team			:INTEGER-- The team hwo send last bet
+--		betting_team			:INTEGER-- The team hwo send last bet
 		current_game_points		:INTEGER-- raise of the game , first it 1 but when you press envido and accept it will be 2 and so on
 		current_bet				:STRING-- if there a bet  what's this bet
 
@@ -350,11 +350,10 @@ feature -- Bets
 		game_state_obj.set_who_bet_id (who_bet_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
-			betting_team:=1
+			game_state_obj.set_betting_team (1)
 		else
-			betting_team:=2
+			game_state_obj.set_betting_team (2)
 		end
-		game_state_obj.set_betting_team (betting_team)
 	end
 
  --------------------------------------------------------------------
@@ -376,12 +375,10 @@ feature -- Bets
 		game_state_obj.set_who_bet_id (who_bet_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
-			betting_team:=1
+			game_state_obj.set_betting_team (1)
 		else
-			betting_team:=2
+			game_state_obj.set_betting_team (2)
 		end
-
-		game_state_obj.set_betting_team (betting_team)
 	end
 ------------------------------------------------------------------------------------------------------------
 
@@ -405,12 +402,10 @@ feature -- Bets
 
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
-			betting_team:=1
+			game_state_obj.set_betting_team (1)
 		else
-			betting_team:=2
+			game_state_obj.set_betting_team (2)
 		end
-
-		game_state_obj.set_betting_team (betting_team)
 	end
 -------------------------------------------------------------------------------------------------------
 
@@ -433,12 +428,10 @@ feature -- Bets
 		game_state_obj.set_who_bet_id (who_bet_id)
 
 		if a_betting_player_id=1 or a_betting_player_id=3 then
-			betting_team:=1
+			game_state_obj.set_betting_team (1)
 		else
-			betting_team:=2
+			game_state_obj.set_betting_team (2)
 		end
-
-		game_state_obj.set_betting_team (betting_team)
 
 	end
 ------------------------------------------------------------------------------------------------------------------------
@@ -452,7 +445,11 @@ feature -- Bets
 	send_re_truco(a_betting_player_id:INTEGER)
 	require
 		bet_possible : game_state_obj.is_retruco_allowed (game_state_obj.all_players[a_betting_player_id-1])
+	local
+		betting_team : INTEGER
 	do
+		betting_team := game_state_obj.betting_team
+
 		game_state_obj.set_current_bet (BC.retruco)
 		game_state_obj.set_action
 		current_bet:=BC.retruco
@@ -480,7 +477,11 @@ feature -- Bets
 	send_valle_cuatro(a_betting_player_id:INTEGER)
 	require
 		bet_possible : game_state_obj.is_vale_cuatro_allowed (game_state_obj.all_players[a_betting_player_id-1])
+	local
+		betting_team : INTEGER
 	do
+		betting_team := game_state_obj.betting_team
+
 		game_state_obj.set_current_bet (BC.vale_cuatro)
 		game_state_obj.set_action
 		current_bet:=BC.vale_cuatro
@@ -593,6 +594,11 @@ feature -- Bets
 		result := game_state_obj.current_bet
 	end
 
+	get_betting_team : INTEGER
+	do
+		result := game_state_obj.betting_team
+	end
+
 feature -- Searching for points in envido
 
 	who_is_the_first_to_have_highest_envido_points : INTEGER
@@ -687,7 +693,7 @@ feature -- Working with the gmae_state
 --		round_number:=game_state_obj.get_round_number
 --		team1_score:=game_state_obj.get_team1_score
 --		team2_score:=game_state_obj.get_team2_score
-		betting_team:=game_state_obj.get_betting_team
+--		betting_team:=game_state_obj.get_betting_team
 		current_game_points:=game_state_obj.get_current_game_points
 		current_bet:=game_state_obj.get_current_bet
 		who_bet_id:=game_state_obj.get_who_bet_id
