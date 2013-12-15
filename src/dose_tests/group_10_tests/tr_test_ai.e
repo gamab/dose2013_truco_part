@@ -2509,7 +2509,9 @@ feature -- test bet_available and team_bet_available
 		assert ("this_card_play ok", worked_well)
 	end
 
-	test_accept_truco_dif
+
+
+	test_accept_truco_dif_1
 	local
 		bet : STRING
 		id_player: INTEGER
@@ -2580,7 +2582,7 @@ feature -- test bet_available and team_bet_available
 		players.at (0).set_cards (one_player_cards)
 
 		create one_player_cards.make_filled (Void, 0, 2)
-		create one_card.make ("golds", 2)
+		create one_card.make ("swords", 1)
 		one_player_cards.at (0) := one_card
 		create one_card.make ("clubs", 11)
 		one_player_cards.at (1) := one_card
@@ -2619,10 +2621,9 @@ feature -- test bet_available and team_bet_available
 		print("And updating the hand of the AI players " + players.at (id_player-1).get_player_name + " and " + players.at (id_team_mate-1).get_player_name + "%N")
 		ai.update_hand (players.at (id_player-1),players.at (id_team_mate-1))
 
-
 		-- getting all information we need and deciding to accept or not a bet
 		print ("Initializing the bet %N")
-		bet := BC.truco
+		bet := BC.vale_cuatro
 
 	-- getting all information we need and playing a card in difficult mode
 		print("Checking the cards of AI players one more time %N")
@@ -2631,12 +2632,269 @@ feature -- test bet_available and team_bet_available
 		played_cards := ai.played_cards_a
 		team_mate_played_cards := ai.played_cards_b
 
+		worked := ai.accept_truco_dif (bet, game_state, card_player, played_cards, card_team_mate,team_mate_played_cards )
 
+		assert ("accept_truco_diff ok", worked)
+	end
+
+
+	test_accept_truco_dif_2
+	local
+		bet : STRING
+		id_player: INTEGER
+		id_team_mate: INTEGER
+		team : INTEGER
+
+		card_player : ARRAY[TR_CARD]
+		card_team_mate : ARRAY[TR_CARD]
+
+		played_cards : ARRAY[BOOLEAN]
+		team_mate_played_cards : ARRAY[BOOLEAN]
+
+		game_state : TR_LOGIC
+
+		players: ARRAY[TR_PLAYER]
+		one_card : TR_CARD
+		one_player_cards : ARRAY[TR_CARD]
+
+		i : INTEGER
+		j : INTEGER
+
+
+		card_played : TR_CARD
+		worked: BOOLEAN
+	do
+		create BC
+		-- create players ids
+		id_player := 2
+		id_team_mate := 4
+		-- create players team
+		team := 2
+
+		-- create the logic
+		print("Creating game state : %N")
+		create game_state.make
+
+		-- create players
+		print("Creating the four players : %N")
+		game_state.set_player_info ("Test1", 1, 1)
+		game_state.set_player_info ("AI2", 2, 2)
+		game_state.set_player_info ("Test3", 3, 1)
+		game_state.set_player_info ("AI4", 4, 2)
+
+		create players.make_filled (Void, 0, 3)
+		from
+			i := players.lower
+		until
+			i > players.upper
+		loop
+			players.at (i) := game_state.get_current_game_state.get_all_players.at (i)
+			i := i + 1
+		end
+
+		print("Setting there positions in the round : %N")
+		players.at (0).set_player_posistion (4)
+		players.at (1).set_player_posistion (1)
+		players.at (2).set_player_posistion (2)
+		players.at (3).set_player_posistion (3)
+
+		print("Dealing cards as we want : %N")
+		create one_player_cards.make_filled (Void, 0, 2)
+		create one_card.make ("golds", 2)
+		one_player_cards.at (0) := one_card
+		create one_card.make ("clubs", 5)
+		one_player_cards.at (1) := one_card
+		create one_card.make ("golds", 12)
+		one_player_cards.at (2) := one_card
+		players.at (0).set_cards (one_player_cards)
+
+		create one_player_cards.make_filled (Void, 0, 2)
+		create one_card.make ("swords", 1)
+		one_player_cards.at (0) := one_card
+		create one_card.make ("clubs", 11)
+		one_player_cards.at (1) := one_card
+		create one_card.make ("golds", 1)
+		one_player_cards.at (2) := one_card
+		players.at (1).set_cards (one_player_cards)
+
+		create one_player_cards.make_filled (Void, 0, 2)
+		create one_card.make ("swords", 7)
+		one_player_cards.at (0) := one_card
+		create one_card.make ("cups", 2)
+		one_player_cards.at (1) := one_card
+		create one_card.make ("clubs", 12)
+		one_player_cards.at (2) := one_card
+		players.at (2).set_cards (one_player_cards)
+
+		create one_player_cards.make_filled (Void, 0, 2)
+		create one_card.make ("clubs", 3)
+		one_player_cards.at (0) := one_card
+		create one_card.make ("cups", 7)
+		one_player_cards.at (1) := one_card
+		create one_card.make ("swords",5)
+		one_player_cards.at (2) := one_card
+		players.at (3).set_cards (one_player_cards)
+
+		-- setting the player to play
+		print("Setting that the player who has to play is the AI2 and the round %N")
+		game_state.get_current_game_state.set_the_player_turn_id (id_player)
+		game_state.set_round_number (1)
+		print("%T -> Need to play : " + game_state.get_current_game_state.do_i_have_to_play (id_player).out + "%N")
+
+		-- create the ai
+		print("Creating AI difficult with players : " + id_player.out + " and " + id_team_mate.out + " in team " + team.out + "%N")
+		create ai.make_ai_with_players("difficult",id_player,id_team_mate,team)
+		-- updating the hand
+		print("And updating the hand of the AI players " + players.at (id_player-1).get_player_name + " and " + players.at (id_team_mate-1).get_player_name + "%N")
+		ai.update_hand (players.at (id_player-1),players.at (id_team_mate-1))
+
+		-- getting all information we need and deciding to accept or not a bet
+		print ("Initializing the bet %N")
+		bet := BC.retruco
+
+	-- getting all information we need and playing a card in difficult mode
+		print("Checking the cards of AI players one more time %N")
+		card_player := ai.player_cards_a
+		card_team_mate := ai.player_cards_b
+		played_cards := ai.played_cards_a
+		team_mate_played_cards := ai.played_cards_b
 
 		worked := ai.accept_truco_dif (bet, game_state, card_player, played_cards, card_team_mate,team_mate_played_cards )
 
 		assert ("accept_truco_diff ok", worked)
 	end
+
+
+
+
+	test_accept_truco_dif_3
+	local
+		bet : STRING
+		id_player: INTEGER
+		id_team_mate: INTEGER
+		team : INTEGER
+
+		card_player : ARRAY[TR_CARD]
+		card_team_mate : ARRAY[TR_CARD]
+
+		played_cards : ARRAY[BOOLEAN]
+		team_mate_played_cards : ARRAY[BOOLEAN]
+
+		game_state : TR_LOGIC
+
+		players: ARRAY[TR_PLAYER]
+		one_card : TR_CARD
+		one_player_cards : ARRAY[TR_CARD]
+
+		i : INTEGER
+		j : INTEGER
+
+
+		card_played : TR_CARD
+		worked: BOOLEAN
+	do
+		create BC
+		-- create players ids
+		id_player := 2
+		id_team_mate := 4
+		-- create players team
+		team := 2
+
+		-- create the logic
+		print("Creating game state : %N")
+		create game_state.make
+
+		-- create players
+		print("Creating the four players : %N")
+		game_state.set_player_info ("Test1", 1, 1)
+		game_state.set_player_info ("AI2", 2, 2)
+		game_state.set_player_info ("Test3", 3, 1)
+		game_state.set_player_info ("AI4", 4, 2)
+
+		create players.make_filled (Void, 0, 3)
+		from
+			i := players.lower
+		until
+			i > players.upper
+		loop
+			players.at (i) := game_state.get_current_game_state.get_all_players.at (i)
+			i := i + 1
+		end
+
+		print("Setting there positions in the round : %N")
+		players.at (0).set_player_posistion (4)
+		players.at (1).set_player_posistion (1)
+		players.at (2).set_player_posistion (2)
+		players.at (3).set_player_posistion (3)
+
+		print("Dealing cards as we want : %N")
+		create one_player_cards.make_filled (Void, 0, 2)
+		create one_card.make ("golds", 2)
+		one_player_cards.at (0) := one_card
+		create one_card.make ("clubs", 5)
+		one_player_cards.at (1) := one_card
+		create one_card.make ("golds", 12)
+		one_player_cards.at (2) := one_card
+		players.at (0).set_cards (one_player_cards)
+
+		create one_player_cards.make_filled (Void, 0, 2)
+		create one_card.make ("swords", 1)
+		one_player_cards.at (0) := one_card
+		create one_card.make ("clubs", 11)
+		one_player_cards.at (1) := one_card
+		create one_card.make ("golds", 1)
+		one_player_cards.at (2) := one_card
+		players.at (1).set_cards (one_player_cards)
+
+		create one_player_cards.make_filled (Void, 0, 2)
+		create one_card.make ("swords", 7)
+		one_player_cards.at (0) := one_card
+		create one_card.make ("cups", 2)
+		one_player_cards.at (1) := one_card
+		create one_card.make ("clubs", 12)
+		one_player_cards.at (2) := one_card
+		players.at (2).set_cards (one_player_cards)
+
+		create one_player_cards.make_filled (Void, 0, 2)
+		create one_card.make ("clubs", 3)
+		one_player_cards.at (0) := one_card
+		create one_card.make ("cups", 7)
+		one_player_cards.at (1) := one_card
+		create one_card.make ("swords",5)
+		one_player_cards.at (2) := one_card
+		players.at (3).set_cards (one_player_cards)
+
+		-- setting the player to play
+		print("Setting that the player who has to play is the AI2 and the round %N")
+		game_state.get_current_game_state.set_the_player_turn_id (id_player)
+		game_state.set_round_number (1)
+		print("%T -> Need to play : " + game_state.get_current_game_state.do_i_have_to_play (id_player).out + "%N")
+
+		-- create the ai
+		print("Creating AI difficult with players : " + id_player.out + " and " + id_team_mate.out + " in team " + team.out + "%N")
+		create ai.make_ai_with_players("difficult",id_player,id_team_mate,team)
+		-- updating the hand
+		print("And updating the hand of the AI players " + players.at (id_player-1).get_player_name + " and " + players.at (id_team_mate-1).get_player_name + "%N")
+		ai.update_hand (players.at (id_player-1),players.at (id_team_mate-1))
+
+		-- getting all information we need and deciding to accept or not a bet
+		print ("Initializing the bet %N")
+		bet := BC.vale_cuatro
+
+	-- getting all information we need and playing a card in difficult mode
+		print("Checking the cards of AI players one more time %N")
+		card_player := ai.player_cards_a
+		card_team_mate := ai.player_cards_b
+		played_cards := ai.played_cards_a
+		team_mate_played_cards := ai.played_cards_b
+
+		worked := ai.accept_truco_dif (bet, game_state, card_player, played_cards, card_team_mate,team_mate_played_cards )
+
+		assert ("accept_truco_diff ok", worked)
+	end
+
+
+
 
 
 	test_send_truco_difficil
