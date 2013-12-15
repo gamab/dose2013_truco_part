@@ -22,7 +22,7 @@ feature{NONE,TR_TEST_LOGIC}
 --		team1_score				:INTEGER-- score of the team1
 --		team2_score				:INTEGER--score of the team2
 --		betting_team			:INTEGER-- The team hwo send last bet
-		current_game_points		:INTEGER-- raise of the game , first it 1 but when you press envido and accept it will be 2 and so on
+--		current_game_points		:INTEGER-- raise of the game , first it 1 but when you press envido and accept it will be 2 and so on
 		current_bet				:STRING-- if there a bet  what's this bet
 
 		action					:BOOLEAN--never mind
@@ -65,9 +65,10 @@ feature {ANY,TR_TEST_LOGIC}
 		game_state_obj.set_the_player_turn_id (current_player_id)
 		current_player_id:=1
 
-		current_game_points:=0
-		game_state_obj.set_current_game_points (current_game_points)
+--		current_game_points:=0
+		game_state_obj.set_current_game_points (0)
 
+--		round_number := 1
 		game_state_obj.set_round_number (1)
 
 		current_bet:=""
@@ -682,7 +683,7 @@ feature -- Working with the gmae_state
 --		team1_score:=game_state_obj.get_team1_score
 --		team2_score:=game_state_obj.get_team2_score
 --		betting_team:=game_state_obj.get_betting_team
-		current_game_points:=game_state_obj.get_current_game_points
+--		current_game_points:=game_state_obj.get_current_game_points
 		current_bet:=game_state_obj.get_current_bet
 		who_bet_id:=game_state_obj.get_who_bet_id
 		-- win_round (game_state_obj.get_winner_round)
@@ -963,12 +964,10 @@ feature -- end of game
 feature -- manipulate the points
 
 
-	add_to_game_points(point: INTEGER)
+	add_to_game_points(points : INTEGER)
 		-- add a certain amount of points to the current game points
 	do
-		current_game_points:=game_state_obj.get_current_game_points
-		current_game_points:=current_game_points+point
-		game_state_obj.set_current_game_points (current_game_points)
+		game_state_obj.set_current_game_points (game_state_obj.get_current_game_points + points)
 	end
 
 
@@ -1010,7 +1009,10 @@ feature -- manipulate the points
 		end
 	end
 
-
+	get_current_game_points : INTEGER
+	do
+		result := game_state_obj.current_game_points
+	end
 
 
 feature -- Useful information to determine who has to do something
@@ -1030,6 +1032,5 @@ feature -- Useful information to determine who has to do something
 	do
 	        result := game_state_obj.who_dealt
 	end
-
 
 end

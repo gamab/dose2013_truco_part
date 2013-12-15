@@ -26,7 +26,7 @@ test_make
 	 	worked_well := false;
 	 	logic.make
 	 	-- we check if the teams are initialized correctly
-	 	if logic.game_state_obj.get_team1_score = 0 AND logic.game_state_obj.get_team2_score = 0 AND logic.current_game_points = 0 then
+	 	if logic.game_state_obj.get_team1_score = 0 AND logic.game_state_obj.get_team2_score = 0 AND logic.get_current_game_points = 0 then
 	 		-- check if all the arrays are correctly set
 	 		if logic.cards.count = 40 and logic.get_table_cards.count = 36 AND logic.get_round.count = 3 AND logic.game_state_obj.get_all_players.count = 4 then
 	 			if logic.current_bet = "" AND logic.action = false AND logic.get_betting_team = 0 then
@@ -760,9 +760,9 @@ feature -- test for: update_game_points
  		game_points1,game_points2:INTEGER
  	do
  		create logic.make
- 		game_points1 := logic.current_game_points
+ 		game_points1 := logic.get_current_game_points
  		logic.add_to_game_points (2)
- 		game_points2 := logic.current_game_points
+ 		game_points2 := logic.get_current_game_points
  		worked_well:= (game_points1 = game_points2+2)
  		assert ("update_game_points ok",worked_well)
  	end
@@ -777,9 +777,9 @@ feature -- test for: update_game_points
  		game_points1,game_points2:INTEGER
  	do
  		create logic.make
- 		game_points1 := logic.current_game_points
+ 		game_points1 := logic.get_current_game_points
  		logic.add_to_game_points (2)
- 		game_points2 := logic.current_game_points
+ 		game_points2 := logic.get_current_game_points
  		worked_well:= not (game_points1 = game_points2+3)
  		assert ("update_game_points ok",worked_well)
  	end
