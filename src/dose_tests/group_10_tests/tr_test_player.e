@@ -35,9 +35,12 @@ feature -- Test update_score
 		local
 			score:INTEGER
 		do
-			player.update_score (20)
-			score := player.get_player_score
-			assert ("update_score worked", score = 20)
+
+			player.set_player_team_score (4)
+			score := player.get_player_team_score
+			player.set_player_team_score (score+4)
+			score := player.get_player_team_score
+			assert ("update_score worked", score = 8)
 		end
 
 	test_update_score_2
@@ -50,7 +53,7 @@ feature -- Test update_score
 			passed : BOOLEAN
 		do
 			if not rescued then
-				player.update_score (30)
+				player.set_player_team_score (4)
 				passed := True
 			end
 			assert ("update_score broke",  passed)

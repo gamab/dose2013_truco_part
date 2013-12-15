@@ -24,7 +24,7 @@ feature {NONE,TR_TEST_PLAYER}
     player_position          :INTEGER -- goes from 1 to 4
     the_player_team_score    :INTEGER
     played_card_counter      :INTEGER
-    player_score             :INTEGER
+    --player_score             :INTEGER
     player_team_score        :INTEGER
     player_cards_calculation :INTEGER
     is_current_card          :BOOLEAN
@@ -68,7 +68,7 @@ feature{ANY,TR_TEST_PLAYER}
         played_card_counter:=0
         the_player_team_score:=0
         player_name:=""
-		player_score:=0
+		--player_score:=0
 		is_current_card:=false
    	end
 
@@ -172,6 +172,12 @@ feature --setters and getters
     	result:=is_current_card
     end
 
+	played_card(card:TR_CARD)
+    do
+
+    end
+
+
 feature {NONE}
 
     calculate_points(cards: ARRAY[TR_CARD]):INTEGER
@@ -224,25 +230,6 @@ feature {NONE}
         result := points
 	ensure
     	point_valid: Result >= 0 and Result <= 33
-	end
-
-feature {ANY}
-
-	get_player_score():INTEGER
-    do
-    	result:= cards_points
-    end
-------------------------------------------------------------------------------------------------------------------------------------
-
-
-	played_card(card:TR_CARD)
-    do
-
-    end
-
-	update_score (counts_of_cards : INTEGER )
-	do
-
 	end
 
 end
