@@ -339,65 +339,64 @@ feature {NONE, TR_TEST_AI} --Accept
         result := send
     end
 
-        accept_truco_easy (proposition : String; current_state_game: TR_LOGIC;player1_card:ARRAY[TR_CARD]; played_card:ARRAY[BOOLEAN]):BOOLEAN
+	accept_truco_easy (proposition : String; current_state_game: TR_LOGIC;player1_card:ARRAY[TR_CARD]; played_card:ARRAY[BOOLEAN]):BOOLEAN
     -- Decide to accept or refuses a proposition of 'Truco'
     -- if  the AI won the first play and has one of the top four cards accept_truco
     -- the AI won the first play and has one of the top two cards accept_truco and send retruco ;
     require
-            proposition_truco_valid: proposition.count>0
-            player1_card_not_void: player1_card /= void
-            played_card_not_void: played_card /= void
+		proposition_truco_valid: proposition.count>0
+		player1_card_not_void: player1_card /= void
+		played_card_not_void: played_card /= void
     local
-            flag: BOOLEAN
-            cards_available: ARRAY[TR_CARD]
-            index: INTEGER
+		flag: BOOLEAN
+		cards_available: ARRAY[TR_CARD]
+		index: INTEGER
     do
-            cards_available := card_available(player1_card, played_card)
-                 if proposition.is_equal(BC.Truco) then
-                        if current_state_game.get_round[0] = 2 then
-                                        flag :=  bet_available (cards_available, 8)
-                        elseif proposition.is_equal(BC.Retruco) then
-                                flag :=  bet_available (cards_available, 10)
-                        elseif proposition.is_equal(BC.Vale_cuatro) then
-                                flag :=  bet_available (cards_available, 12)
-                        else
-                                flag := false
-                        end
-                end
-                result := flag
-        end
+    	create cards_available.make_filled (void,0,2)
+		cards_available := card_available(player1_card, played_card)
+		if proposition.is_equal(BC.Truco) then
+			flag :=  bet_available (cards_available, 8)
+		elseif proposition.is_equal(BC.Retruco) then
+			flag :=  bet_available (cards_available, 10)
+		elseif proposition.is_equal(BC.Vale_cuatro) then
+			flag :=  bet_available (cards_available, 12)
+		else
+			flag := false
+		end
+		result := flag
+	end
 
 
-        feature {NONE,TR_TEST_AI}
-        accept_truco_dif (proposition : String; current_state_game: TR_LOGIC; current_player_card:ARRAY[TR_CARD]; current_played_card:ARRAY[BOOLEAN];partner_player_card:ARRAY[TR_CARD]; partner_played_card:ARRAY[BOOLEAN]):BOOLEAN
+feature {NONE,TR_TEST_AI}
+	accept_truco_dif (proposition : String; current_state_game: TR_LOGIC; current_player_card:ARRAY[TR_CARD]; current_played_card:ARRAY[BOOLEAN];partner_player_card:ARRAY[TR_CARD]; partner_played_card:ARRAY[BOOLEAN]):BOOLEAN
     require
-            proposition_truco_valid: proposition.count > 0
-            current_state_game_not_void: current_state_game /= void
-            current_player_card_length: current_player_card.count = 3
-            current_played_card_length: current_played_card.count = 3
-                partner_player_card_length: partner_player_card.count = 3
-                partner_played_card_length: partner_played_card.count = 3
-    local
-            flag: BOOLEAN
-            current_cards_available: ARRAY[TR_CARD]
-            partner_cards_available: ARRAY[TR_CARD]
-            index: INTEGER
+		proposition_truco_valid: proposition.count > 0
+		current_state_game_not_void: current_state_game /= void
+		current_player_card_length: current_player_card.count = 3
+		current_played_card_length: current_played_card.count = 3
+		partner_player_card_length: partner_player_card.count = 3
+		partner_played_card_length: partner_played_card.count = 3
+	local
+		flag: BOOLEAN
+		current_cards_available: ARRAY[TR_CARD]
+		partner_cards_available: ARRAY[TR_CARD]
+		index: INTEGER
     do
-            current_cards_available := card_available(current_player_card, current_played_card)
-            partner_cards_available := card_available(partner_player_card, partner_played_card)
-                if proposition.is_equal(BC.Truco) then
-                        if current_state_game.get_round[0] = 2 then
-                                flag :=  bet_available (current_cards_available, 8) or bet_available (current_cards_available, 8)
-                        end
-                elseif proposition.is_equal(BC.Retruco) then
-                        flag := bet_available (current_cards_available, 10) or bet_available (current_cards_available, 10)
-                elseif proposition.is_equal(BC.Vale_cuatro) then
-                        flag := bet_available (current_cards_available, 12) or bet_available (current_cards_available, 12)
-                else
-                        flag := false
-                end
-                result := flag
-        end
+    	create current_cards_available.make_filled (void, 0, 2)
+    	create partner_cards_available.make_filled (void, 0, 2)
+		current_cards_available := card_available(current_player_card, current_played_card)
+		partner_cards_available := card_available(partner_player_card, partner_played_card)
+		if proposition.is_equal(BC.Truco) then
+			flag :=  bet_available (current_cards_available, 8) or bet_available (current_cards_available, 8)
+		elseif proposition.is_equal(BC.Retruco) then
+			flag := bet_available (current_cards_available, 10) or bet_available (current_cards_available, 10)
+		elseif proposition.is_equal(BC.Vale_cuatro) then
+			flag := bet_available (current_cards_available, 12) or bet_available (current_cards_available, 12)
+		else
+			flag := false
+		end
+		result := flag
+	end
 
 
 
