@@ -39,6 +39,8 @@ feature{ANY}
 	local
 		player_empty : TR_PLAYER
 	do
+		create bc
+
 		create rounds.make_filled (0, 0,2)
 		create player_empty.make (0, 0)
 		create the_winner.make (0,0)
