@@ -26,7 +26,7 @@ test_make
 	 	worked_well := false;
 	 	logic.make
 	 	-- we check if the teams are initialized correctly
-	 	if logic.team1_score = 0 AND logic.team2_score = 0 AND logic.current_game_points = 0 then
+	 	if logic.game_state_obj.get_team1_score = 0 AND logic.game_state_obj.get_team2_score = 0 AND logic.current_game_points = 0 then
 	 		-- check if all the arrays are correctly set
 	 		if logic.cards.count = 40 and logic.get_table_cards.count = 36 AND logic.get_round.count = 3 AND logic.game_state_obj.get_all_players.count = 4 then
 	 			if logic.current_bet = "" AND logic.action = false AND logic.betting_team = 0 then
@@ -84,7 +84,7 @@ test_make_cards_random_order -- check if there isn't twice the same card in the 
 	 do
 	 	create logic.make
 	 	logic.add_to_team_points (1, 20 )
-	 	if logic.get_team_points (1) = logic.team1_score then
+	 	if logic.get_team_points (1) = logic.game_state_obj.get_team1_score then
 	 		worked_well := true;
 	 	end
 	 	assert ("make ok", worked_well )
