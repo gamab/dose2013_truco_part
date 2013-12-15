@@ -481,31 +481,34 @@ feature {NONE, TR_TEST_AI} --Send
             flag: BOOLEAN
             cards_available_player_current: ARRAY[TR_CARD]
             index: INTEGER
+            bet : STRING
     do
+    			create cards_available_player_current.make_filled (void, 0,5)
                 cards_available_player_current := card_available(current_card_player, current_played_card)
                 if current_state_game.is_truco_allowed(current_player) then
                         if current_state_game.get_round[0] = 2 or current_state_game.get_round[0] = 2 then
                                 if bet_available(cards_available_player_current, 8) then
-                                        result := BC.Truco
+                                        bet := BC.Truco
                                 end
                         end
                 elseif current_state_game.is_retruco_allowed(current_player) then
                         if current_state_game.get_round[0] = 2 or current_state_game.get_round[0] = 2 then
                                 if bet_available(cards_available_player_current,10) then
-                                        result := BC.Retruco
+                                        bet := BC.Retruco
                                 end
                         end
 
                 elseif current_state_game.is_vale_cuatro_allowed(current_player) then
                         if current_state_game.get_round[0] = 2 or current_state_game.get_round[0] = 2 then
                                 if bet_available(cards_available_player_current,12) then
-                                        result := BC.Vale_Cuatro
+                                        bet := BC.Vale_Cuatro
                                 end
                         end
 
                 else
-                        result := ""
+                        bet := ""
                 end
+                result := bet
         ensure
                 expected_result: result.is_equal(BC.Truco) or  result.is_equal(BC.Retruco) or result.is_equal(BC.Vale_Cuatro) or result.is_equal("")
     end
