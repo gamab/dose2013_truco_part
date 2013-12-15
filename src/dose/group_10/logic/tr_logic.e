@@ -934,6 +934,9 @@ feature -- end of hand
 
 		-- we deal the cards
 		dealer
+
+		-- setting the current game point to one
+		game_state_obj.set_current_game_points (1)
 	end
 
 	which_team_won_the_hand : INTEGER
