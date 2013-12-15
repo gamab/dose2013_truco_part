@@ -314,9 +314,9 @@ feature {ANY,TR_TEST_LOGIC}
 	require
 		bet_possible : game_state_obj.is_envido_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
-		game_state_obj.set_current_bet ("envido")
+		game_state_obj.set_current_bet (BC.envido)
 		game_state_obj.set_action
-		current_bet:="envido"
+		current_bet:=BC.envido
 		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
@@ -340,9 +340,9 @@ feature {ANY,TR_TEST_LOGIC}
 	require
 		bet_possible : game_state_obj.is_real_envido_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
-		game_state_obj.set_current_bet ("realenvido")
+		game_state_obj.set_current_bet (BC.real_envido)
 		game_state_obj.set_action
-		current_bet:="realenvido"
+		current_bet:=BC.real_envido
 		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
@@ -368,9 +368,9 @@ feature {ANY,TR_TEST_LOGIC}
 	require
 		bet_possible : game_state_obj.is_falta_envido_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
-		game_state_obj.set_current_bet ("faltaenvido")
+		game_state_obj.set_current_bet (BC.falta_envido)
 		game_state_obj.set_action
-		current_bet:="faltaenvido"
+		current_bet:=BC.falta_envido
 		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
@@ -397,9 +397,9 @@ feature {ANY,TR_TEST_LOGIC}
 	require
 		bet_possible : game_state_obj.is_truco_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
-		game_state_obj.set_current_bet ("truco")
+		game_state_obj.set_current_bet (BC.truco)
 		game_state_obj.set_action
-		current_bet:="truco"
+		current_bet:=BC.truco
 		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
@@ -425,9 +425,9 @@ feature {ANY,TR_TEST_LOGIC}
 	require
 		bet_possible : game_state_obj.is_retruco_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
-		game_state_obj.set_current_bet ("retruco")
+		game_state_obj.set_current_bet (BC.retruco)
 		game_state_obj.set_action
-		current_bet:="retruco"
+		current_bet:=BC.retruco
 		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
@@ -453,9 +453,9 @@ feature {ANY,TR_TEST_LOGIC}
 	require
 		bet_possible : game_state_obj.is_vale_cuatro_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
-		game_state_obj.set_current_bet ("vallecuatro")
+		game_state_obj.set_current_bet (BC.vale_cuatro)
 		game_state_obj.set_action
-		current_bet:="vallecuatro"
+		current_bet:=BC.vale_cuatro
 		action:=true
 		who_bet_id:=a_betting_player_id
 		game_state_obj.set_who_bet_id (who_bet_id)
@@ -653,9 +653,11 @@ feature -- end of rounds
 			round_number := round_number+1
 			game_state_obj.set_round_number (round_number)
 			the_end_of_the_hand:=False
+			game_state_obj.set_end_hand_to_false
 		-- else we call ed of hand
 		elseif round_number = 3 then
 			the_end_of_the_hand:=True
+			game_state_obj.set_end_hand
 		end
 	end
 -------------------------------------------------------------------------------------------
@@ -678,6 +680,7 @@ feature -- end of rounds
 		action:=game_state_obj.get_action
 		all_players:=game_state_obj.get_all_players
 		current_dealer_id := game_state_obj.who_dealt
+		the_end_of_the_hand := game_state_obj.end_hand
 	end
 
 
@@ -767,6 +770,7 @@ feature -- end of rounds
 		j:INTEGER
 		i:INTEGER
 	do
+		all_players := game_state_obj.get_all_players
 		i:=winner_id-1
 		from
 			j:=0
@@ -802,14 +806,8 @@ feature -- end of rounds
 			-- we get the game points
 			current_game_points := game_state_obj.get_current_game_points
 
-			-- we treat the bet
-			if current_bet.is_equal (BC.truco) then
-				current_game_points := current_game_points+1
-			elseif current_bet.is_equal (BC.retruco) then
-				current_game_points := current_game_points+1
-			elseif current_bet.is_equal (BC.vale_cuatro) then
-				current_game_points := current_game_points+1
-			end
+			-- we increment it by one
+			current_game_points := current_game_points+1
 
 			-- we set the current_game points
 			game_state_obj.set_current_game_points (current_game_points)
