@@ -472,6 +472,134 @@ feature {ANY,TR_TEST_LOGIC}
 
 	end
 
+
+	send_accept(team:INTEGER)
+	local
+		add_score : INTEGER
+		id : INTEGER
+		cur_id : INTEGER
+		count : INTEGER
+		max : INTEGER
+	do
+		-- we get the players
+		all_players := game_state_obj.get_all_players
+
+
+		-- TRUCO
+
+		if current_bet.is_equal (BC.truco) or current_bet.is_equal (BC.retruco) or current_bet.is_equal (BC.vale_cuatro) then
+			-- we get the game points
+			current_game_points := game_state_obj.get_current_game_points
+
+			-- we increment it by one
+			current_game_points := current_game_points+1
+
+			-- we set the current_game points
+			game_state_obj.set_current_game_points (current_game_points)
+
+		-- ENVIDO		
+		elseif current_bet.is_equal (BC.envido) or current_bet.is_equal (BC.real_envido) or current_bet.is_equal (BC.falta_envido) then
+
+			-- we treat the bet to know the points we will need to add
+			if current_bet.is_equal (BC.envido)  then
+				add_score := 2
+			elseif current_bet.is_equal (BC.real_envido)  then
+				add_score := 3
+			elseif current_bet.is_equal (BC.falta_envido)  then
+				-- the falta envido is the points between the end of the game and the current score of the best team
+				if (game_state_obj.team1_score > game_state_obj.team2_score) then
+					add_score := 24 - game_state_obj.team1_score
+				else
+					add_score := 24 - game_state_obj.team2_score
+				end
+			end
+
+			-- we are searching for the first player to have the highest envido points
+			from
+				count := 2
+				id := get_id_from_position_in_round(1)
+				max := all_players.at (id-1).cards_points
+				cur_id := id \\ 4 + 1
+			until
+				count > 4
+			loop
+				if all_players.at (cur_id - 1).cards_points > max then
+					max := all_players.at (cur_id - 1).cards_points
+					id := cur_id
+				end
+
+				cur_id := cur_id \\ 4 + 1
+				count := count + 1
+			end
+
+			-- we set the points of the best player
+			if id = 1 or id = 3 then
+                team1_score := team1_score + add_score
+                all_players[0].set_player_team_score (team1_score)
+                all_players[2].set_player_team_score (team1_score)
+                game_state_obj.set_team2_score (team1_score)
+			elseif id = 2 or id = 4 then
+                team2_score := team2_score + add_score
+                all_players[1].set_player_team_score (team2_score)
+                all_players[3].set_player_team_score (team2_score)
+                game_state_obj.set_team2_score (team2_score)
+			end
+
+		end
+
+		action:=false
+		game_state_obj.remove_action
+	end
+
+-------------------------------------------
+
+	send_reject(team:INTEGER)
+	local
+		add_points : INTEGER
+	do
+		-- TRUCO		
+		if current_bet.is_equal (BC.truco) or current_bet.is_equal (BC.retruco) or current_bet.is_equal (BC.vale_cuatro) then
+
+			-- we get the game points
+			add_points := game_state_obj.get_current_game_points
+
+			-- we set that the hand is ended
+			the_end_of_the_hand := True
+
+		-- ENVIDO		
+		elseif current_bet.is_equal (BC.envido) or current_bet.is_equal (BC.real_envido) or current_bet.is_equal (BC.falta_envido) then
+			-- we treat the bet to know the points we will need to add
+			if current_bet.is_equal (BC.envido)  then
+				add_points := 1
+			elseif current_bet.is_equal (BC.real_envido)  then
+				add_points := 2
+			elseif current_bet.is_equal (BC.falta_envido)  then
+				add_points := 3
+			end
+		end
+
+		-- set the points
+		if team = 1 then
+			team2_score := add_points
+			all_players[1].set_player_team_score (team2_score)
+			all_players[3].set_player_team_score (team2_score)
+			game_state_obj.set_team2_score (team2_score)
+		else
+			team1_score := add_points
+			all_players[0].set_player_team_score (team1_score)
+			all_players[2].set_player_team_score (team1_score)
+			game_state_obj.set_team1_score (team1_score)
+		end
+
+		action:=false
+		game_state_obj.remove_action
+
+	end
+
+
+
+
+
 ---------------------------------------------------------------------------------------------------------------------
 	get_table_cards():ARRAY[TR_CARD]
 	do
@@ -790,136 +918,16 @@ feature -- end of rounds
 	end
 -------------------------------------------------------
 
-	send_accept(team:INTEGER)
-	local
-		add_score : INTEGER
-		id : INTEGER
-		cur_id : INTEGER
-		count : INTEGER
-		max : INTEGER
+	end_game()
+	require
+		game_can_end : is_end_of_game
 	do
-		-- we get the players
-		all_players := game_state_obj.get_all_players
-
-
-		-- TRUCO
-
-		if current_bet.is_equal (BC.truco) or current_bet.is_equal (BC.retruco) or current_bet.is_equal (BC.vale_cuatro) then
-			-- we get the game points
-			current_game_points := game_state_obj.get_current_game_points
-
-			-- we increment it by one
-			current_game_points := current_game_points+1
-
-			-- we set the current_game points
-			game_state_obj.set_current_game_points (current_game_points)
-
-		-- ENVIDO		
-		elseif current_bet.is_equal (BC.envido) or current_bet.is_equal (BC.real_envido) or current_bet.is_equal (BC.falta_envido) then
-
-			-- we treat the bet to know the points we will need to add
-			if current_bet.is_equal (BC.envido)  then
-				add_score := 2
-			elseif current_bet.is_equal (BC.real_envido)  then
-				add_score := 3
-			elseif current_bet.is_equal (BC.falta_envido)  then
-				-- the falta envido is the points between the end of the game and the current score of the best team
-				if (game_state_obj.team1_score > game_state_obj.team2_score) then
-					add_score := 24 - game_state_obj.team1_score
-				else
-					add_score := 24 - game_state_obj.team2_score
-				end
-			end
-
-			-- we are searching for the first player to have the highest envido points
-			from
-				count := 2
-				id := get_id_from_position_in_round(1)
-				max := all_players.at (id-1).cards_points
-				cur_id := id \\ 4 + 1
-			until
-				count > 4
-			loop
-				if all_players.at (cur_id - 1).cards_points > max then
-					max := all_players.at (cur_id - 1).cards_points
-					id := cur_id
-				end
-
-				cur_id := cur_id \\ 4 + 1
-				count := count + 1
-			end
-
-			-- we set the points of the best player
-			if id = 1 or id = 3 then
-                team1_score := team1_score + add_score
-                all_players[0].set_player_team_score (team1_score)
-                all_players[2].set_player_team_score (team1_score)
-                game_state_obj.set_team2_score (team1_score)
-			elseif id = 2 or id = 4 then
-                team2_score := team2_score + add_score
-                all_players[1].set_player_team_score (team2_score)
-                all_players[3].set_player_team_score (team2_score)
-                game_state_obj.set_team2_score (team2_score)
-			end
-
-		end
-
-		action:=false
-		game_state_obj.remove_action
-	end
-
--------------------------------------------
-
-	send_reject(team:INTEGER)
-	local
-		add_points : INTEGER
-	do
-		-- TRUCO		
-		if current_bet.is_equal (BC.truco) or current_bet.is_equal (BC.retruco) or current_bet.is_equal (BC.vale_cuatro) then
-
-			-- we get the game points
-			add_points := game_state_obj.get_current_game_points
-
-			-- we set that the hand is ended
-			the_end_of_the_hand := True
-
-		-- ENVIDO		
-		elseif current_bet.is_equal (BC.envido) or current_bet.is_equal (BC.real_envido) or current_bet.is_equal (BC.falta_envido) then
-			-- we treat the bet to know the points we will need to add
-			if current_bet.is_equal (BC.envido)  then
-				add_points := 1
-			elseif current_bet.is_equal (BC.real_envido)  then
-				add_points := 2
-			elseif current_bet.is_equal (BC.falta_envido)  then
-				add_points := 3
-			end
-		end
-
-		-- set the points
-		if team = 1 then
-			team2_score := add_points
-			all_players[1].set_player_team_score (team2_score)
-			all_players[3].set_player_team_score (team2_score)
-			game_state_obj.set_team2_score (team2_score)
+		if team1_score >=24 then
+			final_winner :=1
 		else
-			team1_score := add_points
-			all_players[0].set_player_team_score (team1_score)
-			all_players[2].set_player_team_score (team1_score)
-			game_state_obj.set_team1_score (team1_score)
+			final_winner:= 2
 		end
-
-		action:=false
-		game_state_obj.remove_action
-
 	end
-
-
-end_game()
-  do
-        if team1_score >=24 then
-                final_winner :=1
-        else final_winner:= 2 end
-end
 
 
 
