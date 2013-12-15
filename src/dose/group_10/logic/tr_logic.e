@@ -632,6 +632,8 @@ feature -- end of rounds
 
 
 	end_round
+		-- Make all modification necessary to the end of the round
+		-- set the end of the hand to true in case it was the last round
 	local
 		winner_id : INTEGER
 	do
@@ -646,10 +648,10 @@ feature -- end of rounds
 		if round_number = 1 or round_number = 2 then
 			round_number := round_number+1
 			game_state_obj.set_round_number (round_number)
+			the_end_of_the_hand:=False
 		-- else we call ed of hand
 		elseif round_number = 3 then
-			the_end_of_the_hand:=true
-			end_hand
+			the_end_of_the_hand:=True
 		end
 	end
 -------------------------------------------------------------------------------------------
