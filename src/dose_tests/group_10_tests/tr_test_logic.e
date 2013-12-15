@@ -461,6 +461,7 @@ feature -- test for : is_envido_allowed is_real_envido_allowed is_falta_envido_a
  	 	create player2.make (2, 2)
  	 	-- envido should not be allowed if someone said it
  	 	envido_allowed := logic.is_envido_allowed (player)
+ 	 	logic.send_envido (1)
  	 	envido_allowed := logic.is_envido_allowed (player2)
  		assert ("is_envido_allowed_2 ok", not envido_allowed )
  	 end
