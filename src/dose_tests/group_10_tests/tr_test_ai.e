@@ -2535,6 +2535,7 @@ feature -- test bet_available and team_bet_available
 		card_played : TR_CARD
 		worked: BOOLEAN
 	do
+		create BC
 		-- create players ids
 		id_player := 2
 		id_team_mate := 4
@@ -2621,7 +2622,7 @@ feature -- test bet_available and team_bet_available
 
 		-- getting all information we need and deciding to accept or not a bet
 		print ("Initializing the bet %N")
-		bet := "Retruco"
+		bet := BC.truco
 
 	-- getting all information we need and playing a card in difficult mode
 		print("Checking the cards of AI players one more time %N")
