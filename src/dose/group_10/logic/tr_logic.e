@@ -624,6 +624,7 @@ feature -- Working with players
 	local
 		player : TR_PLAYER
 	do
+		all_players := game_state_obj.get_all_players
 		create player.make (a_id, a_team_id)
 		player.set_player_name(a_name)
 		all_players[a_id-1] := player
