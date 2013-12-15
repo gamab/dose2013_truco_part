@@ -687,10 +687,10 @@ feature {ANY,TR_TEST_LOGIC}
 
                                  -- if first team wins
                 if
-                all_players[0].calculate_cards_weight > all_players[1].calculate_cards_weight
-                        and all_players[0].calculate_cards_weight > all_players[3].calculate_cards_weight
-                        or all_players[2].calculate_cards_weight > all_players[1].calculate_cards_weight
-                        and all_players[2].calculate_cards_weight > all_players[3].calculate_cards_weight
+                all_players[0].cards_points > all_players[1].cards_points
+                        and all_players[0].cards_points > all_players[3].cards_points
+                        or all_players[2].cards_points > all_players[1].cards_points
+                        and all_players[2].cards_points > all_players[3].cards_points
                 then
                 team1_score := team1_score + add_score
                 all_players[0].set_player_team_score (team1_score)
@@ -698,10 +698,10 @@ feature {ANY,TR_TEST_LOGIC}
                 game_state_obj.set_team1_score (team1_score)
                                  -- if second wins
                 else if
-                all_players[0].calculate_cards_weight > all_players[1].calculate_cards_weight
-                        and all_players[0].calculate_cards_weight > all_players[3].calculate_cards_weight
-                        or all_players[2].calculate_cards_weight > all_players[1].calculate_cards_weight
-                        and all_players[2].calculate_cards_weight > all_players[3].calculate_cards_weight
+                all_players[0].cards_points > all_players[1].cards_points
+                        and all_players[0].cards_points > all_players[3].cards_points
+                        or all_players[2].cards_points > all_players[1].cards_points
+                        and all_players[2].cards_points > all_players[3].cards_points
                 then
                 team2_score := team2_score + add_score
                 all_players[1].set_player_team_score (team2_score)
@@ -709,7 +709,7 @@ feature {ANY,TR_TEST_LOGIC}
                 game_state_obj.set_team2_score (team2_score)
 
                 -- if first the same as second
-                else if all_players[0].calculate_cards_weight = all_players[1].calculate_cards_weight
+                else if all_players[0].cards_points = all_players[1].cards_points
                 then
                 if
                 all_players[0].get_player_posistion < all_players[1].get_player_posistion
@@ -726,7 +726,7 @@ feature {ANY,TR_TEST_LOGIC}
 
                 end
                                   -- if first  the same as forth
-                else if all_players[0].calculate_cards_weight = all_players[3].calculate_cards_weight
+                else if all_players[0].cards_points = all_players[3].cards_points
                 then
                 if
                 all_players[0].get_player_posistion < all_players[3].get_player_posistion
@@ -745,7 +745,7 @@ feature {ANY,TR_TEST_LOGIC}
                 end
 
                                   -- if third  the same as second
-                else if all_players[2].calculate_cards_weight = all_players[1].calculate_cards_weight
+                else if all_players[2].cards_points = all_players[1].cards_points
                 then
                 if
                 all_players[2].get_player_posistion < all_players[1].get_player_posistion
@@ -763,7 +763,7 @@ feature {ANY,TR_TEST_LOGIC}
 
                 end
                 -- if third  the same as forth
-                else if all_players[2].calculate_cards_weight = all_players[3].calculate_cards_weight
+                else if all_players[2].cards_points = all_players[3].cards_points
                 then
                 if
                 all_players[2].get_player_posistion < all_players[3].get_player_posistion
