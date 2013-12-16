@@ -364,10 +364,13 @@ feature {NONE, TR_TEST_AI} --Accept
 		cards_available: ARRAY[TR_CARD]
 		index: INTEGER
     do
-    	create cards_available.make_filled (void,0,2)
+
 		cards_available := card_available(player1_card, played_card)
+		print ("accept_truco_easy : cards_available(0) := " + cards_available.at (0).out + "%N")
+		print ("accept_truco_easy : proposition := " + proposition + "%N")
 		if proposition.is_equal(BC.Truco) then
 			flag :=  bet_available (cards_available, 8)
+			print ("accept_truco_easy : flag := " + bet_available (cards_available, 8).out + "%N")
 		elseif proposition.is_equal(BC.Retruco) then
 			flag :=  bet_available (cards_available, 10)
 		elseif proposition.is_equal(BC.Vale_cuatro) then
@@ -426,6 +429,7 @@ feature {NONE,TR_TEST_AI}
                 until
                         index > played_cards.upper
                 loop
+                	print ("card_available : played_card (" + index.out + ") := " + played_cards[index].out + "%N" )
                         if played_cards[index] = false then
                                 count:=count+1
                         end
@@ -543,7 +547,8 @@ feature {NONE,TR_TEST_AI}
                 until
                         index > current_cards_player.upper or flag
                 loop
-                        if current_cards_player[index].get_card_weight_truco >= number then
+                	print ("bet_available : get_card_weight_truco := " + current_cards_player.at (index).get_card_weight_truco.out + "%N")
+                        if current_cards_player.at (index).get_card_weight_truco >= number then
                                 flag := true
                         end
                         index:= index+1

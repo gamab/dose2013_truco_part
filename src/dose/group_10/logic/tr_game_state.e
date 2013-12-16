@@ -226,6 +226,7 @@ feature{ANY}
 
 	is_truco_allowed(player: TR_PLAYER) :BOOLEAN
 	do
+		print ("is_truco_allowed : current_bet := " + current_bet.out + "%N" )
 		result:=(not current_bet.is_equal (bc.truco) and not current_bet.is_equal (bc.retruco) and not current_bet.is_equal (bc.vale_cuatro) )
 	end
 

@@ -524,13 +524,13 @@ feature {NONE}-- Network event handling
 				set_truco_disable(false)
 
 
---				if gs.is_truco_allowed (local_player) then
+				if gs.is_truco_allowed (local_player) then
 					set_truco_button ("Truco", agent truco_clicked(?,?,?,?,?,?,?,?))
---				elseif gs.is_retruco_allowed (local_player) then
---					set_truco_button ("Retruco", agent retruco_clicked (?,?,?,?,?,?,?,?))
---				elseif gs.is_vale_cuatro_allowed(local_player) then
---					set_truco_button ("Vale Cuatro", agent valecuatro_clicked (?,?,?,?,?,?,?,?))
---				end
+				elseif gs.is_retruco_allowed (local_player) then
+					set_truco_button ("Retruco", agent retruco_clicked (?,?,?,?,?,?,?,?))
+				elseif gs.is_vale_cuatro_allowed(local_player) then
+					set_truco_button ("Vale Cuatro", agent valecuatro_clicked (?,?,?,?,?,?,?,?))
+				end
 
 
 
