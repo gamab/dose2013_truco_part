@@ -932,7 +932,6 @@ feature {NONE,TR_TEST_AI}
         require
                 current_cards_player_not_void: current_cards_player /= void
                 partner_cards_player_not_void: partner_cards_player /= void
-                equals_long: current_cards_player.count = partner_cards_player.count
                 number_correct: number >= 0 and number <= 13
         local
                 index: INTEGER
@@ -943,11 +942,24 @@ feature {NONE,TR_TEST_AI}
                 until
                         index > current_cards_player.upper or flag
                 loop
-                        if current_cards_player[index].get_card_weight_truco >= number or partner_cards_player[index].get_card_weight_truco >= number then
+                        if current_cards_player[index].get_card_weight_truco >= number  then
                                 flag := true
                         end
                         index:= index+1
                 end
+
+
+                from
+                        index := partner_cards_player.lower
+                until
+                        index > partner_cards_player.upper or flag
+                loop
+                        if partner_cards_player[index].get_card_weight_truco >= number then
+                                flag := true
+                        end
+                        index:= index+1
+                end
+
                 result := flag
         end
 
