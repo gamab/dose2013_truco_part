@@ -575,12 +575,12 @@ feature {NONE,TR_TEST_AI}
                 current_cards_available := card_available(current_card_player, current_played_card)
                 partner_cards_available := card_available(partner_card_player, partner_played_card)
                 if current_state_game.is_truco_allowed (current_player) then
-                        if current_state_game.get_round_number = 1 then
-                                cards_on_the_table := prepare_the_table(cards_on_the_table, current_state_game.get_table_cards)
-                                if team_bet_available(current_cards_available, partner_cards_available, 10) then
-                                        flag := random_boolean()
-                                end
-                        elseif current_state_game.get_round_number = 2 then
+--                        if current_state_game.get_round_number = 1 then
+--                                cards_on_the_table := prepare_the_table(cards_on_the_table, current_state_game.get_table_cards)
+--                                if team_bet_available(current_cards_available, partner_cards_available, 10) then
+--                                        flag := random_boolean()
+--                                end
+                        if current_state_game.get_round_number = 2 then
                                 cards_on_the_table := prepare_the_table(cards_on_the_table, current_state_game.get_table_cards)
                                 if current_state_game.get_round[0] = current_player.get_player_team_id then
                                         if team_bet_available(current_cards_available, partner_cards_available,10) then
