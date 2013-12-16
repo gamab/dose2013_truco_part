@@ -147,15 +147,28 @@ test_make_cards_random_order -- check if there isn't twice the same card in the 
 	 	logic : TR_LOGIC
 	 	worked_well: BOOLEAN
 	 	card: TR_CARD
-	 	player: TR_PLAYER
-
+		player : TR_PLAYER
  	do
 		create logic.make
+		logic.set_player_info ("1", 1, 1)
+		logic.set_player_info ("2", 2, 2)
+		logic.set_player_info ("3", 3, 1)
+		logic.set_player_info ("4", 4, 2)
+
 		worked_well := false;
-		card.make ("sword", 1)
-		player.make (1, 1)
+		logic.new_hand
+
+		player := logic.get_players[0]
+		card := player.get_player_cards[0].deep_twin
+
+		print ("Player cards : " + player.get_player_cards[0].out + "%N")
+		print ("Player cards : " + player.get_player_cards[1].out + "%N")
+		print ("Player cards : " + player.get_player_cards[2].out + "%N")
+
 		logic.play_card (card, player)
-		if logic.cards.has(card) then
+		print ("Card played : " + card.out + "%N")
+		print ("Card played : " + logic.cards.at (0).out+ "%N")
+		if logic.cards.at (0).get_card_type.is_equal (card.get_card_type) and logic.cards.at (0).get_card_value = card.get_card_value then
 			worked_well := true;
 		end
 		assert ("play_card ok", worked_well)
