@@ -368,7 +368,7 @@ feature -- Bets
 
 	send_re_envido(a_betting_player_id:INTEGER)
 	require
-		bet_possible : game_state_obj.is_real_envido_allowed (game_state_obj.all_players[a_betting_player_id-1])
+--		bet_possible : game_state_obj.is_real_envido_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
 		game_state_obj.set_current_bet (BC.real_envido)
 		game_state_obj.set_action
@@ -394,7 +394,7 @@ feature -- Bets
 
 	send_falta_envido(a_betting_player_id:INTEGER)
 	require
-		bet_possible : game_state_obj.is_falta_envido_allowed (game_state_obj.all_players[a_betting_player_id-1])
+--		bet_possible : game_state_obj.is_falta_envido_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
 		game_state_obj.set_current_bet (BC.falta_envido)
 		game_state_obj.set_action
@@ -421,7 +421,7 @@ feature -- Bets
 
 	send_truco(a_betting_player_id:INTEGER)
 	require
-		bet_possible : game_state_obj.is_truco_allowed (game_state_obj.all_players[a_betting_player_id-1])
+--		bet_possible : game_state_obj.is_truco_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
 		game_state_obj.set_current_bet (BC.truco)
 		game_state_obj.set_action
@@ -447,7 +447,7 @@ feature -- Bets
 
 	send_re_truco(a_betting_player_id:INTEGER)
 	require
-		bet_possible : game_state_obj.is_retruco_allowed (game_state_obj.all_players[a_betting_player_id-1])
+--		bet_possible : game_state_obj.is_retruco_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
 		game_state_obj.set_current_bet (BC.retruco)
 		game_state_obj.set_action
@@ -474,7 +474,7 @@ feature -- Bets
 
 	send_valle_cuatro(a_betting_player_id:INTEGER)
 	require
-		bet_possible : game_state_obj.is_vale_cuatro_allowed (game_state_obj.all_players[a_betting_player_id-1])
+--		bet_possible : game_state_obj.is_vale_cuatro_allowed (game_state_obj.all_players[a_betting_player_id-1])
 	do
 		game_state_obj.set_current_bet (BC.vale_cuatro)
 		game_state_obj.set_action
