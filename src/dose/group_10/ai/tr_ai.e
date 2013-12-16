@@ -505,20 +505,20 @@ feature {NONE, TR_TEST_AI} --Send
     			create cards_available_player_current.make_filled (void, 0,5)
                 cards_available_player_current := card_available(current_card_player, current_played_card)
                 if current_state_game.is_truco_allowed(current_player) then
-                        if current_state_game.get_round[0] = 2 or current_state_game.get_round[0] = 2 then
+                        if current_state_game.get_round[0] = 2 or current_state_game.get_round[0] = 4 then
                                 if bet_available(cards_available_player_current, 8) then
                                         bet := BC.Truco
                                 end
                         end
                 elseif current_state_game.is_retruco_allowed(current_player) then
-                        if current_state_game.get_round[0] = 2 or current_state_game.get_round[0] = 2 then
+                        if current_state_game.get_round[0] = 2 or current_state_game.get_round[0] = 4 then
                                 if bet_available(cards_available_player_current,10) then
                                         bet := BC.Retruco
                                 end
                         end
 
                 elseif current_state_game.is_vale_cuatro_allowed(current_player) then
-                        if current_state_game.get_round[0] = 2 or current_state_game.get_round[0] = 2 then
+                        if current_state_game.get_round[0] = 2 or current_state_game.get_round[0] = 4 then
                                 if bet_available(cards_available_player_current,12) then
                                         bet := BC.Vale_Cuatro
                                 end
@@ -582,7 +582,7 @@ feature {NONE,TR_TEST_AI}
 --                                end
                         if current_state_game.get_round_number = 2 then
                                 cards_on_the_table := prepare_the_table(cards_on_the_table, current_state_game.get_table_cards)
-                                if current_state_game.get_round[0] = current_player.get_player_team_id then
+                                if -((current_state_game.get_round[0] \\ 2) - 2) = current_player.get_player_team_id then
                                         if team_bet_available(current_cards_available, partner_cards_available,10) then
                                                 flag := true
                                         end
@@ -640,7 +640,7 @@ feature {NONE,TR_TEST_AI}
                                 end
                         elseif current_state_game.get_round_number = 2 then
                                 cards_on_the_table := prepare_the_table(cards_on_the_table, current_state_game.get_table_cards)
-                                if current_state_game.get_round[0] = current_player.get_player_team_id then
+                                if -((current_state_game.get_round[0] \\ 2) - 2) = current_player.get_player_team_id then
                                         if team_bet_available(current_cards_available, partner_cards_available,10) then
                                                 flag := true
                                         end
@@ -698,7 +698,7 @@ feature {NONE,TR_TEST_AI}
                                 end
                         elseif current_state_game.get_round_number = 2 then
                                 cards_on_the_table := prepare_the_table(cards_on_the_table, current_state_game.get_table_cards)
-                                if current_state_game.get_round[0] = current_player.get_player_team_id then
+                                if -((current_state_game.get_round[0] \\ 2) - 2) = current_player.get_player_team_id then
                                         if team_bet_available(current_cards_available, partner_cards_available,10) then
                                                 flag := true
                                         end
