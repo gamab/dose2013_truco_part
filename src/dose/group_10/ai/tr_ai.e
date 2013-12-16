@@ -439,9 +439,9 @@ feature {NONE,TR_TEST_AI}
 
 				count := 0
                 from
-                        index := cards_available.lower
+                        index := played_cards.lower
                 until
-                        index > cards_available.upper
+                        index > played_cards.upper
                 loop
                         if played_cards[index] = false then
                                 cards_available[count] := card_player[index]
