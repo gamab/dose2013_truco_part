@@ -213,11 +213,11 @@ feature {ANY} -- Next move
                 end
 
                 point_team_1 := current_state_game.get_team_points (1)
-            point_team_2 := current_state_game.get_team_points (2)
-            point_max := point_team_1
-            if point_team_1 < point_team_2 then
-                    point_max := point_team_2
-            end
+	            point_team_2 := current_state_game.get_team_points (2)
+	            point_max := point_team_1
+	            if point_team_1 < point_team_2 then
+	                    point_max := point_team_2
+	            end
 
                 if current_player_id = id_player_a then
                     player_cards := player_cards_a
@@ -247,7 +247,9 @@ feature {ANY} -- Next move
                                                 current_state_game.send_accept (current_player_id)
                                         end
                                 else
+                                        print("%N%N%NTR_AI : Line 250%N")
                                         current_state_game.send_reject (current_player.get_player_team_id)
+                                        print("%N%N%NTR_AI : Line 251%N")
                                 end
                         else
                                 if bet.is_equal(BC.Truco) OR bet.is_equal(BC.Retruco) OR bet.is_equal(BC.Vale_cuatro) then
@@ -261,7 +263,9 @@ feature {ANY} -- Next move
                                                         current_state_game.send_accept (current_player_id)
                                                 end
                                         else
+                                        		print("%N%N%NTR_AI : Line 264%N")
                                                 current_state_game.send_reject (current_player.get_player_team_id)
+                                        		print("%N%N%NTR_AI : Line 266%N")
                                         end
                                 end
                         end
