@@ -149,6 +149,23 @@ feature -- constructors
 			end
 		end
 
+	-- prompt_box.make_end_round_called (controller, winner_name, l_can_answer_click, current_game_points, box_end_round_clicked)
+	make_end_round_called(a_controller: TR_CONTROLLER; winner_name : STRING; can_answer : BOOLEAN; game_points : INTEGER; a_end_round_action : PROCEDURE[ANY, TUPLE])
+		-- Creates a "falta envido called" box
+		do
+			end_round_action := a_end_round_action
+
+			initialize_standard_box (a_controller)
+			add_title_and_description ("End round (" + game_points.out + ")", winner_name + " won the round!")
+
+			if can_answer then
+				add_end_round_button
+			else
+				add_waiting_text
+			end
+		end
+
+
 feature {NONE} -- Implementation
 
 	initialize_standard_box(a_controller: TR_CONTROLLER)
@@ -164,6 +181,15 @@ feature {NONE} -- Implementation
 			create l_box_pic.make_with_pixmap (box)
 			extend (l_box_pic)
 			l_box_pic.set_point_position (table_box_width//2 - box.width // 2, table_box_height//2 - box.height // 2)
+		end
+
+	add_end_round_button()
+		local
+			l_end_round_button: TR_BUTTON
+		do
+			--Initialize buttons
+			l_end_round_button := make_button ("End round", quiero_button_x, quiero_button_y, agent end_round_clicked, true)
+			extend (l_end_round_button)
 		end
 
 	add_queiro_buttons()
@@ -266,6 +292,11 @@ feature {NONE} -- Implementation
 			Result := player_box_y + slot * player_box_offset
 		end
 
+	end_round_clicked(ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
+		do
+			end_round_action.call ([])
+		end
+
 	quiero_clicked(ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 		do
 			quiero_action.call ([])
@@ -304,6 +335,8 @@ feature {NONE} -- Implementation
 feature {NONE} -- Attributes
 
 	controller: TR_CONTROLLER
+
+	end_round_action: PROCEDURE[ANY, TUPLE]
 
 	quiero_action: PROCEDURE[ANY, TUPLE]
 	no_quiero_action: PROCEDURE[ANY, TUPLE]

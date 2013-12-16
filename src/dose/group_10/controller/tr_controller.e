@@ -1126,7 +1126,7 @@ feature {ANY} -- GUI events
 				l_ai_team := 1
 			end
 
-			create ai_team.make_ai_with_players ("easy", 2, 4, l_ai_team)
+			create ai_team.make_ai_with_players ("difficult", 2, 4, l_ai_team)
 
 			-- join server as ai
 			l_join_response := client.send_join_game_request_to_server (server_ip, server_port, "AI 1", l_ai_team, true)
@@ -1266,6 +1266,20 @@ feature {ANY} -- GUI events
 
 		end
 
+	gui_end_round_played()
+		require
+
+		do
+			-- send bet decline to logic
+			logic.end_round
+			-- update the local GUI such that it reflects the new game state
+			moves_allowed (produce_gui_state)
+			-- send the updated game state to the network
+			send_network_game_update (logic.get_current_game_state)
+		ensure
+
+		end
+
 	gui_chat_message_sent (a_message: TR_CHAT_LINE; is_private: BOOLEAN)
 		-- a message was typed into the chat box and "send" was pressed
 		require
@@ -1367,13 +1381,14 @@ feature {NONE}
 				-- if either of the ai players can perform some action, invoke it
 				if l_ai_1_action then
 					ai_team.next_move (logic.get_current_game_state.get_all_players()[1].get_player_id, logic)
+					-- send the updated game state to the network
+					send_network_game_update (logic.get_current_game_state)
 				end
 				if l_ai_2_action then
 					ai_team.next_move (logic.get_current_game_state.get_all_players()[3].get_player_id, logic)
+					-- send the updated game state to the network
+					send_network_game_update (logic.get_current_game_state)
 				end
-
-				-- send the updated game state to the network
-				send_network_game_update (logic.get_current_game_state)
 			end
 		end
 

@@ -477,12 +477,15 @@ feature {NONE}-- Network event handling
 		-- called from the controller when an updated game state has been received
 		local
 			local_player: TR_PLAYER
+			local_logic : TR_LOGIC
 
 			l_is_local_players_turn: BOOLEAN
 			l_can_answer_bet: BOOLEAN
 			i: INTEGER
 		do
 			local_player := controller.get_local_player
+			create local_logic.make
+			local_logic.set_current_game_state (gs)
 
 			--Place players according to local player
 			from i:=0 until i=4 loop
@@ -546,7 +549,8 @@ feature {NONE}-- Network event handling
 			if prompt_box /= Void then prompt_box.hide end
 			if gs.get_action then
 
-				if gs.get_all_players[gs.get_who_bet_id - 1].get_player_team_id = local_player.get_player_team_id  then
+--				if gs.get_all_players[gs.get_who_bet_id - 1].get_player_team_id = local_player.get_player_team_id  then	
+				if gs.do_i_have_to_answer_a_bet (local_player.get_player_id)  then
 					l_can_answer_bet := false
 				else
 					l_can_answer_bet := true
@@ -566,6 +570,9 @@ feature {NONE}-- Network event handling
 					prompt_box.make_real_envido_called (controller, gs.get_all_players[gs.get_who_bet_id - 1].get_player_name, l_can_answer_bet, gs.get_current_game_points, agent box_quiero_clicked, agent box_no_quiero_clicked, agent box_real_envido_clicked, agent box_falta_envido_clicked)
 				elseif gs.get_current_bet.is_equal ("faltaenvido") then
 					prompt_box.make_falta_envido_called (controller, gs.get_all_players[gs.get_who_bet_id - 1].get_player_name, l_can_answer_bet, gs.get_current_game_points, agent box_quiero_clicked, agent box_no_quiero_clicked)
+				elseif local_logic.is_end_round then
+					print("%N%NIn TR_WINDOW_TABLE : game_state_updated : Detected the end of the round%N%N")
+					prompt_box.make_end_round_called (controller, gs.get_all_players[local_logic.who_played_the_first_best_card - 1].get_player_name, controller.is_host, gs.get_current_game_points, agent box_end_round_clicked)
 				end
 				if not world.has (prompt_box) then world.extend (prompt_box) end
 			end
@@ -627,6 +634,13 @@ feature {NONE}-- Network event handling
 		do
 			print ("falta envido clicked! %N")
 			controller.gui_falta_envido_played
+			disable_card_click := true
+		end
+
+	box_end_round_clicked
+		do
+			print ("end round clicked! %N")
+			controller.gui_end_round_played
 			disable_card_click := true
 		end
 
