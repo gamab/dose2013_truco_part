@@ -118,7 +118,7 @@ feature
 				l_y_pos := card_height
 			elseif card.get_card_type.is_equal("cups") then
 				l_y_pos := card_height * 2
-			elseif card.get_card_type.is_equal("gold") then
+			elseif card.get_card_type.is_equal("golds") then
 				l_y_pos := card_height * 3
 			end
 
