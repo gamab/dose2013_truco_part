@@ -1127,7 +1127,7 @@ feature {NONE,TR_TEST_AI,APPLICATION} --Card to play
                         --if I'm first in the second round: is because my team won the first round, or there was a tie
                                 who_won_first_round := game_state.get_round.at (game_state.get_round.lower)
                                 -- If we won the first round
-                                if who_won_first_round = team then
+                                if -((who_won_first_round \\ 2) - 2) = team then
                                         my_best_card := greater_card_available(card_player,played_cards)
                                         best_partner_card := greater_card_available(card_team_mate,team_mate_played_cards)
                                         if my_best_card.get_card_weight_truco < best_partner_card.get_card_weight_truco then
