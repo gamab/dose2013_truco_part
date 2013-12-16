@@ -484,8 +484,8 @@ feature {NONE, TR_TEST_AI} --Send
                         end
                 end
                 result:= chant
-        ensure
-                expected_result: result.is_equal(BC.Envido) or  result.is_equal(BC.Real_envido) or result.is_equal(BC.Falta_envido) or result.is_equal("")
+--        ensure
+--                expected_result: result.is_equal(BC.Envido) or  result.is_equal(BC.Real_envido) or result.is_equal(BC.Falta_envido) or result.is_equal("")
     end
 
         --need other parameters, cards_aviable, satet_game.
@@ -525,8 +525,8 @@ feature {NONE, TR_TEST_AI} --Send
                         end
                 end
                 result := bet
-        ensure
-                expected_result: result.is_equal(BC.Truco) or  result.is_equal(BC.Retruco) or result.is_equal(BC.Vale_Cuatro) or result.is_equal("")
+--        ensure
+--                expected_result: result.is_equal(BC.Truco) or  result.is_equal(BC.Retruco) or result.is_equal(BC.Vale_Cuatro) or result.is_equal("")
     end
 
 
@@ -750,8 +750,8 @@ feature {NONE,TR_TEST_AI}
                         end
                 end
 
-        ensure
-                expected_result: result.is_equal(BC.Truco) or  result.is_equal(BC.Retruco) or result.is_equal(BC.Vale_Cuatro) or result.is_equal("")
+--        ensure
+--                expected_result: result.is_equal(BC.Truco) or  result.is_equal(BC.Retruco) or result.is_equal(BC.Vale_Cuatro) or result.is_equal("")
         end
 
 
