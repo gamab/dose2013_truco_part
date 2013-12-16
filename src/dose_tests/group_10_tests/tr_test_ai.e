@@ -276,6 +276,90 @@ feature--test_cards_available
 	end
 
 
+--saco primera
+
+
+	test_card_available_3
+	note
+		testing: "covers/{TR_AI}.card_available"
+		testing: "user/TR"
+	local
+		card_1, card_2, card_3 : TR_CARD
+		cards_1 : ARRAY[TR_CARD]
+		cards_2 : ARRAY[BOOLEAN]
+		i : INTEGER
+		worked_well : BOOLEAN
+		array_result : ARRAY[TR_CARD]
+		array_result_void : ARRAY[TR_CARD]
+	do
+		--create make
+		create ai.make_ai_with_players("easy",2,4,2)
+		--create array cards
+		create cards_1.make_filled (Void,0,2)
+		create cards_2.make_filled (false,0,2)
+		--create cards
+     	create card_1.make ("swords", 1)
+		create card_2.make ("gold", 4)
+		create card_3.make ("gold", 5)
+
+		cards_1[0] := card_1
+		cards_1[1] := card_2
+		cards_1[2] := card_3
+
+		cards_2[1] := true
+
+		array_result := ai.card_available(cards_1,cards_2)
+
+		worked_well := array_result.count = 2
+
+		print (worked_well.out + "%N")
+		assert ("ok", worked_well)
+	end
+
+
+
+
+--saco segunda
+
+	test_card_available_4
+	note
+		testing: "covers/{TR_AI}.card_available"
+		testing: "user/TR"
+	local
+		card_1, card_2, card_3 : TR_CARD
+		cards_1 : ARRAY[TR_CARD]
+		cards_2 : ARRAY[BOOLEAN]
+		i : INTEGER
+		worked_well : BOOLEAN
+		array_result : ARRAY[TR_CARD]
+		array_result_void : ARRAY[TR_CARD]
+	do
+		--create make
+		create ai.make_ai_with_players("easy",2,4,2)
+		--create array cards
+		create cards_1.make_filled (Void,0,2)
+		create cards_2.make_filled (false,0,2)
+		--create cards
+     	create card_1.make ("swords", 1)
+		create card_2.make ("gold", 4)
+		create card_3.make ("gold", 5)
+
+		cards_1[0] := card_1
+		cards_1[1] := card_2
+		cards_1[2] := card_3
+
+		cards_2[0] := true
+
+		array_result := ai.card_available(cards_1,cards_2)
+
+		worked_well := array_result.count = 2
+
+		print (worked_well.out + "%N")
+		assert ("ok", worked_well)
+	end
+
+
+
 feature--test_random
 	test_random
 	note
