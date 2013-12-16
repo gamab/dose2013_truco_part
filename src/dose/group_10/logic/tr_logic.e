@@ -314,8 +314,7 @@ feature -- Working with cards
 			end
 			i:=i+1
 		end
-		new_player_turn := game_state_obj.the_player_turn_id\\4 + 1
-		game_state_obj.set_the_player_turn_id (new_player_turn)
+		game_state_obj.inc_the_player_turn_id
 		game_state_obj.set_all_players (all_players)
    end
 
