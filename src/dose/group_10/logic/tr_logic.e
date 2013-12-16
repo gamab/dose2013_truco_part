@@ -870,7 +870,7 @@ feature -- end of rounds
 		-- in case of draw the winner must be the first to have play the highest card
 	require
 		round_ended : is_end_round
-		id_possible : winner_id >= 1 and winner_id <= 3
+		id_possible : winner_id >= 1 and winner_id <= 4
 	local
 		draw : BOOLEAN
 		rounds : ARRAY[INTEGER]

@@ -173,7 +173,7 @@ feature{ANY}
 
 	set_winner_round(a_winner:INTEGER)
 	require
-		id_possible : a_winner >= 1 and a_winner <= 3
+		id_possible : a_winner >= 1 and a_winner <= 4
 	do
 		the_winner:=all_players.at (a_winner - 1)
 	end
