@@ -433,13 +433,15 @@ feature {NONE,TR_TEST_AI}
                 end
                 create cards_available.make_filled (void,0,count-1)
 
+				count := 0
                 from
-                        index := card_player.lower
+                        index := cards_available.lower
                 until
-                        index > card_player.upper
+                        index > cards_available.upper
                 loop
                         if played_cards[index] = false then
-                                cards_available[index] := card_player[index]
+                                cards_available[count] := card_player[index]
+                                count := count +1
                         end
                         index := index + 1
                 end
