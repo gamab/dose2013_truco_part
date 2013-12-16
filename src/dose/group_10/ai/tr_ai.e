@@ -817,11 +817,22 @@ feature {NONE,TR_TEST_AI}
                 loop
                         if current_cards_available[index].get_card_weight_truco >= number  then
                                 count := count + 1
-                        elseif partner_cards_available[index].get_card_weight_truco >= number then
-                                count := count +1
                         end
                         index := index + 1
                 end
+
+                from
+                        index := partner_cards_available.lower
+                until
+                        index > partner_cards_available.upper or count = 2
+                loop
+                        if partner_cards_available[index].get_card_weight_truco >= number  then
+                                count := count + 1
+                        end
+                        index := index + 1
+                end
+
+
                 result := count >= 2
         end
 
