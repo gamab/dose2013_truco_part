@@ -934,7 +934,7 @@ feature -- end of rounds
 	is_end_round :BOOLEAN
 		-- return wether this is the end of the round or not
 	do
-		result:=not(game_state_obj.get_deck_cards[3].get_card_type.is_equal(""))
+		result:=not(game_state_obj.get_deck_cards[3] = Void)
 	end
 
 
