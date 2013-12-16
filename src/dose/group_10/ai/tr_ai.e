@@ -364,7 +364,7 @@ feature {NONE, TR_TEST_AI} --Accept
 		cards_available: ARRAY[TR_CARD]
 		index: INTEGER
     do
-    	create cards_available.make_filled (void,0,2)
+    	
 		cards_available := card_available(player1_card, played_card)
 		if proposition.is_equal(BC.Truco) then
 			flag :=  bet_available (cards_available, 8)
