@@ -977,18 +977,18 @@ feature -- end of hand
 					team := players[game_state_obj.who_dealt \\ 4].get_player_team_id
 				else
 					-- if there are two draws then it is the one who won the third round that wins
-					team := players[rounds.at (2)].get_player_team_id
+					team := players[rounds.at (2)-1].get_player_team_id
 				end
 			else
 				-- if there is only one draw then this is the one who won the second round that wins
-				team := players[rounds.at (1)].get_player_team_id
+				team := players[rounds.at (1)-1].get_player_team_id
 			end
 		-- we remember the team who won the first round
 		else
-			team_won_first := players[rounds.at (0)].get_player_team_id
+			team_won_first := players[rounds.at (0)-1].get_player_team_id
 
 			-- if it also won, or if there is a draw in the second round then it won the hand
-			if rounds.at (1) = 0 or players[rounds.at (1)].get_player_team_id = team_won_first then
+			if rounds.at (1) = 0 or players[rounds.at (1)-1].get_player_team_id = team_won_first then
 				team := team_won_first
 			-- if the other team won the second round
 			else
@@ -997,7 +997,7 @@ feature -- end of hand
 					team := team_won_first
 				else
 					-- then the team who wins is the last one wins
-					team := players[rounds.at (2)].get_player_team_id
+					team := players[rounds.at (2)-1].get_player_team_id
 				end
 			end
 		end
@@ -1033,12 +1033,12 @@ feature -- end of hand
 		-- we remember the team who won the first round
 		elseif rounds.at (0) /= -1 then
 
-			team_won_first := players[rounds.at (0)].get_player_team_id
+			team_won_first := players[rounds.at (0)-1].get_player_team_id
 
 			if rounds.at (1) = 0 then
 				there_is_a_winner := True
 			elseif rounds.at (1) /= -1 then
-				if players[rounds.at (1)].get_player_team_id = team_won_first then
+				if players[rounds.at (1)-1].get_player_team_id = team_won_first then
 					there_is_a_winner := True
 				-- if the other team won the second round
 				elseif rounds.at (2) /= -1 then
