@@ -50,15 +50,15 @@ feature {ANY} -- Update hand
                 player_cards_b:= player_ai_2.get_player_cards.deep_twin
 
 
-                print(id_player_a.out + " %N")
-                print(player_cards_a[0].get_card_value.out + " " + player_cards_a[0].get_card_type.out + " %N ")
-                print(player_cards_a[1].get_card_value.out + " " + player_cards_a[1].get_card_type.out + " %N ")
-                print(player_cards_a[2].get_card_value.out + " " + player_cards_a[2].get_card_type.out + " %N ")
+--                print(id_player_a.out + " %N")
+--                print(player_cards_a[0].get_card_value.out + " " + player_cards_a[0].get_card_type.out + " %N ")
+--                print(player_cards_a[1].get_card_value.out + " " + player_cards_a[1].get_card_type.out + " %N ")
+--                print(player_cards_a[2].get_card_value.out + " " + player_cards_a[2].get_card_type.out + " %N ")
 
-                print(id_player_b.out + " %N")
-                print(player_cards_b[0].get_card_value.out + " " + player_cards_b[0].get_card_type.out + " %N ")
-                print(player_cards_b[1].get_card_value.out + " " + player_cards_b[1].get_card_type.out + " %N ")
-                print(player_cards_b[2].get_card_value.out + " " + player_cards_b[2].get_card_type.out + " %N ")
+--                print(id_player_b.out + " %N")
+--                print(player_cards_b[0].get_card_value.out + " " + player_cards_b[0].get_card_type.out + " %N ")
+--                print(player_cards_b[1].get_card_value.out + " " + player_cards_b[1].get_card_type.out + " %N ")
+--                print(player_cards_b[2].get_card_value.out + " " + player_cards_b[2].get_card_type.out + " %N ")
 
                 --sort the cards
                 insertion_sort_by_weight_truco (player_cards_a)
@@ -963,7 +963,7 @@ feature {NONE,TR_TEST_AI}
                 result := flag
         end
 
-feature {NONE,TR_TEST_AI} --Card to play
+feature {NONE,TR_TEST_AI,APPLICATION} --Card to play
 
     play_card_easy(id_player:INTEGER; card_player: ARRAY[TR_CARD];played_cards:ARRAY[BOOLEAN]; game_state:TR_LOGIC):TR_CARD
     -- if we can play a better card than the one that are on the table then we play it (the lowest
@@ -1276,12 +1276,12 @@ feature {NONE,TR_TEST_AI} --Card to play
                         end
 
                 else -- position 4
-                        pos_opponent1 := 3
-                        pos_opponent2 := 1
+                        pos_opponent1 := 1
+                        pos_opponent2 := 3
                         pos_partner := 2
 
-                        weight_truco_o1 := table_cards[pos_opponent1].get_card_weight_truco
-                        weight_truco_o2 := table_cards[pos_opponent2].get_card_weight_truco
+                        weight_truco_o1 := table_cards[pos_opponent1-1].get_card_weight_truco
+                        weight_truco_o2 := table_cards[pos_opponent2-1].get_card_weight_truco
                         max_weigth_op := weight_truco_o1
                         max_op_position := pos_opponent1
                         if max_weigth_op < weight_truco_o2 then
@@ -1289,13 +1289,13 @@ feature {NONE,TR_TEST_AI} --Card to play
                                 max_op_position := pos_opponent2
                         end
 
-                        weight_truco_p  := table_cards[pos_partner].get_card_weight_truco
+                        weight_truco_p  := table_cards[pos_partner-1].get_card_weight_truco
                         if max_weigth_op < weight_truco_p  then
                                 my_smaller_card := smaller_card_available(card_player,played_cards)
                                 mark_a_card(my_smaller_card,card_player,played_cards)
                                 result := my_smaller_card
                         else
-                                my_smaller_card := optimal_card_to_play(card_player,played_cards,table_cards[max_op_position])
+                                my_smaller_card := optimal_card_to_play(card_player,played_cards,table_cards[max_op_position-1])
                                 mark_a_card(my_smaller_card,card_player,played_cards)
                                 result := my_smaller_card
                         end
@@ -1558,7 +1558,7 @@ feature{NONE,TR_TEST_AI} -- sort cards
                 end
         end
 
-feature {NONE,TR_TEST_AI} -- Attribut
+feature {NONE,TR_TEST_AI, APPLICATION} -- Attribut
 
     difficulty: STRING
 
