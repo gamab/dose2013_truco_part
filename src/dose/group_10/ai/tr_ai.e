@@ -1182,7 +1182,7 @@ feature {NONE,TR_TEST_AI,APPLICATION} --Card to play
                         elseif (game_state.get_round_number = 2) then
                         --if I'm second in the second round: is because my team not won  the first round, or there was a tie.
                                 who_won_first_round := game_state.get_round.at (team)
-                                if who_won_first_round = team_opponent then
+                                if -((who_won_first_round \\ 2) - 2) = team_opponent then
                                         my_best_card := greater_card_available(card_player,played_cards)
                                         best_partner_card := greater_card_available(card_team_mate,team_mate_played_cards)
                                         my_smaller_card := smaller_card_available(card_player,played_cards)
@@ -1249,7 +1249,7 @@ feature {NONE,TR_TEST_AI,APPLICATION} --Card to play
                         --if I'm third in the second round: is because my team won the first round, or there was a tie
                                 who_won_first_round := game_state.get_round.at (game_state.get_round.lower)
                                 -- If we won the first round
-                                if who_won_first_round = team then
+                                if -((who_won_first_round \\ 2) - 2) = team then
                                         weight_truco_p :=  table_cards[table_cards.lower].get_card_weight_truco
                                         weight_truco_o1 := table_cards[table_cards.lower+1].get_card_weight_truco
 
