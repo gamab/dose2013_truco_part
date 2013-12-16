@@ -894,6 +894,9 @@ feature -- end of rounds
 		-- then we set the winner of the round
 		set_players_positions(winner_id)
 		game_state_obj.set_winner_round (winner_id)
+
+		-- finally we set the current player
+		game_state_obj.set_the_player_turn_id (winner_id)
 	end
 
 
